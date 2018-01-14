@@ -37,8 +37,9 @@ public class Multiplayer extends BasicGameState
 	}
 
 	@Override
-	public void render(GameContainer arg0, StateBasedGame arg1, Graphics arg2) throws SlickException 
+	public void render(GameContainer arg0, StateBasedGame arg1, Graphics g) throws SlickException 
 	{
+		world.render(g, 0, 0);
 	}
 
 	@Override

@@ -103,8 +103,8 @@ public class TileMap
 				backgroundText[i] = backgroundText[i].replaceAll("\n", "");
 				foregroundText[i] = foregroundText[i].replaceAll("\n", "");
 				
-				background[c][r] = Integer.parseInt(backgroundText[i]);
-				foreground[c][r] = Integer.parseInt(foregroundText[i]);
+				background[c][r] = Integer.parseInt(backgroundText[i]) - 1;
+				foreground[c][r] = Integer.parseInt(foregroundText[i]) - 1;
 				i++;
 			}
 		}
