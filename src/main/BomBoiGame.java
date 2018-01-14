@@ -11,7 +11,7 @@ public class BomBoiGame extends StateBasedGame
     // Game state identifiers
     public static final int SPLASHSCREEN  = 0;
     public static final int MAIN_MENU     = 1;
-    public static final int WORLD_SELECT  = 2;
+    public static final int LEVEL_SELECT  = 2;
     public static final int SINGLEPLAYER  = 3;
     public static final int MULTIPLAYER   = 4;
 
@@ -22,7 +22,7 @@ public class BomBoiGame extends StateBasedGame
     public static float scale = 4.0f;
     
     public static boolean multiplayer = false;
-    public static World world;
+    public static Level level;
 	
 	public BomBoiGame() 
 	{
@@ -35,7 +35,7 @@ public class BomBoiGame extends StateBasedGame
         // The first state added will be the one that is loaded first, when the application is launched
         this.addState(new SplashScreen());
         this.addState(new MainMenu());
-        this.addState(new WorldSelect());
+        this.addState(new LevelSelect());
         this.addState(new Singleplayer());
         this.addState(new Multiplayer());
     }

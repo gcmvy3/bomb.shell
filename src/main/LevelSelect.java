@@ -10,11 +10,11 @@ import org.newdawn.slick.gui.MouseOverArea;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
-public class WorldSelect extends BasicGameState
+public class LevelSelect extends BasicGameState
 {
 	public static final int ID = 2;
 	
-	private World selectedWorld = null;
+	private Level selectedLevel = null;
 	
 	private Image startButtonImage;
 	
@@ -39,9 +39,9 @@ public class WorldSelect extends BasicGameState
 			@Override
 			public void componentActivated(AbstractComponent arg0) 
 			{
-				if(selectedWorld != null)
+				if(selectedLevel != null)
 				{
-					BomBoiGame.world = selectedWorld;
+					BomBoiGame.level = selectedLevel;
 					if(BomBoiGame.multiplayer)
 					{
 						game.enterState(4);
@@ -58,10 +58,10 @@ public class WorldSelect extends BasicGameState
 	@Override
 	public void enter(GameContainer gc, StateBasedGame game)
 	{
-		WorldFactory.refreshLists();
+		LevelFactory.refreshLists();
 		try 
 		{
-			selectedWorld = WorldFactory.buildWorld("default", "default");
+			selectedLevel = LevelFactory.buildLevel("default", "default");
 		} 
 		catch (Exception e) 
 		{
@@ -85,7 +85,7 @@ public class WorldSelect extends BasicGameState
 	@Override
 	public int getID() 
 	{
-		return WorldSelect.ID;
+		return LevelSelect.ID;
 	}
 
 }

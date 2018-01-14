@@ -3,7 +3,7 @@ package main;
 import java.io.File;
 import java.util.ArrayList;
 
-public class WorldFactory 
+public class LevelFactory 
 {
 	private final static String TILEMAP_DIRECTORY = "assets/tilemaps";
 	private final static String TILESET_DIRECTORY = "assets/tilesets";
@@ -67,7 +67,7 @@ public class WorldFactory
 		}
 	}
 	
-	public static World buildWorld(String tileMapName, String tilesetName) throws Exception
+	public static Level buildLevel(String tileMapName, String tilesetName) throws Exception
 	{
 		TileMap tileMap = null;
 		Tileset tileset = null;
@@ -94,6 +94,6 @@ public class WorldFactory
 			throw new Exception();
 		}
 		
-		return new World(tileMap, tileset);
+		return new Level(tileMap, tileset);
 	}
 }
