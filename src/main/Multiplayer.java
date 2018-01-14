@@ -26,9 +26,9 @@ public class Multiplayer extends BasicGameState
 		world = BomBoiGame.world;
 		try 
 		{
-			world.loadFromFile();
+			world.init();
 		} 
-		catch (SlickException e) 
+		catch (Exception e) 
 		{
 			//If the world cannot be loaded, return to the main menu
 			game.enterState(1);
@@ -39,7 +39,6 @@ public class Multiplayer extends BasicGameState
 	@Override
 	public void render(GameContainer arg0, StateBasedGame arg1, Graphics arg2) throws SlickException 
 	{
-		world.getTiledMap().render(0, 0);
 	}
 
 	@Override

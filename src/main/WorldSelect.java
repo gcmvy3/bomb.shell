@@ -25,8 +25,8 @@ public class WorldSelect extends BasicGameState
 	{
 		startButtonImage = new Image("/assets/gui/startButton.png");
 		
-		int buttonWidth = (int)((double)startButtonImage.getWidth() * BomBoiGame.scale);
-		int buttonHeight = (int)((double)startButtonImage.getHeight() * BomBoiGame.scale);
+		int buttonWidth = startButtonImage.getWidth();
+		int buttonHeight = startButtonImage.getHeight();
 		
 		startButton = new MouseOverArea(gc,
 										startButtonImage,
@@ -58,8 +58,16 @@ public class WorldSelect extends BasicGameState
 	@Override
 	public void enter(GameContainer gc, StateBasedGame game)
 	{
-		WorldManager.refreshList();
-		selectedWorld = WorldManager.getWorld("default");
+		WorldFactory.refreshLists();
+		try 
+		{
+			selectedWorld = WorldFactory.buildWorld("default", "default");
+		} 
+		catch (Exception e) 
+		{
+			game.enterState(1);
+			e.printStackTrace();
+		}
 	}
 	
 	@Override

@@ -21,7 +21,7 @@ public class SplashScreen extends BasicGameState
 	@Override
 	public void enter(GameContainer gc, StateBasedGame game)
 	{
-		
+		gc.getGraphics().scale(BomBoiGame.scale, BomBoiGame.scale);
 	}
 
 	@Override

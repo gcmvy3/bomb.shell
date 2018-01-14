@@ -2,6 +2,7 @@ package main;
 
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.ScalableGame;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 
@@ -18,7 +19,7 @@ public class BomBoiGame extends StateBasedGame
     public static final int WIDTH   = 1920;
     public static final int HEIGHT  = 1080;
     
-    public static double scale = 1.0;
+    public static float scale = 4.0f;
     
     public static boolean multiplayer = false;
     public static World world;
@@ -44,9 +45,10 @@ public class BomBoiGame extends StateBasedGame
     {
         try 
         {
-            AppGameContainer app = new AppGameContainer(new BomBoiGame());
+            AppGameContainer app = new AppGameContainer(new ScalableGame(new BomBoiGame(), WIDTH, HEIGHT));
             app.setDisplayMode(WIDTH, HEIGHT, false);
             app.setShowFPS(true);
+            app.setVSync(true);
             app.start();
         } 
         catch(SlickException e) 

@@ -43,8 +43,8 @@ public class MainMenu extends BasicGameState
 			System.err.println("Could not load button sprite!");
 		}
 		
-		buttonWidth = (int)((double)multiplayerButtonImage.getWidth() * BomBoiGame.scale);
-		buttonHeight = (int)((double)multiplayerButtonImage.getHeight() * BomBoiGame.scale);
+		buttonWidth = multiplayerButtonImage.getWidth();
+		buttonHeight = multiplayerButtonImage.getHeight();
 		
 		singleplayerButton = new MouseOverArea(gt, 
 												singleplayerButtonImage, 

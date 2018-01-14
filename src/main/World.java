@@ -1,33 +1,32 @@
 package main;
 
-import java.io.File;
-
-import org.newdawn.slick.SlickException;
-import org.newdawn.slick.tiled.TiledMap;
-
 public class World 
 {
 	public String name;
-	private File path;
-	private TiledMap tiledMap;
+	private TileMap tileMap;
+	private Tileset tileset;
 	
-	public World(File path)
+	public World(TileMap tileMap, Tileset tileset)
 	{
-		this.path = path;
-		this.name = path.getName();
+		this.tileMap = tileMap;
+		this.tileset = tileset;
+		this.name = tileMap.name;
 	}
 	
-	public void loadFromFile() throws SlickException
+	public void init() throws Exception
 	{
-			tiledMap = new TiledMap(path + "/tilemap.tmx");
-	}
-	
-	public TiledMap getTiledMap() throws SlickException
-	{
-		if(tiledMap == null)
+		tileMap.init();
+		tileset.init();
+		
+		if(tileMap.tileSize != tileset.tileSize)
 		{
-			loadFromFile();
+			System.err.println("Tile sizes do not match!");
+			throw new Exception();
 		}
-		return tiledMap;
+	}
+
+	public void render()
+	{
+		//TODO write render method for world
 	}
 }
