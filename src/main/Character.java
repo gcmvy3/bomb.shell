@@ -29,7 +29,7 @@ public class Character extends Entity
 		body.setType(BodyType.DYNAMIC);
 		
 		PolygonShape boundingBox = new PolygonShape();
-		boundingBox.setAsBox(size, size);
+		boundingBox.setAsBox(size / 2, size / 2);
 		setShape(boundingBox);
 		
 		//Setup collision filtering
@@ -47,7 +47,7 @@ public class Character extends Entity
 	
 	public void render()
 	{
-		sprite.draw(body.getPosition().x, body.getPosition().y, size, size);
+		sprite.draw(body.getPosition().x - size / 2, body.getPosition().y - size / 2, size, size);
 	}
 	
 	public void update(GameContainer gc)

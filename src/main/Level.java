@@ -4,16 +4,14 @@ import java.util.ArrayList;
 
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.World;
-import org.newdawn.slick.Game;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.state.StateBasedGame;
 
 public class Level 
 {
 	final float TIME_STEP = 1.0f / 60.0f;
-	final int POSITION_ITERATION = 6;
-	final int VELOCITY_ITERATION = 3;
+	final int POSITION_ITERATION = 8;
+	final int VELOCITY_ITERATION = 8;
 	
 	public String name;
 	private TileMap tileMap;
@@ -63,8 +61,8 @@ public class Level
 		{
 			for(int c = 0; c < numColumns; c++)
 			{
-				float x = c * tileSize;
-				float y = r * tileSize;
+				float x = (c * tileSize) + (tileSize / 2);
+				float y = (r * tileSize) + (tileSize / 2);
 				
 				Tile bgTile = TileFactory.createTileById(x,
 														y, 
