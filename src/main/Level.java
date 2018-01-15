@@ -14,8 +14,8 @@ public class Level
 	final int VELOCITY_ITERATION = 8;
 	
 	public String name;
-	private TileMap tileMap;
-	private Tileset tileset;
+	public TileMap tileMap;
+	public Tileset tileset;
 	
 	private int tileSize;
 	private int numRows;
@@ -56,6 +56,8 @@ public class Level
 		backgroundArray = new Tile[numColumns][numRows];
 		foregroundArray = new Tile[numColumns][numRows];
 		
+		initBoundaries();
+		
 		//Convert background and foreground data into Tiles
 		for(int r = 0; r < numRows; r++)
 		{
@@ -65,17 +67,21 @@ public class Level
 				float y = (r * tileSize) + (tileSize / 2);
 				
 				Tile bgTile = TileFactory.createTileById(x,
-														y, 
+														y,
+														r,
+														c,
 														tileSize,
 														tileMap.background[c][r],
-														world);
+														this);
 				backgroundArray[c][r] = bgTile;
 				
 				Tile fgTile = TileFactory.createTileById(x, 
-										y, 
+										y,
+										r,
+										c,
 										tileSize,
 										tileMap.foreground[c][r],
-										world);
+										this);
 				
 				foregroundArray[c][r] = fgTile;
 			}
@@ -87,27 +93,44 @@ public class Level
 		Character character1 = new Character(100, 100, world);
 		characters.add(character1);
 	}
+	
+	private void initBoundaries()
+	{
+		int thickness = 20;
+
+		int worldWidth = tileSize * numColumns;
+		int worldHeight = tileSize * numRows;
+		
+		int xMiddle = worldWidth / 2;
+		int yMiddle = worldHeight / 2;
+		
+		LevelBoundary top = new LevelBoundary(xMiddle, - thickness / 2, worldWidth, thickness, world);
+		LevelBoundary bottom = new LevelBoundary(xMiddle, worldHeight + thickness / 2, worldWidth, thickness, world);
+		LevelBoundary left = new LevelBoundary(-thickness / 2, yMiddle, thickness, worldHeight, world);
+		LevelBoundary right = new LevelBoundary(worldWidth + thickness / 2, yMiddle, thickness, worldHeight, world);
+	}
 
 	public void render(Graphics g, int x, int y)
 	{
-		//Draw background
 		for(int r = 0; r < numRows; r++)
 		{
 			for(int c = 0; c < numColumns; c++)
 			{
-				int tileID = backgroundArray[c][r].id;
+				//Draw background
+				int backgroundID = backgroundArray[c][r].id;
 				
-				tileset.getTile(tileID).draw(x + tileSize * c, y + tileSize * r);
-			}	
-		}
-		
-		//Draw foreground
-		for(int r = 0; r < numRows; r++)
-		{
-			for(int c = 0; c < numColumns; c++)
-			{
-				int tileID = foregroundArray[c][r].id;
-				tileset.getTile(tileID).draw(x + tileSize * c, y + tileSize * r);
+				if(backgroundID != 0)
+				{
+					backgroundArray[c][r].render(g);
+				}
+				
+				//Draw foreground
+				int foregroundID = foregroundArray[c][r].id;
+				
+				if(foregroundID != 0)
+				{
+					foregroundArray[c][r].render(g);
+				}
 			}	
 		}
 		
@@ -125,5 +148,10 @@ public class Level
 		{
 			c.update(gc);
 		}
+	}
+	
+	public void setForegroundTile(int row, int column, Tile newTile)
+	{
+		foregroundArray[column][row] = newTile;
 	}
 }

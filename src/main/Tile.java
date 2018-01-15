@@ -2,18 +2,30 @@ package main;
 
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.dynamics.Filter;
-import org.jbox2d.dynamics.World;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 
-public abstract class Tile extends Entity
+public class Tile extends Entity
 {
 	public int id;
 	public int size;
 	
-	public Tile(float x, float y, int size, int id, World world)
+	public int row;
+	public int column;
+	
+	public Image sprite;
+	
+	public Level level;
+	
+	public Tile(float x, float y, int row, int column, int size, int id, Level level)
 	{
-		super(x, y, world);
+		super(x, y, level.world);
 		
+		this.size = size;
 		this.id = id;
+		this.level = level;
+		
+		sprite = level.tileset.getImage(id);
 		
 		PolygonShape boundingBox = new PolygonShape();
 		boundingBox.setAsBox(size / 2, size / 2);
@@ -25,5 +37,13 @@ public abstract class Tile extends Entity
 		filter.maskBits = Entity.NONE;
 		
 		body.getFixtureList().setFilterData(filter);
+	}
+	
+	public void render(Graphics g)
+	{
+		if(sprite != null)
+		{
+			sprite.draw(body.getPosition().x - size / 2, body.getPosition().y - size / 2);
+		}
 	}
 }

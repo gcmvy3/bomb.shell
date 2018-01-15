@@ -1,23 +1,19 @@
 package main;
 
-import org.jbox2d.dynamics.World;
-
 public class TileFactory 
 {
-	public static Tile createTileById(float x, float y, int size, int id, World world)
+	public static Tile createTileById(float x, float y, int row, int column, int size, int id, Level level)
 	{
 		switch(id)
 		{
-		case 0:
-			return new EmptyTile(x, y, size, id, world);
-		case 1:
-			return new BackgroundTile(x, y, size, id, world);
-		case 2:
-			return new DestructibleTile(x, y, size, id, world);
-		case 3:
-			return new IndestructibleTile(x, y, size, id, world);
 		default:
-			return null;
+			return new Tile(x, y, row, column, size, id, level);
+		case 1:
+			return new BackgroundTile(x, y, row, column, size, id, level);
+		case 2:
+			return new DestructibleTile(x, y, row, column, size, id, level);
+		case 3:
+			return new IndestructibleTile(x, y, row, column, size, id, level);
 		}
 	}
 }

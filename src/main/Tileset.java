@@ -2,6 +2,7 @@ package main;
 
 import java.io.File;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Iterator;
 
 import org.dom4j.Document;
@@ -15,7 +16,7 @@ public class Tileset
 	
 	private File directory;
 
-	private Image[] tiles;
+	private HashMap<Integer, Image> images;
 	
 	public int tileSize;
 	int numTiles;
@@ -40,7 +41,7 @@ public class Tileset
 		tileSize = Integer.parseInt(root.attributeValue("tilewidth"));
 		numTiles = Integer.parseInt(root.attributeValue("tilecount"));
 		
-		tiles = new Image[numTiles];
+		images = new HashMap<Integer, Image>(numTiles);
 		
 		// Iterate through tiles, loading each one into memory
 	    for ( Iterator<Element> i = root.elementIterator("tile"); i.hasNext(); ) 
@@ -55,12 +56,12 @@ public class Tileset
 	        
 	        Image image = new Image(directory.getPath() + File.separator + source);
 	        
-	        tiles[id] = image;
+	        images.put(id, image);
 	    }
 	}
 	
-	public Image getTile(int id)
+	public Image getImage(int id)
 	{
-		return tiles[id];
+		return images.get(id);
 	}
 }
