@@ -12,7 +12,7 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 
-public class Character extends Entity
+public class Player extends Entity
 {
 	final String SPRITE_DIRECTORY = "assets" + File.separator + "characters" + File.separator;
 	
@@ -21,7 +21,7 @@ public class Character extends Entity
 	
 	Image sprite;
 	
-	public Character(float x, float y, World w) throws SlickException 
+	public Player(float x, float y, World w) throws SlickException 
 	{
 		super(x, y, w);
 		loadSprite();

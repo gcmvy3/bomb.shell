@@ -21,7 +21,7 @@ public class Level
 	private int numRows;
 	private int numColumns;
 	
-	private ArrayList<Character> characters;
+	private ArrayList<Player> players;
 	
 	private Tile[][] backgroundArray;
 	private Tile[][] foregroundArray;
@@ -88,10 +88,10 @@ public class Level
 		}
 		
 		//Add characters
-		characters = new ArrayList<Character>();
+		players = new ArrayList<Player>();
 		
-		Character character1 = new Character(100, 100, world);
-		characters.add(character1);
+		Player player1 = new Player(100, 100, world);
+		players.add(player1);
 	}
 	
 	private void initBoundaries()
@@ -134,9 +134,9 @@ public class Level
 			}	
 		}
 		
-		for(Character c : characters)
+		for(Player p : players)
 		{
-			c.render();
+			p.render();
 		}
 	}
 	
@@ -144,9 +144,9 @@ public class Level
 	{
 		world.step(TIME_STEP, VELOCITY_ITERATION, POSITION_ITERATION);
 		
-		for(Character c : characters)
+		for(Player p : players)
 		{
-			c.update(gc);
+			p.update(gc);
 		}
 	}
 	
