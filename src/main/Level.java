@@ -1,6 +1,7 @@
 package main;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.World;
@@ -29,6 +30,8 @@ public class Level
 	
 	private Tile[][] backgroundArray;
 	private Tile[][] foregroundArray;
+	
+	public ArrayList<Bomb> bombs;
 	
 	public World world; //Box2d world for physics
 	
@@ -99,6 +102,8 @@ public class Level
 		
 		Player player1 = new Player(1, 1, this);
 		players.add(player1);
+		
+		bombs = new ArrayList<Bomb>();
 	}
 	
 	private void initBoundaries()
@@ -111,10 +116,10 @@ public class Level
 		float xMiddle = worldWidth / 2;
 		float yMiddle = worldHeight / 2;
 		
-		LevelBoundary top = new LevelBoundary(xMiddle, - thickness / 2, worldWidth, thickness, world);
-		LevelBoundary bottom = new LevelBoundary(xMiddle, worldHeight + thickness / 2, worldWidth, thickness, world);
-		LevelBoundary left = new LevelBoundary(-thickness / 2, yMiddle, thickness, worldHeight, world);
-		LevelBoundary right = new LevelBoundary(worldWidth + thickness / 2, yMiddle, thickness, worldHeight, world);
+		LevelBoundary top = new LevelBoundary(xMiddle, - thickness / 2, worldWidth, thickness, this);
+		LevelBoundary bottom = new LevelBoundary(xMiddle, worldHeight + thickness / 2, worldWidth, thickness, this);
+		LevelBoundary left = new LevelBoundary(-thickness / 2, yMiddle, thickness, worldHeight, this);
+		LevelBoundary right = new LevelBoundary(worldWidth + thickness / 2, yMiddle, thickness, worldHeight, this);
 	}
 
 	public void render(Graphics g, int x, int y)
@@ -141,6 +146,11 @@ public class Level
 			}	
 		}
 		
+		for(Bomb b : bombs)
+		{
+			b.render();
+		}
+		
 		for(Player p : players)
 		{
 			p.render();
@@ -150,6 +160,22 @@ public class Level
 	public void update(GameContainer gc)
 	{
 		world.step(TIME_STEP, VELOCITY_ITERATION, POSITION_ITERATION);
+		
+		Iterator<Bomb> bombIter = bombs.iterator();
+
+		while (bombIter.hasNext()) 
+		{
+		    Bomb b = bombIter.next();
+
+			if(b.alive)
+			{
+				b.update();
+			}
+			else
+			{
+				bombIter.remove();
+			}
+		}
 		
 		for(Player p : players)
 		{

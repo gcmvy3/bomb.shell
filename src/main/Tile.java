@@ -20,7 +20,7 @@ public class Tile extends Entity
 	
 	public Tile(float x, float y, int row, int column, int size, int id, Level level)
 	{
-		super(x, y, level.world);
+		super(x, y, level);
 		
 		sizeInMeters = size;
 		this.id = id;

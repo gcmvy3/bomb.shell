@@ -21,13 +21,16 @@ public class Player extends Entity
 	float sizeInPixels;
 	float speed = 8.0f;
 	
+	int attackDelay = 15;
+	int timeSinceAttack = 0;
+	
 	Level level;
 	
 	Image sprite;
 	
 	public Player(float x, float y, Level l) throws SlickException 
 	{
-		super(x, y, l.world);
+		super(x, y, l);
 		
 		level = l;
 		
@@ -65,6 +68,7 @@ public class Player extends Entity
 	
 	public void update(GameContainer gc)
 	{	
+		//Movement
 		Vec2 currentVelocity = body.getLinearVelocity();
 		
 	    float desiredXVel = 0;
@@ -94,5 +98,33 @@ public class Player extends Entity
 	    float impulseY = body.getMass() * velChangeY; //disregard time factor
 		
 		body.applyLinearImpulse(new Vec2(impulseX, impulseY), body.getWorldCenter());
+		
+		//Attack
+		
+		if(timeSinceAttack <= attackDelay)
+		{
+			timeSinceAttack++;
+		}
+
+		if(gc.getInput().isKeyDown(Input.KEY_SPACE) && timeSinceAttack > attackDelay)
+		{
+			dropBomb();
+		}
+	}
+	
+	private void dropBomb()
+	{
+		timeSinceAttack = 0;
+		
+		try
+		{
+			Bomb b = new Bomb(body.getPosition().x, body.getPosition().y, level, this);
+			
+			level.bombs.add(b);
+		}
+		catch(SlickException e)
+		{
+			System.err.println("Could not create bomb!");
+		}
 	}
 }
