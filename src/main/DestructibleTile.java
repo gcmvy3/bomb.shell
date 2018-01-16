@@ -31,7 +31,7 @@ public class DestructibleTile extends Tile
 	
 	public void destroy()
 	{
-		Tile replacementTile = TileFactory.createTileById(body.getPosition().x, body.getPosition().y, row, column, size, 0, level);
+		Tile replacementTile = TileFactory.createTileById(body.getPosition().x, body.getPosition().y, row, column, sizeInMeters, 0, level);
 		level.setForegroundTile(column, row, replacementTile);
 	}
 }

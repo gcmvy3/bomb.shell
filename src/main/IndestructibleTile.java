@@ -19,6 +19,6 @@ public class IndestructibleTile extends Tile
 
 	public void render(Graphics g)
 	{
-		sprite.draw(body.getPosition().x - size / 2, body.getPosition().y - size / 2);
+		sprite.draw(body.getPosition().x - sizeInMeters / 2, body.getPosition().y - sizeInMeters / 2);
 	}
 }

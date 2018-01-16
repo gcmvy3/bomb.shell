@@ -6,7 +6,6 @@ import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.Filter;
-import org.jbox2d.dynamics.World;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
@@ -16,20 +15,31 @@ public class Player extends Entity
 {
 	final String SPRITE_DIRECTORY = "assets" + File.separator + "characters" + File.separator;
 	
-	int size = 40;
-	float speed = 100.0f;
+	final float sizeRelativeToTile = 0.8f;
+	
+	float sizeInMeters;
+	float sizeInPixels;
+	float speed = 10.0f;
+	
+	Level level;
 	
 	Image sprite;
 	
-	public Player(float x, float y, World w) throws SlickException 
+	public Player(float x, float y, Level l) throws SlickException 
 	{
-		super(x, y, w);
+		super(x, y, l.world);
+		
+		level = l;
+		
 		loadSprite();
 		
 		body.setType(BodyType.DYNAMIC);
 		
+		sizeInMeters = l.tileSizeInMeters * sizeRelativeToTile;
+		sizeInPixels = l.metersToPixels(sizeInMeters);
+		
 		PolygonShape boundingBox = new PolygonShape();
-		boundingBox.setAsBox(size / 2, size / 2);
+		boundingBox.setAsBox(sizeInMeters / 2, sizeInMeters / 2);
 		setShape(boundingBox);
 		
 		//Setup collision filtering
@@ -47,7 +57,10 @@ public class Player extends Entity
 	
 	public void render()
 	{
-		sprite.draw(body.getPosition().x - size / 2, body.getPosition().y - size / 2, size, size);
+		int pixelsX = (int)level.metersToPixels(body.getPosition().x);
+		int pixelsY = (int)level.metersToPixels(body.getPosition().y);
+		
+		sprite.draw(pixelsX - sizeInPixels / 2, pixelsY - sizeInPixels / 2, sizeInPixels, sizeInPixels);
 	}
 	
 	public void update(GameContainer gc)

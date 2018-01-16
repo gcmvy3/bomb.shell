@@ -13,11 +13,15 @@ public class Level
 	final int POSITION_ITERATION = 8;
 	final int VELOCITY_ITERATION = 8;
 	
+	float pixelsPerMeter;
+	
 	public String name;
 	public TileMap tileMap;
 	public Tileset tileset;
 	
-	private int tileSize;
+	public float tileSizeInPixels;
+	public float tileSizeInMeters;
+	
 	private int numRows;
 	private int numColumns;
 	
@@ -50,7 +54,10 @@ public class Level
 			throw new Exception();
 		}
 		
-		tileSize = tileMap.tileSize;
+		tileSizeInPixels = tileMap.tileSize;
+		pixelsPerMeter = tileSizeInPixels;
+		tileSizeInMeters = pixelsToMeters(tileSizeInPixels);
+		
 		numColumns = tileMap.numColumns;
 		numRows = tileMap.numRows;
 		backgroundArray = new Tile[numColumns][numRows];
@@ -63,14 +70,14 @@ public class Level
 		{
 			for(int c = 0; c < numColumns; c++)
 			{
-				float x = (c * tileSize) + (tileSize / 2);
-				float y = (r * tileSize) + (tileSize / 2);
+				float x = (c * tileSizeInMeters) + (tileSizeInMeters / 2);
+				float y = (r * tileSizeInMeters) + (tileSizeInMeters / 2);
 				
 				Tile bgTile = TileFactory.createTileById(x,
 														y,
 														r,
 														c,
-														tileSize,
+														tileSizeInMeters,
 														tileMap.background[c][r],
 														this);
 				backgroundArray[c][r] = bgTile;
@@ -79,7 +86,7 @@ public class Level
 										y,
 										r,
 										c,
-										tileSize,
+										tileSizeInMeters,
 										tileMap.foreground[c][r],
 										this);
 				
@@ -90,7 +97,7 @@ public class Level
 		//Add characters
 		players = new ArrayList<Player>();
 		
-		Player player1 = new Player(100, 100, world);
+		Player player1 = new Player(1, 1, this);
 		players.add(player1);
 	}
 	
@@ -98,11 +105,11 @@ public class Level
 	{
 		int thickness = 20;
 
-		int worldWidth = tileSize * numColumns;
-		int worldHeight = tileSize * numRows;
+		float worldWidth = tileSizeInMeters * numColumns;
+		float worldHeight = tileSizeInMeters * numRows;
 		
-		int xMiddle = worldWidth / 2;
-		int yMiddle = worldHeight / 2;
+		float xMiddle = worldWidth / 2;
+		float yMiddle = worldHeight / 2;
 		
 		LevelBoundary top = new LevelBoundary(xMiddle, - thickness / 2, worldWidth, thickness, world);
 		LevelBoundary bottom = new LevelBoundary(xMiddle, worldHeight + thickness / 2, worldWidth, thickness, world);
@@ -153,5 +160,15 @@ public class Level
 	public void setForegroundTile(int row, int column, Tile newTile)
 	{
 		foregroundArray[column][row] = newTile;
+	}
+	
+	public float pixelsToMeters(float pixels)
+	{
+		return pixels / pixelsPerMeter;
+	}
+	
+	public float metersToPixels(float meters)
+	{
+		return meters * pixelsPerMeter;
 	}
 }

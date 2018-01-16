@@ -8,7 +8,8 @@ import org.newdawn.slick.Image;
 public class Tile extends Entity
 {
 	public int id;
-	public int size;
+	public float sizeInMeters;
+	private float sizeInPixels;
 	
 	public int row;
 	public int column;
@@ -21,14 +22,16 @@ public class Tile extends Entity
 	{
 		super(x, y, level.world);
 		
-		this.size = size;
+		sizeInMeters = size;
 		this.id = id;
 		this.level = level;
+		
+		sizeInPixels = level.metersToPixels(size);
 		
 		sprite = level.tileset.getImage(id);
 		
 		PolygonShape boundingBox = new PolygonShape();
-		boundingBox.setAsBox(size / 2, size / 2);
+		boundingBox.setAsBox(sizeInMeters / 2, sizeInMeters / 2);
 		setShape(boundingBox);
 		
 		//Setup collision filtering
@@ -43,7 +46,10 @@ public class Tile extends Entity
 	{
 		if(sprite != null)
 		{
-			sprite.draw(body.getPosition().x - size / 2, body.getPosition().y - size / 2);
+			int pixelsX = (int)level.metersToPixels(body.getPosition().x);
+			int pixelsY = (int)level.metersToPixels(body.getPosition().y);
+			
+			sprite.draw(pixelsX - sizeInPixels / 2, pixelsY - sizeInPixels / 2);
 		}
 	}
 }
