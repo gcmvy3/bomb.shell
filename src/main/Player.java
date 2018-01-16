@@ -3,6 +3,7 @@ package main;
 import java.io.File;
 
 import org.jbox2d.collision.shapes.CircleShape;
+import org.jbox2d.collision.shapes.EdgeShape;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.Filter;
@@ -48,7 +49,7 @@ public class Player extends Entity
 		//Setup collision filtering
 		Filter filter = new Filter();
 		filter.categoryBits = Entity.CHARACTER;
-		filter.maskBits = Entity.NONSOLID_TILE;
+		filter.maskBits = Entity.SOLID_TILE;
 		
 		body.getFixtureList().setFilterData(filter);
 	}

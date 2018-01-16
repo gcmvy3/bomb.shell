@@ -6,7 +6,6 @@ public class DestructibleTile extends Tile
 {
 	int maxHealth = 100;
 	int health = maxHealth;
-	Level level;
 	
 	public DestructibleTile(float x, float y, int row, int column, int size, int id, Level level) 
 	{
@@ -32,6 +31,6 @@ public class DestructibleTile extends Tile
 	public void destroy()
 	{
 		Tile replacementTile = TileFactory.createTileById(body.getPosition().x, body.getPosition().y, row, column, sizeInMeters, 0, level);
-		level.setForegroundTile(column, row, replacementTile);
+		level.setForegroundTile(row, column, replacementTile);
 	}
 }

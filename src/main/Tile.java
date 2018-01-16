@@ -23,6 +23,8 @@ public class Tile extends Entity
 		super(x, y, level);
 		
 		sizeInMeters = size;
+		this.row = row;
+		this.column = column;
 		this.id = id;
 		this.level = level;
 		

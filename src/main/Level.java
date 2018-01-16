@@ -23,13 +23,13 @@ public class Level
 	public float tileSizeInPixels;
 	public float tileSizeInMeters;
 	
-	private int numRows;
-	private int numColumns;
+	public int numRows;
+	public int numColumns;
 	
 	private ArrayList<Player> players;
 	
-	private Tile[][] backgroundArray;
-	private Tile[][] foregroundArray;
+	public Tile[][] backgroundArray;
+	public Tile[][] foregroundArray;
 	
 	public ArrayList<Bomb> bombs;
 	
@@ -108,7 +108,7 @@ public class Level
 	
 	private void initBoundaries()
 	{
-		int thickness = 20;
+		float thickness = 1f;
 
 		float worldWidth = tileSizeInMeters * numColumns;
 		float worldHeight = tileSizeInMeters * numRows;
@@ -185,6 +185,7 @@ public class Level
 	
 	public void setForegroundTile(int row, int column, Tile newTile)
 	{
+		world.destroyBody(foregroundArray[column][row].body);
 		foregroundArray[column][row] = newTile;
 	}
 	

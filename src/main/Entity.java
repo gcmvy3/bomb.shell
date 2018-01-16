@@ -27,8 +27,9 @@ public abstract class Entity
 
 		bodDef.position.set(x, y);
 		bodDef.type = BodyType.STATIC;
-
+		
 		body = l.world.createBody(bodDef);
+		
 	}
 	
 	public void update()

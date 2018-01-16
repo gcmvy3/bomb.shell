@@ -1,7 +1,6 @@
 package main;
 
 import org.jbox2d.dynamics.Filter;
-import org.newdawn.slick.Graphics;
 
 public class IndestructibleTile extends Tile
 {
@@ -15,10 +14,5 @@ public class IndestructibleTile extends Tile
 		filter.maskBits = Entity.CHARACTER;
 		
 		body.getFixtureList().setFilterData(filter);
-	}
-
-	public void render(Graphics g)
-	{
-		sprite.draw(body.getPosition().x - sizeInMeters / 2, body.getPosition().y - sizeInMeters / 2);
 	}
 }
