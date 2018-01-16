@@ -10,8 +10,8 @@ import org.newdawn.slick.Graphics;
 public class Level 
 {
 	final float TIME_STEP = 1.0f / 60.0f;
-	final int POSITION_ITERATION = 8;
-	final int VELOCITY_ITERATION = 8;
+	final int POSITION_ITERATION = 10;
+	final int VELOCITY_ITERATION = 10;
 	
 	float pixelsPerMeter;
 	

@@ -2,7 +2,7 @@ package main;
 
 import java.io.File;
 
-import org.jbox2d.collision.shapes.PolygonShape;
+import org.jbox2d.collision.shapes.CircleShape;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.Filter;
@@ -19,7 +19,7 @@ public class Player extends Entity
 	
 	float sizeInMeters;
 	float sizeInPixels;
-	float speed = 10.0f;
+	float speed = 8.0f;
 	
 	Level level;
 	
@@ -38,8 +38,8 @@ public class Player extends Entity
 		sizeInMeters = l.tileSizeInMeters * sizeRelativeToTile;
 		sizeInPixels = l.metersToPixels(sizeInMeters);
 		
-		PolygonShape boundingBox = new PolygonShape();
-		boundingBox.setAsBox(sizeInMeters / 2, sizeInMeters / 2);
+		CircleShape boundingBox = new CircleShape();
+		boundingBox.setRadius(sizeInMeters / 2);
 		setShape(boundingBox);
 		
 		//Setup collision filtering
