@@ -3,7 +3,6 @@ package main;
 import java.io.File;
 
 import org.jbox2d.collision.shapes.CircleShape;
-import org.jbox2d.collision.shapes.EdgeShape;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.Filter;
@@ -21,6 +20,9 @@ public class Player extends Entity
 	float sizeInMeters;
 	float sizeInPixels;
 	float speed = 8.0f;
+	
+	int maxHealth = 200;
+	int health = maxHealth;
 	
 	int attackDelay = 15;
 	int timeSinceAttack = 0;
@@ -126,6 +128,15 @@ public class Player extends Entity
 		catch(SlickException e)
 		{
 			System.err.println("Could not create bomb!");
+		}
+	}
+	
+	public void takeDamage(int damage)
+	{
+		health -= damage;
+		if(health >= 0)
+		{
+			//TODO destroy player here
 		}
 	}
 }

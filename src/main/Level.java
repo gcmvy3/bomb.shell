@@ -26,12 +26,14 @@ public class Level
 	public int numRows;
 	public int numColumns;
 	
-	private ArrayList<Player> players;
-	
 	public Tile[][] backgroundArray;
 	public Tile[][] foregroundArray;
 	
+	public ArrayList<Player> players;
+	
 	public ArrayList<Bomb> bombs;
+	
+	public ArrayList<Explosion> explosions;
 	
 	public World world; //Box2d world for physics
 	
@@ -104,6 +106,7 @@ public class Level
 		players.add(player1);
 		
 		bombs = new ArrayList<Bomb>();
+		explosions = new ArrayList<Explosion>();
 	}
 	
 	private void initBoundaries()
@@ -155,19 +158,25 @@ public class Level
 		{
 			p.render();
 		}
+		
+		for(Explosion e : explosions)
+		{
+			e.render();
+		}
 	}
 	
 	public void update(GameContainer gc)
 	{
 		world.step(TIME_STEP, VELOCITY_ITERATION, POSITION_ITERATION);
 		
+		//Update bombs
+		
 		Iterator<Bomb> bombIter = bombs.iterator();
-
 		while (bombIter.hasNext()) 
 		{
 		    Bomb b = bombIter.next();
 
-			if(b.alive)
+			if(b.active)
 			{
 				b.update();
 			}
@@ -177,9 +186,25 @@ public class Level
 			}
 		}
 		
+		
 		for(Player p : players)
 		{
 			p.update(gc);
+		}
+		
+		Iterator<Explosion> explosionIter = explosions.iterator();
+		while (explosionIter.hasNext()) 
+		{
+		    Explosion e = explosionIter.next();
+
+			if(e.active)
+			{
+				e.update();
+			}
+			else
+			{
+				explosionIter.remove();
+			}
 		}
 	}
 	

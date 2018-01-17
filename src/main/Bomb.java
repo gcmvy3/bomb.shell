@@ -84,27 +84,29 @@ public class Bomb extends Entity
 	
 	private void explode()
 	{
-		for(int i = 0; i < explosionShape.length; i++)
+		Vec2[][] rays = new Vec2[4][2];
+		
+		float x = body.getPosition().x;
+		float y = body.getPosition().y;
+		
+		Vec2 downRay = new Vec2(x, y + explosionRadius);
+		Vec2 upRay = new Vec2(x, y - explosionRadius);
+		Vec2 leftRay = new Vec2(x - explosionRadius, y);
+		Vec2 rightRay = new Vec2(x + explosionRadius, y);
+		
+		for(int i = 0; i < rays.length; i++)
 		{
-			AABB explosionAABB = explosionShape[i];
-			
-			for(int r = 0; r < level.numRows; r++)
-			{
-				for(int c = 0; c < level.numColumns; c++)
-				{
-					Tile tile = level.foregroundArray[c][r];
-					AABB tileAABB = tile.body.getFixtureList().getAABB(0);
-					
-					if(AABB.testOverlap(tileAABB, explosionAABB) && tile instanceof DestructibleTile)
-					{
-						
-						DestructibleTile dt = (DestructibleTile) tile;
-						dt.takeDamage(damage);
-					}
-				}
-			}
+			rays[i][0] = body.getPosition();
 		}
 		
-		alive = false;
+		rays[0][1] = downRay;
+		rays[1][1] = upRay;
+		rays[2][1] = leftRay;
+		rays[3][1] = rightRay;
+		
+		Explosion explosion = new Explosion(level, damage, rays);
+		level.explosions.add(explosion);
+		
+		active = false;
 	}
 }

@@ -17,7 +17,7 @@ public abstract class Entity
 	Body body;
 	Level level;
 	
-	boolean alive = true;
+	boolean active = true;
 	
 	public Entity(float x, float y, Level l)
 	{
@@ -27,6 +27,7 @@ public abstract class Entity
 
 		bodDef.position.set(x, y);
 		bodDef.type = BodyType.STATIC;
+		bodDef.userData = this;
 		
 		body = l.world.createBody(bodDef);
 		
