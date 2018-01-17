@@ -11,5 +11,7 @@
 	<classpathentry kind="lib" path="C:/Users/grant_000/workspace/BomBoi/libs/Slick2D/lib/slick.jar"/>
 	<classpathentry kind="lib" path="C:/Users/grant_000/workspace/BomBoi/libs/dom4j/dom4j-2.1.0.jar"/>
 	<classpathentry kind="lib" path="C:/Users/grant_000/workspace/BomBoi/libs/jbox2d/jbox2d-library-2.2.1.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/grant_000/workspace/BomBoi/libs/Totality/TotalityServer.jar"/>
+	<classpathentry kind="lib" path="C:/Users/grant_000/workspace/BomBoi/libs/gson/gson-2.8.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

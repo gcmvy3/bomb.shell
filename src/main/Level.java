@@ -7,6 +7,7 @@ import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.World;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.SlickException;
 
 public class Level 
 {
@@ -101,9 +102,6 @@ public class Level
 		
 		//Add characters
 		players = new ArrayList<Player>();
-		
-		Player player1 = new Player(1, 1, this);
-		players.add(player1);
 		
 		bombs = new ArrayList<Bomb>();
 		explosions = new ArrayList<Explosion>();
@@ -222,5 +220,11 @@ public class Level
 	public float metersToPixels(float meters)
 	{
 		return meters * pixelsPerMeter;
+	}
+	
+	public Player newPlayer() throws SlickException
+	{		
+		
+		return new Player(1, 1, this);
 	}
 }

@@ -8,12 +8,12 @@ import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.Filter;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Image;
-import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 
 public class Player extends Entity
 {
 	final String SPRITE_DIRECTORY = "assets" + File.separator + "characters" + File.separator;
+	final float JOYSTICK_DEADZONE = 0.1f;
 	
 	final float sizeRelativeToTile = 0.8f;
 	
@@ -21,11 +21,16 @@ public class Player extends Entity
 	float sizeInPixels;
 	float speed = 8.0f;
 	
+	double joystickX = 0f;
+	double joystickY = 0f;
+	
 	int maxHealth = 200;
 	int health = maxHealth;
 	
 	int attackDelay = 15;
 	int timeSinceAttack = 0;
+	
+	boolean dropBomb = false;
 	
 	Level level;
 	
@@ -36,8 +41,6 @@ public class Player extends Entity
 		super(x, y, l);
 		
 		level = l;
-		
-		loadSprite();
 		
 		body.setType(BodyType.DYNAMIC);
 		
@@ -63,6 +66,18 @@ public class Player extends Entity
 	
 	public void render()
 	{
+		if(sprite == null)
+		{
+			try 
+			{
+				loadSprite();
+			} 
+			catch (SlickException e) 
+			{
+				e.printStackTrace();
+			}
+		}
+		
 		int pixelsX = (int)level.metersToPixels(body.getPosition().x);
 		int pixelsY = (int)level.metersToPixels(body.getPosition().y);
 		
@@ -77,21 +92,25 @@ public class Player extends Entity
 	    float desiredXVel = 0;
 	    float desiredYVel = 0;
 	    
-		if(gc.getInput().isKeyDown(Input.KEY_W))
+	    //System.out.println("JoystickY: " + joystickY);
+	    
+		if(joystickY > JOYSTICK_DEADZONE)
 		{
-			desiredYVel = Math.min(currentVelocity.y - 0.1f, -speed);
+			//UP
+			desiredYVel = Math.min(currentVelocity.y - 0.1f, speed * (float)joystickY);
 		}
-		if(gc.getInput().isKeyDown(Input.KEY_A))
+		if(joystickX < -JOYSTICK_DEADZONE)
 		{
-			desiredXVel = Math.min(currentVelocity.x - 0.1f, -speed);
+			desiredXVel = Math.min(currentVelocity.x - 0.1f, speed * (float)joystickX);
 		}
-		if(gc.getInput().isKeyDown(Input.KEY_S))
+		if(joystickY < -JOYSTICK_DEADZONE)
 		{
-			desiredYVel = Math.max(currentVelocity.y - 0.1f, speed);
+			//DOWN
+			desiredYVel = Math.max(currentVelocity.y - 0.1f, -speed * (float)joystickY);
 		}
-		if(gc.getInput().isKeyDown(Input.KEY_D))
+		if(joystickX > JOYSTICK_DEADZONE)
 		{
-			desiredXVel = Math.max(currentVelocity.x - 0.1f, speed);
+			desiredXVel = Math.max(currentVelocity.x - 0.1f, speed * (float)joystickX);
 		}
 		
 	    float velChangeX = desiredXVel - currentVelocity.x;
@@ -102,16 +121,19 @@ public class Player extends Entity
 		
 		body.applyLinearImpulse(new Vec2(impulseX, impulseY), body.getWorldCenter());
 		
-		//Attack
-		
+		//Drop bombs
 		if(timeSinceAttack <= attackDelay)
 		{
 			timeSinceAttack++;
 		}
 
-		if(gc.getInput().isKeyDown(Input.KEY_SPACE) && timeSinceAttack > attackDelay)
+		if(dropBomb)
 		{
-			dropBomb();
+			if(timeSinceAttack > attackDelay)
+			{
+				dropBomb();
+			}
+			dropBomb = !dropBomb;
 		}
 	}
 	
