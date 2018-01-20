@@ -18,7 +18,6 @@ public class SplashScreen extends BasicGameState
 	@Override
 	public void init(GameContainer arg0, StateBasedGame game) throws SlickException 
 	{
-    	System.setOut(new TommyOut(System.out));
 	}
 	
 	@Override
@@ -45,18 +44,4 @@ public class SplashScreen extends BasicGameState
 		return SplashScreen.ID;
 	}
 
-}
-
-class TommyOut extends PrintStream
-{
-
-	public TommyOut(OutputStream out) {
-		super(out);
-	}
-
-	@Override
-	public void println(String x)
-	{
-		super.println(x + " Tommy was here!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-	}
 }
