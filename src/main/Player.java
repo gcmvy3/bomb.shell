@@ -14,7 +14,7 @@ import org.newdawn.slick.SlickException;
 public class Player extends Entity
 {
 	final String SPRITE_DIRECTORY = "assets" + File.separator + "characters" + File.separator;
-	final float JOYSTICK_DEADZONE = 0.1f;
+	final float JOYSTICK_DEADZONE = 0.5f;
 	
 	final float sizeRelativeToTile = 0.8f;
 	
@@ -167,7 +167,7 @@ public class Player extends Entity
 	public void takeDamage(int damage)
 	{
 		health -= damage;
-		if(health >= 0)
+		if(health <= 0)
 		{
 			//TODO destroy player here
 		}

@@ -84,7 +84,7 @@ public class Bomb extends Entity
 	
 	private void explode()
 	{
-		Vec2[][] rays = new Vec2[4][2];
+		Vec2[] rays = new Vec2[4];
 		
 		float x = body.getPosition().x;
 		float y = body.getPosition().y;
@@ -94,17 +94,12 @@ public class Bomb extends Entity
 		Vec2 leftRay = new Vec2(x - explosionRadius, y);
 		Vec2 rightRay = new Vec2(x + explosionRadius, y);
 		
-		for(int i = 0; i < rays.length; i++)
-		{
-			rays[i][0] = body.getPosition();
-		}
+		rays[0] = downRay;
+		rays[1] = upRay;
+		rays[2] = leftRay;
+		rays[3] = rightRay;
 		
-		rays[0][1] = downRay;
-		rays[1][1] = upRay;
-		rays[2][1] = leftRay;
-		rays[3][1] = rightRay;
-		
-		Explosion explosion = new Explosion(level, damage, rays);
+		Explosion explosion = new Explosion(x, y, level, damage, rays, explosionThickness);
 		level.explosions.add(explosion);
 		
 		active = false;

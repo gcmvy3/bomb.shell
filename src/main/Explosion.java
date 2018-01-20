@@ -6,25 +6,43 @@ import java.util.Collections;
 import org.jbox2d.callbacks.RayCastCallback;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Fixture;
+import org.newdawn.slick.Image;
 
 public class Explosion implements RayCastCallback
 {
-	final int DURATION = 5;
+	final int DURATION = 10;
 	int age = 0;
-
-	Level level;
 	int damage;
-	Vec2[][] rays;
+	float x; //Center of the explosion
+	float y;
+	float thickness = 0;
+	
+	int rayIndex; //Temp variable used for calculating ray lengths
+	
+	Level level;
+	Vec2[] rays;
+	float[] rayLengths;
 
 	boolean active = true;
 	
 	ArrayList<RayCollision> collisions;
 	
-	public Explosion(Level l, int damage, Vec2[][] rays) 
+	Image sprite;
+	
+	public Explosion(float x, float y, Level l, int damage, Vec2[] rays, float thickness) 
 	{
+		this.x = x;
+		this.y = y;
 		this.level = l;
 		this.damage = damage;
 		this.rays = rays;
+		this.thickness = l.metersToPixels(thickness);
+		
+		rayLengths = new float[rays.length];
+		for(int i = 0; i < rayLengths.length; i++)
+		{
+			rayLengths[i] = 1;
+		}
 	}
 	
 	public void update()
@@ -42,38 +60,67 @@ public class Explosion implements RayCastCallback
 	
 	public void render()
 	{
+		if(sprite == null)
+		{
+			loadSprite();
+		}
 		
+		for(int i = 0; i < rays.length; i++)
+		{
+			float angle = getAngleTo(rays[i].x, rays[i].y);
+			
+			float width = Math.abs(x - rays[i].x);
+			float height = Math.abs(y - rays[i].y);
+			
+			float xPixels = level.metersToPixels(x);
+			float yPixels = level.metersToPixels(y);
+			
+			float length = level.metersToPixels((float)Math.sqrt((width * width) + (height * height)));
+			length *= rayLengths[i];
+			
+			sprite.setRotation(angle);
+			
+			sprite.draw(xPixels, yPixels - thickness / 2, length, thickness);
+			
+			sprite.setRotation(0);
+		}
+	}
+	
+	private void loadSprite()
+	{
+		sprite = SpriteManager.getSprite("explosion1");
+		
+		sprite.setCenterOfRotation(0, thickness / 2);
 	}
 	
 	private void dealDamage()
 	{
-		collisions = new ArrayList<RayCollision>();
-		
 		//Calculate raycast
 		for(int i = 0; i < rays.length; i++)
 		{
-			Vec2[] ray = rays[i];
+			rayIndex = i;
 			
-			level.world.raycast(this, ray[0], ray[1]);
-		}
-		
-		Collections.sort(collisions);
-		
-		for(RayCollision rc : collisions)
-		{
-			if(rc.entity instanceof IndestructibleTile)
+			collisions = new ArrayList<RayCollision>();
+			level.world.raycast(this, new Vec2(x, y), rays[i]);
+			
+			Collections.sort(collisions);
+			
+			for(RayCollision rc : collisions)
 			{
-				break;
-			}
-			else if(rc.entity instanceof DestructibleTile)
-			{
-				DestructibleTile dt = (DestructibleTile)rc.entity;
-				dt.takeDamage(damage);
-			}
-			else if(rc.entity instanceof Player)
-			{
-				Player p = (Player)rc.entity;
-				p.takeDamage(damage);
+				if(rc.entity instanceof IndestructibleTile)
+				{
+					break;
+				}
+				else if(rc.entity instanceof DestructibleTile)
+				{
+					DestructibleTile dt = (DestructibleTile)rc.entity;
+					dt.takeDamage(damage);
+				}
+				else if(rc.entity instanceof Player)
+				{
+					Player p = (Player)rc.entity;
+					p.takeDamage(damage);
+				}
 			}
 		}
 	}
@@ -84,9 +131,29 @@ public class Explosion implements RayCastCallback
 	{
 		Entity entity = (Entity)fixture.getBody().getUserData();
 		
+		if(entity instanceof IndestructibleTile)
+		{
+			if(fraction < rayLengths[rayIndex])
+			{
+				rayLengths[rayIndex] = fraction;
+			}
+		}
+		
 		RayCollision collision = new RayCollision(entity, fraction);
 		collisions.add(collision);
 		
 		return 1;
+	}
+	
+	public float getAngleTo(float targetX, float targetY) 
+	{
+	    float angle = (float) Math.toDegrees(Math.atan2(targetY - y, targetX - x));
+
+	    if(angle < 0)
+	    {
+	        angle += 360;
+	    }
+
+	    return angle;
 	}
 }
