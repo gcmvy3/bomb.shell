@@ -103,6 +103,12 @@ public class Level
 		//Add characters
 		players = new ArrayList<Player>();
 		
+		if(!BomBoiGame.multiplayer)
+		{
+			Player p = new Player(1, 1, this);
+			players.add(p);
+		}
+		
 		bombs = new ArrayList<Bomb>();
 		explosions = new ArrayList<Explosion>();
 	}

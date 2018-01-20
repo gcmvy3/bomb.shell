@@ -87,11 +87,6 @@ public class Explosion implements RayCastCallback
 		RayCollision collision = new RayCollision(entity, fraction);
 		collisions.add(collision);
 		
-		if(entity instanceof IndestructibleTile)
-		{			
-			return fraction;
-		}
-		
 		return 1;
 	}
 }

@@ -11,6 +11,8 @@ public class Singleplayer extends BasicGameState
 {
 	public static final int ID = 3;
 	
+	Level level;
+	
 	@Override
 	public void init(GameContainer arg0, StateBasedGame arg1) throws SlickException 
 	{
@@ -21,17 +23,31 @@ public class Singleplayer extends BasicGameState
 	public void enter(GameContainer gc, StateBasedGame game)
 	{
 		System.out.println("Entering singleplayer");
+		
+		level = BomBoiGame.level;
+		try 
+		{
+			level.init();
+		} 
+		catch (Exception e) 
+		{
+			//If the world cannot be loaded, return to the main menu
+			game.enterState(1);
+			e.printStackTrace();
+		}
 	}
 
 	@Override
-	public void render(GameContainer arg0, StateBasedGame arg1, Graphics arg2) throws SlickException 
+	public void render(GameContainer gc, StateBasedGame game, Graphics g) throws SlickException 
 	{
-		
+		level.render(g, 0, 0);
 	}
 
 	@Override
 	public void update(GameContainer gc, StateBasedGame game, int arg2) throws SlickException 
 	{
+		level.update(gc);
+		
 		if(gc.getInput().isKeyDown(Input.KEY_ESCAPE))
 		{
 			game.enterState(1);

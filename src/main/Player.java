@@ -8,6 +8,7 @@ import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.Filter;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 
 public class Player extends Entity
@@ -94,23 +95,27 @@ public class Player extends Entity
 	    
 	    //System.out.println("JoystickY: " + joystickY);
 	    
-		if(joystickY > JOYSTICK_DEADZONE)
-		{
-			//UP
-			desiredYVel = Math.min(currentVelocity.y - 0.1f, speed * (float)joystickY);
-		}
-		if(joystickX < -JOYSTICK_DEADZONE)
-		{
-			desiredXVel = Math.min(currentVelocity.x - 0.1f, speed * (float)joystickX);
-		}
-		if(joystickY < -JOYSTICK_DEADZONE)
+	    Input input = gc.getInput();
+	    
+		if(joystickY < -JOYSTICK_DEADZONE || input.isKeyDown(Input.KEY_S))
 		{
 			//DOWN
-			desiredYVel = Math.max(currentVelocity.y - 0.1f, -speed * (float)joystickY);
+			desiredYVel = Math.max(currentVelocity.y - 0.1f, speed);
 		}
-		if(joystickX > JOYSTICK_DEADZONE)
+		if(joystickX < -JOYSTICK_DEADZONE || input.isKeyDown(Input.KEY_A))
 		{
-			desiredXVel = Math.max(currentVelocity.x - 0.1f, speed * (float)joystickX);
+			//LEFT
+			desiredXVel = Math.min(currentVelocity.x - 0.1f, -speed);
+		}
+		if(joystickY > JOYSTICK_DEADZONE || input.isKeyDown(Input.KEY_W))
+		{
+			//UP
+			desiredYVel = Math.min(currentVelocity.y - 0.1f, -speed);
+		}
+		if(joystickX > JOYSTICK_DEADZONE || input.isKeyDown(Input.KEY_D))
+		{
+			//RIGHT
+			desiredXVel = Math.max(currentVelocity.x - 0.1f, speed);
 		}
 		
 	    float velChangeX = desiredXVel - currentVelocity.x;
@@ -122,6 +127,12 @@ public class Player extends Entity
 		body.applyLinearImpulse(new Vec2(impulseX, impulseY), body.getWorldCenter());
 		
 		//Drop bombs
+		
+		if(input.isKeyDown(Input.KEY_SPACE))
+		{
+			dropBomb = true;
+		}
+		
 		if(timeSinceAttack <= attackDelay)
 		{
 			timeSinceAttack++;
