@@ -12,7 +12,9 @@ public abstract class Entity
 	public final static int NONE = 0x0000;
 	public final static int SOLID_TILE = 0x0002;
 	public final static int NONSOLID_TILE = 0x0003;
-	public final static int CHARACTER = 0x0004;
+	public final static int PLAYER = 0x0004;
+	public final static int BOMB = 0x0005;
+	public final static int LEVEL_BOUNDARY = 0x0006;
 	
 	Body body;
 	Level level;
@@ -50,5 +52,16 @@ public abstract class Entity
 		fixDef.shape = s;
 
 		body.createFixture(fixDef);
+	}
+	
+	public float getMetersTo(Entity other)
+	{
+		float x1 = body.getPosition().x;
+		float y1 = body.getPosition().y;
+		
+		float x2 = other.body.getPosition().x;
+		float y2 = other.body.getPosition().y;
+		
+		return (float)Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
 	}
 }

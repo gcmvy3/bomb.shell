@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
@@ -74,6 +75,12 @@ public class Multiplayer extends BasicGameState
 					
 					Player newPlayer = level.newPlayer();
 					
+					int r = (int)(Math.random() * 255);
+					int g = (int)(Math.random() * 200);
+					int b = (int)(Math.random() * 255);
+					
+					newPlayer.color = new Color(r, g, b);
+					
 					playerMap.put(uuid, newPlayer);
 
 					level.players = new ArrayList<Player>(playerMap.values());
@@ -90,9 +97,12 @@ public class Multiplayer extends BasicGameState
 			@Override
 			public void onDisconnect(UUID uuid)
 			{
+				System.out.println("Disconnecting player!");
+				
 				Player p = playerMap.get(uuid);
-				p.active = false;
+				p.destroy();
 				playerMap.remove(uuid);
+				level.players = new ArrayList<Player>(playerMap.values());
 			}
 		});
 
@@ -126,7 +136,10 @@ public class Multiplayer extends BasicGameState
 	@Override
 	public void render(GameContainer arg0, StateBasedGame arg1, Graphics g) throws SlickException 
 	{
-		level.render(g, 0, 0);
+		int x = BomBoiGame.WIDTH - level.getWidth() / 2;
+		int y = BomBoiGame.HEIGHT - level.getHeight() / 2;
+		
+		level.render(g, x, y);
 	}
 
 	@Override

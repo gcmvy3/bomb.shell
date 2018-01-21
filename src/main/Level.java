@@ -3,18 +3,23 @@ package main;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import org.jbox2d.callbacks.ContactImpulse;
+import org.jbox2d.callbacks.ContactListener;
+import org.jbox2d.collision.Manifold;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.World;
+import org.jbox2d.dynamics.contacts.Contact;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 
-public class Level 
+public class Level
 {
 	final float TIME_STEP = 1.0f / 60.0f;
+	final float SCALE = 3.1f;
 	final int POSITION_ITERATION = 10;
 	final int VELOCITY_ITERATION = 10;
-	
+
 	float pixelsPerMeter;
 	
 	public String name;
@@ -60,7 +65,7 @@ public class Level
 			throw new Exception();
 		}
 		
-		tileSizeInPixels = tileMap.tileSize;
+		tileSizeInPixels = tileset.tileSize;
 		pixelsPerMeter = tileSizeInPixels;
 		tileSizeInMeters = pixelsToMeters(tileSizeInPixels);
 		
@@ -105,7 +110,7 @@ public class Level
 		
 		if(!BomBoiGame.multiplayer)
 		{
-			Player p = new Player(1, 1, this);
+			Player p = newPlayer();
 			players.add(p);
 		}
 		
@@ -131,6 +136,8 @@ public class Level
 
 	public void render(Graphics g, int x, int y)
 	{
+		g.scale(SCALE, SCALE);
+		
 		for(int r = 0; r < numRows; r++)
 		{
 			for(int c = 0; c < numColumns; c++)
@@ -160,7 +167,10 @@ public class Level
 		
 		for(Player p : players)
 		{
-			p.render();
+			if(p.active)
+			{
+				p.render();
+			}
 		}
 		
 		for(Explosion e : explosions)
@@ -232,5 +242,15 @@ public class Level
 	{		
 		
 		return new Player(1, 1, this);
+	}
+	
+	public int getWidth()
+	{
+		return (int)(numColumns * tileSizeInPixels);
+	}
+	
+	public int getHeight()
+	{
+		return (int)(numRows * tileSizeInPixels);
 	}
 }

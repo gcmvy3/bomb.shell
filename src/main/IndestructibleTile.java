@@ -11,7 +11,7 @@ public class IndestructibleTile extends Tile
 		//Setup collision filtering
 		Filter filter = new Filter();
 		filter.categoryBits = Entity.SOLID_TILE;
-		filter.maskBits = Entity.CHARACTER;
+		filter.maskBits = Entity.PLAYER;
 		
 		body.getFixtureList().setFilterData(filter);
 	}

@@ -15,8 +15,8 @@ public class LevelBoundary extends Entity
 		
 		//Setup collision filtering
 		Filter filter = new Filter();
-		filter.categoryBits = Entity.SOLID_TILE;
-		filter.maskBits = Entity.CHARACTER;
+		filter.categoryBits = Entity.LEVEL_BOUNDARY;
+		filter.maskBits = Entity.PLAYER | Entity.BOMB;
 		
 		body.getFixtureList().setFilterData(filter);
 	}

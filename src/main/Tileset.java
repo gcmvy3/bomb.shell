@@ -50,13 +50,16 @@ public class Tileset
 	        
 	        int id = Integer.parseInt(tile.attributeValue("id"));
 	        
-	        Element imageElement = (Element) tile.elements().get(0);
-	        
-	        String source = imageElement.attributeValue("source");
-	        
-	        Image image = new Image(directory.getPath() + File.separator + source);
-	        
-	        images.put(id, image);
+		    for ( Iterator<Element> j = tile.elementIterator("image"); j.hasNext(); ) 
+		    {
+		        Element imageElement = (Element) j.next();
+		        
+		        String source = imageElement.attributeValue("source");
+		        
+		        Image image = new Image(directory.getPath() + File.separator + source);
+		        
+		        images.put(id, image);
+		    }
 	    }
 	}
 	

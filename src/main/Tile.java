@@ -14,6 +14,8 @@ public class Tile extends Entity
 	public int row;
 	public int column;
 	
+	public boolean spawn = false;
+	
 	public Image sprite;
 	
 	public Level level;
@@ -50,6 +52,17 @@ public class Tile extends Entity
 		{
 			int pixelsX = (int)level.metersToPixels(body.getPosition().x);
 			int pixelsY = (int)level.metersToPixels(body.getPosition().y);
+			
+			sprite.draw(pixelsX - sizeInPixels / 2, pixelsY - sizeInPixels / 2);
+		}
+	}
+	
+	public void render(Graphics g, int x, int y)
+	{
+		if(sprite != null)
+		{
+			int pixelsX = x + (int)level.metersToPixels(body.getPosition().x);
+			int pixelsY = y + (int)level.metersToPixels(body.getPosition().y);
 			
 			sprite.draw(pixelsX - sizeInPixels / 2, pixelsY - sizeInPixels / 2);
 		}

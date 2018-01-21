@@ -6,6 +6,7 @@ import org.jbox2d.collision.shapes.CircleShape;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.Filter;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
@@ -25,13 +26,15 @@ public class Player extends Entity
 	double joystickX = 0f;
 	double joystickY = 0f;
 	
-	int maxHealth = 200;
+	int maxHealth = 100;
 	int health = maxHealth;
 	
-	int attackDelay = 15;
+	int attackDelay = 30;
 	int timeSinceAttack = 0;
 	
 	boolean dropBomb = false;
+	
+	public Color color = null;
 	
 	Level level;
 	
@@ -54,8 +57,8 @@ public class Player extends Entity
 		
 		//Setup collision filtering
 		Filter filter = new Filter();
-		filter.categoryBits = Entity.CHARACTER;
-		filter.maskBits = Entity.SOLID_TILE;
+		filter.categoryBits = Entity.PLAYER;
+		filter.maskBits = Entity.SOLID_TILE | Entity.BOMB | Entity.LEVEL_BOUNDARY | Entity.PLAYER;
 		
 		body.getFixtureList().setFilterData(filter);
 	}
@@ -82,11 +85,16 @@ public class Player extends Entity
 		int pixelsX = (int)level.metersToPixels(body.getPosition().x);
 		int pixelsY = (int)level.metersToPixels(body.getPosition().y);
 		
-		sprite.draw(pixelsX - sizeInPixels / 2, pixelsY - sizeInPixels / 2, sizeInPixels, sizeInPixels);
+		sprite.draw(pixelsX - sizeInPixels / 2, pixelsY - sizeInPixels / 2, sizeInPixels, sizeInPixels, color);
 	}
 	
 	public void update(GameContainer gc)
 	{	
+		if(!active)
+		{
+			return;
+		}
+		
 		//Movement
 		Vec2 currentVelocity = body.getLinearVelocity();
 		
@@ -169,7 +177,20 @@ public class Player extends Entity
 		health -= damage;
 		if(health <= 0)
 		{
-			//TODO destroy player here
+			destroy();
 		}
+	}
+	
+	public void respawn()
+	{
+		health = maxHealth;
+		
+		active = true;
+	}
+	
+	public void destroy()
+	{
+		active = false;
+		level.world.destroyBody(body);
 	}
 }

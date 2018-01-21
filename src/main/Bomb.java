@@ -1,7 +1,10 @@
 package main;
 
-import org.jbox2d.collision.AABB;
+import org.jbox2d.collision.shapes.CircleShape;
 import org.jbox2d.common.Vec2;
+import org.jbox2d.dynamics.BodyType;
+import org.jbox2d.dynamics.Filter;
+import org.jbox2d.dynamics.contacts.ContactEdge;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
@@ -13,7 +16,7 @@ public class Bomb extends Entity
 	
 	final String PATH_TO_SPRITE = "assets/sprites/bomb1.png";
 	
-	int delay = 100;
+	int delay = 120;
 	int age = 0;
 	int damage = 100;
 	float explosionRadius;
@@ -26,7 +29,7 @@ public class Bomb extends Entity
 	
 	public Image sprite;
 	
-	AABB[] explosionShape;
+	boolean collisionEnabled = false;
 	
 	public Bomb(float x, float y, Level l, Player parent) throws SlickException 
 	{
@@ -40,38 +43,58 @@ public class Bomb extends Entity
 		sprite = new Image(PATH_TO_SPRITE);
 		
 		initExplosionShape();
+		
+		CircleShape boundingBox = new CircleShape();
+		boundingBox.setRadius(sizeInMeters / 2);
+		setShape(boundingBox);
+		
+		Filter filter = new Filter();
+		filter.categoryBits = Entity.BOMB;
+		filter.maskBits = Entity.NONE;
+		body.getFixtureList().setFilterData(filter);
 	}
 	
 	private void initExplosionShape()
 	{
 		explosionRadius = level.tileSizeInMeters * RADIUS_IN_BLOCKS;
 		explosionThickness = level.tileSizeInMeters * EXPLOSION_THICKNESS_RELATIVE_TO_TILE;
-		
-		float x = body.getPosition().x;
-		float y = body.getPosition().y;
-		
-		explosionShape = new AABB[2];
-		
-		Vec2 horizontalBottomLeft = new Vec2(x - explosionRadius, y - explosionThickness / 2);
-		Vec2 horizontalTopRight = new Vec2(x + explosionRadius, y + explosionThickness / 2);
-		
-		Vec2 verticalBottomLeft = new Vec2(x - explosionThickness / 2, y - explosionRadius);
-		Vec2 verticalTopRight = new Vec2(x + explosionThickness / 2, y + explosionRadius);
-		
-		AABB horizontal = new AABB(horizontalBottomLeft, horizontalTopRight);
-		AABB vertical = new AABB(verticalBottomLeft, verticalTopRight);
-		
-		explosionShape[0] = horizontal;
-		explosionShape[1] = vertical;
 	}
 	
 	public void update()
-	{
-		age++;
-		if(age >= delay)
+	{		
+		if(active)
 		{
-			explode();
+			if(!collisionEnabled)
+			{
+				CircleShape boundingBox = (CircleShape)body.getFixtureList().getShape();
+				CircleShape parentBoundingBox = (CircleShape)parent.body.getFixtureList().getShape();
+				
+				float maxParentDistance = boundingBox.getRadius() + parentBoundingBox.getRadius();
+				
+				if(getMetersTo(parent) > maxParentDistance)
+				{
+					enableCollision();
+				}
+			}
+			
+			age++;
+			if(age >= delay)
+			{
+				explode();
+			}
 		}
+	}
+	
+	public void enableCollision()
+	{
+		collisionEnabled = true;
+		
+		//Setup collision filtering
+		Filter filter = new Filter();
+		filter.categoryBits = Entity.BOMB;
+		filter.maskBits = Entity.PLAYER | Entity.LEVEL_BOUNDARY;
+
+		body.getFixtureList().setFilterData(filter);
 	}
 	
 	public void render()
@@ -103,5 +126,7 @@ public class Bomb extends Entity
 		level.explosions.add(explosion);
 		
 		active = false;
+		
+		level.world.destroyBody(body);
 	}
 }

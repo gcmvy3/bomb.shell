@@ -10,7 +10,7 @@ import org.newdawn.slick.Image;
 
 public class Explosion implements RayCastCallback
 {
-	final int DURATION = 10;
+	final int DURATION = 20;
 	int age = 0;
 	int damage;
 	float x; //Center of the explosion
@@ -65,6 +65,8 @@ public class Explosion implements RayCastCallback
 			loadSprite();
 		}
 		
+		sprite.setCenterOfRotation(0, thickness / 2);
+		
 		for(int i = 0; i < rays.length; i++)
 		{
 			float angle = getAngleTo(rays[i].x, rays[i].y);
@@ -89,8 +91,6 @@ public class Explosion implements RayCastCallback
 	private void loadSprite()
 	{
 		sprite = SpriteManager.getSprite("explosion1");
-		
-		sprite.setCenterOfRotation(0, thickness / 2);
 	}
 	
 	private void dealDamage()
@@ -131,7 +131,7 @@ public class Explosion implements RayCastCallback
 	{
 		Entity entity = (Entity)fixture.getBody().getUserData();
 		
-		if(entity instanceof IndestructibleTile)
+		if(entity instanceof IndestructibleTile || entity instanceof LevelBoundary)
 		{
 			if(fraction < rayLengths[rayIndex])
 			{

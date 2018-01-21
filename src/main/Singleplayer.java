@@ -40,7 +40,12 @@ public class Singleplayer extends BasicGameState
 	@Override
 	public void render(GameContainer gc, StateBasedGame game, Graphics g) throws SlickException 
 	{
-		level.render(g, 0, 0);
+		int x = (BomBoiGame.WIDTH / 2) - (level.getWidth() / 2);
+		int y = (BomBoiGame.HEIGHT / 2) - (level.getHeight() / 2);
+		
+		//System.out.println("X: " + x);
+		
+		level.render(g, x, y);
 	}
 
 	@Override
