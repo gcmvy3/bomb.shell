@@ -61,8 +61,8 @@ public class Multiplayer extends BasicGameState
 	
 	private void initTotality()
 	{
-		TotalityServer.instance.addControllerElement("button1", ControllerElementType.BUTTON, 0.1f, 0.1f, 0.2f, 0.2f);
-		TotalityServer.instance.addControllerElement("joystick1", ControllerElementType.JOYSTICK, 0.6f, 0.3f, 0.4f, 0.4f);
+		TotalityServer.instance.addControllerElement("button1", ControllerElementType.BUTTON, 0.0f, 0.0f, 1.0f, 0.5f);
+		TotalityServer.instance.addControllerElement("joystick1", ControllerElementType.JOYSTICK, 0.0f, 0.5f, 1.0f, 0.5f);
 
 		TotalityServer.instance.addConnectListener(new ConnectListener()
 		{
