@@ -23,8 +23,8 @@ public class Player extends Entity
 	float sizeInPixels;
 	float speed = 8.0f;
 	
-	double joystickX = 0f;
-	double joystickY = 0f;
+	public double joystickX = 0f;
+	public double joystickY = 0f;
 	
 	int maxHealth = 100;
 	int health = maxHealth;
@@ -32,7 +32,7 @@ public class Player extends Entity
 	int attackDelay = 30;
 	int timeSinceAttack = 0;
 	
-	boolean dropBomb = false;
+	public boolean dropBomb = false;
 	
 	public Color color = null;
 	

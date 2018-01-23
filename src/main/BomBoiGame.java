@@ -6,6 +6,12 @@ import org.newdawn.slick.ScalableGame;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 
+import gamestates.LevelSelect;
+import gamestates.MainMenu;
+import gamestates.Multiplayer;
+import gamestates.Singleplayer;
+import gamestates.SplashScreen;
+
 public class BomBoiGame extends StateBasedGame
 {
     // Game state identifiers

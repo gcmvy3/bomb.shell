@@ -1,4 +1,4 @@
-package main;
+package gamestates;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -9,6 +9,10 @@ import org.newdawn.slick.gui.ComponentListener;
 import org.newdawn.slick.gui.MouseOverArea;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
+
+import main.BomBoiGame;
+import main.Level;
+import main.LevelFactory;
 
 public class LevelSelect extends BasicGameState
 {

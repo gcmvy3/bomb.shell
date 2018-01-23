@@ -1,4 +1,4 @@
-package main;
+package gamestates;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,6 +12,9 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
+import main.BomBoiGame;
+import main.Level;
+import main.Player;
 import self.totality.TotalityServer;
 import self.totality.webSocketServer.controller.Button;
 import self.totality.webSocketServer.controller.ControllerElement;
