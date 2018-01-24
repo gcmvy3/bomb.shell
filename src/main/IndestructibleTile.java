@@ -2,6 +2,8 @@ package main;
 
 import org.jbox2d.dynamics.Filter;
 
+import tiles.Tile;
+
 public class IndestructibleTile extends Tile
 {
 	public IndestructibleTile(float x, float y, int row, int column, int size, int id, Level level) 

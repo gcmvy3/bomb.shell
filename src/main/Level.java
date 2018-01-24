@@ -3,15 +3,15 @@ package main;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import org.jbox2d.callbacks.ContactImpulse;
-import org.jbox2d.callbacks.ContactListener;
-import org.jbox2d.collision.Manifold;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.World;
-import org.jbox2d.dynamics.contacts.Contact;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.SlickException;
+
+import tiles.Tile;
+import tiles.TileFactory;
+import tiles.TileMap;
+import tiles.Tileset;
 
 public class Level
 {
@@ -34,8 +34,6 @@ public class Level
 	
 	public Tile[][] backgroundArray;
 	public Tile[][] foregroundArray;
-	
-	public ArrayList<Player> players;
 	
 	public ArrayList<Bomb> bombs;
 	
@@ -105,15 +103,6 @@ public class Level
 			}
 		}
 		
-		//Add characters
-		players = new ArrayList<Player>();
-		
-		if(!BomBoiGame.multiplayer)
-		{
-			Player p = newPlayer();
-			players.add(p);
-		}
-		
 		bombs = new ArrayList<Bomb>();
 		explosions = new ArrayList<Explosion>();
 	}
@@ -165,14 +154,6 @@ public class Level
 			b.render();
 		}
 		
-		for(Player p : players)
-		{
-			if(p.active)
-			{
-				p.render();
-			}
-		}
-		
 		for(Explosion e : explosions)
 		{
 			e.render();
@@ -198,12 +179,6 @@ public class Level
 			{
 				bombIter.remove();
 			}
-		}
-		
-		
-		for(Player p : players)
-		{
-			p.update(gc);
 		}
 		
 		Iterator<Explosion> explosionIter = explosions.iterator();
@@ -236,12 +211,6 @@ public class Level
 	public float metersToPixels(float meters)
 	{
 		return meters * pixelsPerMeter;
-	}
-	
-	public Player newPlayer() throws SlickException
-	{		
-		
-		return new Player(1, 1, this);
 	}
 	
 	public int getWidth()

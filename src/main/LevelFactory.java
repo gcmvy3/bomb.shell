@@ -3,6 +3,9 @@ package main;
 import java.io.File;
 import java.util.ArrayList;
 
+import tiles.TileMap;
+import tiles.Tileset;
+
 public class LevelFactory 
 {
 	private final static String TILEMAP_DIRECTORY = "assets/tilemaps";

@@ -16,10 +16,10 @@ public abstract class Entity
 	public final static int BOMB = 0x0005;
 	public final static int LEVEL_BOUNDARY = 0x0006;
 	
-	Body body;
-	Level level;
+	public Body body;
+	public Level level;
 	
-	boolean active = true;
+	public boolean active = true;
 	
 	public Entity(float x, float y, Level l)
 	{

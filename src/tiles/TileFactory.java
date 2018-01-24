@@ -1,4 +1,9 @@
-package main;
+package tiles;
+
+import main.BackgroundTile;
+import main.DestructibleTile;
+import main.IndestructibleTile;
+import main.Level;
 
 public class TileFactory 
 {

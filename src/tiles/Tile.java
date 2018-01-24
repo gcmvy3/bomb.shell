@@ -1,9 +1,12 @@
-package main;
+package tiles;
 
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.dynamics.Filter;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
+
+import main.Entity;
+import main.Level;
 
 public class Tile extends Entity
 {

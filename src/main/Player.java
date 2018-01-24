@@ -8,6 +8,7 @@ import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.Filter;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
@@ -20,7 +21,6 @@ public class Player extends Entity
 	final float sizeRelativeToTile = 0.8f;
 	
 	float sizeInMeters;
-	float sizeInPixels;
 	float speed = 8.0f;
 	
 	public double joystickX = 0f;
@@ -33,6 +33,8 @@ public class Player extends Entity
 	int timeSinceAttack = 0;
 	
 	public boolean dropBomb = false;
+	
+	public String name = "";
 	
 	public Color color = null;
 	
@@ -49,7 +51,6 @@ public class Player extends Entity
 		body.setType(BodyType.DYNAMIC);
 		
 		sizeInMeters = l.tileSizeInMeters * sizeRelativeToTile;
-		sizeInPixels = l.metersToPixels(sizeInMeters);
 		
 		CircleShape boundingBox = new CircleShape();
 		boundingBox.setRadius(sizeInMeters / 2);
@@ -68,7 +69,7 @@ public class Player extends Entity
 		sprite = new Image(SPRITE_DIRECTORY + "default" + File.separator + "sprite1.png");
 	}
 	
-	public void render()
+	public void render(Graphics g)
 	{
 		if(sprite == null)
 		{
@@ -82,10 +83,8 @@ public class Player extends Entity
 			}
 		}
 		
-		int pixelsX = (int)level.metersToPixels(body.getPosition().x);
-		int pixelsY = (int)level.metersToPixels(body.getPosition().y);
-		
-		sprite.draw(pixelsX - sizeInPixels / 2, pixelsY - sizeInPixels / 2, sizeInPixels, sizeInPixels, color);
+		sprite.draw(getPixelsX() - getSizeInPixels() / 2, getPixelsY() - getSizeInPixels() / 2, 
+					getSizeInPixels(), getSizeInPixels(), color);
 	}
 	
 	public void update(GameContainer gc)
@@ -113,12 +112,12 @@ public class Player extends Entity
 		if(joystickX < -JOYSTICK_DEADZONE || input.isKeyDown(Input.KEY_A))
 		{
 			//LEFT
-			desiredXVel = Math.min(currentVelocity.x - 0.1f, -speed);
+			desiredXVel = Math.min(currentVelocity.x + 0.1f, -speed);
 		}
 		if(joystickY > JOYSTICK_DEADZONE || input.isKeyDown(Input.KEY_W))
 		{
 			//UP
-			desiredYVel = Math.min(currentVelocity.y - 0.1f, -speed);
+			desiredYVel = Math.min(currentVelocity.y + 0.1f, -speed);
 		}
 		if(joystickX > JOYSTICK_DEADZONE || input.isKeyDown(Input.KEY_D))
 		{
@@ -192,5 +191,20 @@ public class Player extends Entity
 	{
 		active = false;
 		level.world.destroyBody(body);
+	}
+	
+	public float getPixelsX()
+	{
+		return level.metersToPixels(body.getPosition().x);
+	}
+	
+	public float getPixelsY()
+	{
+		return level.metersToPixels(body.getPosition().y);
+	}
+	
+	public float getSizeInPixels()
+	{
+		return level.metersToPixels(sizeInMeters);
 	}
 }

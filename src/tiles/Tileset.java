@@ -1,4 +1,4 @@
-package main;
+package tiles;
 
 import java.io.File;
 import java.net.URL;

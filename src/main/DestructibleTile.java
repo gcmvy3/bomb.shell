@@ -2,6 +2,9 @@ package main;
 
 import org.jbox2d.dynamics.Filter;
 
+import tiles.Tile;
+import tiles.TileFactory;
+
 public class DestructibleTile extends Tile
 {
 	int maxHealth = 100;

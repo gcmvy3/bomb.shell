@@ -1,9 +1,12 @@
 package main;
 
+import java.awt.Font;
+
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.ScalableGame;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.state.StateBasedGame;
 
 import gamestates.LevelSelect;

@@ -1,4 +1,4 @@
-package main;
+package tiles;
 
 import java.io.File;
 import java.net.URL;
@@ -14,8 +14,8 @@ public class TileMap
 	
 	public String name;
 	
-	int numRows;
-	int numColumns;
+	public int numRows;
+	public int numColumns;
 	
 	public int tileSize;
 	

@@ -1,5 +1,6 @@
 package gamestates;
 
+import java.awt.Font;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
@@ -9,6 +10,7 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
@@ -31,6 +33,9 @@ public class Multiplayer extends BasicGameState
 	Level level;
 	
 	public static HashMap<UUID, Player> playerMap;
+	public static ArrayList<Player> playerList;
+	
+	TrueTypeFont playerNameFont;
 	
 	@Override
 	public void init(GameContainer arg0, StateBasedGame arg1) throws SlickException 
@@ -56,10 +61,10 @@ public class Multiplayer extends BasicGameState
 		}
 		
 		playerMap = new HashMap<UUID, Player>();
-		level.players = new ArrayList<Player>(playerMap.values());
+		playerList = new ArrayList<Player>(playerMap.values());
 		
 		initTotality();
-		TotalityServer.instance.start();
+		initFont();
 	}
 	
 	private void initTotality()
@@ -76,7 +81,10 @@ public class Multiplayer extends BasicGameState
 				{
 					System.out.println("New player connecting!");
 					
-					Player newPlayer = level.newPlayer();
+					//TODO spawn player on a spawn block
+					Player newPlayer = new Player(1, 1, level);
+					
+					newPlayer.name = "Anon";
 					
 					int r = (int)(Math.random() * 255);
 					int g = (int)(Math.random() * 200);
@@ -86,7 +94,7 @@ public class Multiplayer extends BasicGameState
 					
 					playerMap.put(uuid, newPlayer);
 
-					level.players = new ArrayList<Player>(playerMap.values());
+					playerList = new ArrayList<Player>(playerMap.values());
 				}
 				catch(SlickException e)
 				{
@@ -105,7 +113,7 @@ public class Multiplayer extends BasicGameState
 				Player p = playerMap.get(uuid);
 				p.destroy();
 				playerMap.remove(uuid);
-				level.players = new ArrayList<Player>(playerMap.values());
+				playerList = new ArrayList<Player>(playerMap.values());
 			}
 		});
 
@@ -134,8 +142,16 @@ public class Multiplayer extends BasicGameState
 				}
 			}
 		});
+		
+		TotalityServer.instance.start();
 	}
 
+	private void initFont()
+	{
+		Font f = new Font("Verdana", Font.BOLD, 32);
+		playerNameFont = new TrueTypeFont(f, true);
+	}
+	
 	@Override
 	public void render(GameContainer arg0, StateBasedGame arg1, Graphics g) throws SlickException 
 	{
@@ -143,12 +159,29 @@ public class Multiplayer extends BasicGameState
 		int y = BomBoiGame.HEIGHT - level.getHeight() / 2;
 		
 		level.render(g, x, y);
+		
+		for(Player p : playerList)
+		{
+			if(p.active)
+			{
+				p.render(g);
+				
+				float nameLength = playerNameFont.getWidth(p.name);
+				
+				playerNameFont.drawString(p.getPixelsX() - nameLength / 2, p.getPixelsY(), p.name);
+			}
+		}
 	}
 
 	@Override
 	public void update(GameContainer gc, StateBasedGame game, int arg2) throws SlickException 
 	{
 		level.update(gc);
+		
+		for(Player p : playerList)
+		{
+			p.update(gc);
+		}
 		
 		if(gc.getInput().isKeyDown(Input.KEY_ESCAPE))
 		{

@@ -3,6 +3,7 @@ package gamestates;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.gui.AbstractComponent;
 import org.newdawn.slick.gui.ComponentListener;
@@ -81,9 +82,13 @@ public class LevelSelect extends BasicGameState
 	}
 
 	@Override
-	public void update(GameContainer arg0, StateBasedGame arg1, int arg2) throws SlickException 
+	public void update(GameContainer gc, StateBasedGame game, int arg2) throws SlickException 
 	{
-		
+		//If escape is pressed, return to the main menu
+		if(gc.getInput().isKeyDown(Input.KEY_ESCAPE))
+		{
+			game.enterState(1);
+		}
 	}
 
 	@Override
