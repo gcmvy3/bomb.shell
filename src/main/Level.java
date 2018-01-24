@@ -9,7 +9,6 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 
 import tiles.Tile;
-import tiles.TileFactory;
 import tiles.TileMap;
 import tiles.Tileset;
 
@@ -57,13 +56,7 @@ public class Level
 		tileMap.init();
 		tileset.init();
 		
-		if(tileMap.tileSize != tileset.tileSize)
-		{
-			System.err.println("Tile sizes do not match!");
-			throw new Exception();
-		}
-		
-		tileSizeInPixels = tileset.tileSize;
+		tileSizeInPixels = tileMap.tileSize;
 		pixelsPerMeter = tileSizeInPixels;
 		tileSizeInMeters = pixelsToMeters(tileSizeInPixels);
 		
@@ -82,22 +75,27 @@ public class Level
 				float x = (c * tileSizeInMeters) + (tileSizeInMeters / 2);
 				float y = (r * tileSizeInMeters) + (tileSizeInMeters / 2);
 				
-				Tile bgTile = TileFactory.createTileById(x,
-														y,
-														r,
-														c,
-														tileSizeInMeters,
-														tileMap.background[c][r],
-														this);
+				int tileID = tileMap.background[c][r];
+				
+				if(tileset.getTileType(tileID) == null)
+				{
+					System.err.println("Tile id " + tileID + " not found in tileset!");
+					tileID = -1;
+				}
+				
+				Tile bgTile = new Tile(x, y, r, c, tileSizeInMeters, tileset.getTileType(tileID), this);
+				
 				backgroundArray[c][r] = bgTile;
 				
-				Tile fgTile = TileFactory.createTileById(x, 
-										y,
-										r,
-										c,
-										tileSizeInMeters,
-										tileMap.foreground[c][r],
-										this);
+				tileID = tileMap.foreground[c][r];
+				
+				if(tileset.getTileType(tileID) == null)
+				{
+					System.err.println("Tile id " + tileID + " not found in tileset!");
+					tileID = -1;
+				}
+				
+				Tile fgTile = new Tile(x, y, r, c, tileSizeInMeters, tileset.getTileType(tileID), this);
 				
 				foregroundArray[c][r] = fgTile;
 			}
@@ -132,17 +130,13 @@ public class Level
 			for(int c = 0; c < numColumns; c++)
 			{
 				//Draw background
-				int backgroundID = backgroundArray[c][r].id;
-				
-				if(backgroundID != 0)
+				if(backgroundArray[c][r].tileType.visible)
 				{
 					backgroundArray[c][r].render(g);
 				}
 				
 				//Draw foreground
-				int foregroundID = foregroundArray[c][r].id;
-				
-				if(foregroundID != 0)
+				if(foregroundArray[c][r].tileType.visible)
 				{
 					foregroundArray[c][r].render(g);
 				}

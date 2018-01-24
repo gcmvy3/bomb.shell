@@ -5,6 +5,8 @@ import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.FixtureDef;
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Graphics;
 
 public abstract class Entity
 {	
@@ -21,6 +23,9 @@ public abstract class Entity
 	
 	public boolean active = true;
 	
+	public int health;
+	public int maxHealth;
+	
 	public Entity(float x, float y, Level l)
 	{
 		level = l;
@@ -35,12 +40,12 @@ public abstract class Entity
 		
 	}
 	
-	public void update()
+	public void update(GameContainer gc)
 	{
 		
 	}
 	
-	public void render()
+	public void render(Graphics g)
 	{
 		
 	}
@@ -63,5 +68,15 @@ public abstract class Entity
 		float y2 = other.body.getPosition().y;
 		
 		return (float)Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+	}
+	
+	public void takeDamage(int damage)
+	{
+		
+	}
+	
+	public void destroy()
+	{
+		
 	}
 }

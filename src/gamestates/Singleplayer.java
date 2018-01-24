@@ -9,12 +9,15 @@ import org.newdawn.slick.state.StateBasedGame;
 
 import main.BomBoiGame;
 import main.Level;
+import main.Player;
 
 public class Singleplayer extends BasicGameState
 {
 	public static final int ID = 3;
 	
 	Level level;
+	
+	Player player;
 	
 	@Override
 	public void init(GameContainer arg0, StateBasedGame arg1) throws SlickException 
@@ -31,6 +34,7 @@ public class Singleplayer extends BasicGameState
 		try 
 		{
 			level.init();
+			player = new Player(0.5f, 0.5f, level);
 		} 
 		catch (Exception e) 
 		{
@@ -49,12 +53,15 @@ public class Singleplayer extends BasicGameState
 		//System.out.println("X: " + x);
 		
 		level.render(g, x, y);
+		
+		player.render(g);
 	}
 
 	@Override
 	public void update(GameContainer gc, StateBasedGame game, int arg2) throws SlickException 
 	{
 		level.update(gc);
+		player.update(gc);
 		
 		if(gc.getInput().isKeyDown(Input.KEY_ESCAPE))
 		{

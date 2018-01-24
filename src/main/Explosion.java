@@ -8,6 +8,8 @@ import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Fixture;
 import org.newdawn.slick.Image;
 
+import tiles.Tile;
+
 public class Explosion implements RayCastCallback
 {
 	final int DURATION = 20;
@@ -107,20 +109,15 @@ public class Explosion implements RayCastCallback
 			
 			for(RayCollision rc : collisions)
 			{
-				if(rc.entity instanceof IndestructibleTile)
+				if(rc.entity instanceof Tile)
 				{
-					break;
+					Tile t = (Tile)rc.entity;
+					if(!t.tileType.destructible && t.tileType.solid)
+					{
+						break;
+					}
 				}
-				else if(rc.entity instanceof DestructibleTile)
-				{
-					DestructibleTile dt = (DestructibleTile)rc.entity;
-					dt.takeDamage(damage);
-				}
-				else if(rc.entity instanceof Player)
-				{
-					Player p = (Player)rc.entity;
-					p.takeDamage(damage);
-				}
+				rc.entity.takeDamage(damage);
 			}
 		}
 	}
@@ -131,7 +128,20 @@ public class Explosion implements RayCastCallback
 	{
 		Entity entity = (Entity)fixture.getBody().getUserData();
 		
-		if(entity instanceof IndestructibleTile || entity instanceof LevelBoundary)
+		//If we hit an indestructible entity, record it
+		if(entity instanceof Tile)
+		{
+			Tile t = (Tile)entity;
+			
+			if(!t.tileType.destructible && t.tileType.solid)
+			{
+				if(fraction < rayLengths[rayIndex])
+				{
+					rayLengths[rayIndex] = fraction;
+				}	
+			}
+		}
+		else if(entity instanceof LevelBoundary)
 		{
 			if(fraction < rayLengths[rayIndex])
 			{

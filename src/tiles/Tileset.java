@@ -2,7 +2,7 @@ package tiles;
 
 import java.io.File;
 import java.net.URL;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.Iterator;
 
 import org.dom4j.Document;
@@ -16,9 +16,8 @@ public class Tileset
 	
 	private File directory;
 
-	private HashMap<Integer, Image> images;
+	private ArrayList<TileType> tileTypes;
 	
-	public int tileSize;
 	int numTiles;
 	
 	public Tileset(File directory)
@@ -38,33 +37,83 @@ public class Tileset
 		
 		Element root = document.getRootElement();
 		
-		tileSize = Integer.parseInt(root.attributeValue("tilewidth"));
 		numTiles = Integer.parseInt(root.attributeValue("tilecount"));
 		
-		images = new HashMap<Integer, Image>(numTiles);
+		tileTypes = new ArrayList<TileType>(numTiles);
 		
-		// Iterate through tiles, loading each one into memory
+		//Add null tile type (id = -1)
+		TileType nullTile = new TileType(-1);
+		nullTile.visible = false;
+		tileTypes.add(nullTile);
+		
+		// Iterate through tiles, creating a new TileType for each one
 	    for ( Iterator<Element> i = root.elementIterator("tile"); i.hasNext(); ) 
 	    {
 	        Element tile = (Element) i.next();
 	        
 	        int id = Integer.parseInt(tile.attributeValue("id"));
 	        
-		    for ( Iterator<Element> j = tile.elementIterator("image"); j.hasNext(); ) 
-		    {
-		        Element imageElement = (Element) j.next();
+	        TileType newType = new TileType(id);
+	        
+	        Element properties = tile.element("properties");
+	        
+	        if(properties != null)
+	        {
+	        	//Read in custom tile properties
+	        	for(Element property : properties.elements("property"))
+	        	{
+	        		try
+	        		{
+		        		switch(property.attributeValue("name"))
+		        		{
+		        		case "health":
+		        			newType.health = Integer.parseInt(property.attributeValue("value"));
+		        			break;
+		        		case "solid":
+		        			newType.solid = Boolean.valueOf(property.attributeValue("value"));
+			        		System.err.println("Solid: " + newType.solid);
+			        		
+		        			break;
+		        		case "destructible":
+		        			newType.destructible = Boolean.valueOf(property.attributeValue("value"));
+		        			break;
+		        		case "visible":
+		        			newType.visible = Boolean.valueOf(property.attributeValue("value"));
+		        			break;
+		        		case "spawn":
+		        			newType.spawn = Boolean.valueOf(property.attributeValue("value"));
+		        			break;
+		        		default:
+		        			throw new Exception();
+		        		}
+	        		}
+	        		catch(Exception e)
+	        		{
+	        			System.err.println("Could not read in tile property! (tileID " + id + ")");
+	        		}
+	        	}
+	        }
+	        
+	        Element imageElement = tile.element("image");
+	        
+		    String source = imageElement.attributeValue("source");
 		        
-		        String source = imageElement.attributeValue("source");
-		        
-		        Image image = new Image(directory.getPath() + File.separator + source);
-		        
-		        images.put(id, image);
-		    }
+		    Image image = new Image(directory.getPath() + File.separator + source);    
+		    newType.sprite = image;
+		    
+		    tileTypes.add(newType);
 	    }
 	}
 	
-	public Image getImage(int id)
+	public TileType getTileType(int id)
 	{
-		return images.get(id);
+		for(TileType t : tileTypes)
+		{
+			if(t.id == id)
+			{
+				return t;
+			}
+		}
+		return null;
 	}
 }

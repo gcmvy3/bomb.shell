@@ -5,9 +5,17 @@
   <image width="64" height="64" source="background1.png"/>
  </tile>
  <tile id="2">
+  <properties>
+   <property name="destructible" type="bool" value="true"/>
+   <property name="health" type="int" value="100"/>
+   <property name="solid" type="bool" value="true"/>
+  </properties>
   <image width="64" height="64" source="destructible1.png"/>
  </tile>
  <tile id="3">
+  <properties>
+   <property name="solid" type="bool" value="true"/>
+  </properties>
   <image width="64" height="64" source="indestructible1.png"/>
  </tile>
  <tile id="4">

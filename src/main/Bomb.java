@@ -2,9 +2,7 @@ package main;
 
 import org.jbox2d.collision.shapes.CircleShape;
 import org.jbox2d.common.Vec2;
-import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.Filter;
-import org.jbox2d.dynamics.contacts.ContactEdge;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
