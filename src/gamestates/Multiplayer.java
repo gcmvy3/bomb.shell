@@ -21,7 +21,9 @@ import self.totality.TotalityServer;
 import self.totality.webSocketServer.controller.Button;
 import self.totality.webSocketServer.controller.ControllerElement;
 import self.totality.webSocketServer.controller.ControllerElementType;
+import self.totality.webSocketServer.controller.GameController;
 import self.totality.webSocketServer.controller.Joystick;
+import self.totality.webSocketServer.controller.TextInput;
 import self.totality.webSocketServer.listener.ConnectListener;
 import self.totality.webSocketServer.listener.DataListener;
 import self.totality.webSocketServer.listener.DisconnectListener;
@@ -32,10 +34,15 @@ public class Multiplayer extends BasicGameState
 	
 	Level level;
 	
+	public static HashMap<UUID, String> pendingPlayers;
+	
 	public static HashMap<UUID, Player> playerMap;
 	public static ArrayList<Player> playerList;
 	
 	TrueTypeFont playerNameFont;
+	
+	GameController loginController;
+	GameController gameController;
 	
 	@Override
 	public void init(GameContainer arg0, StateBasedGame arg1) throws SlickException 
@@ -60,6 +67,7 @@ public class Multiplayer extends BasicGameState
 			e.printStackTrace();
 		}
 		
+		pendingPlayers = new HashMap<UUID, String>();
 		playerMap = new HashMap<UUID, Player>();
 		playerList = new ArrayList<Player>(playerMap.values());
 		
@@ -69,37 +77,22 @@ public class Multiplayer extends BasicGameState
 	
 	private void initTotality()
 	{
-		TotalityServer.instance.addControllerElement("button1", ControllerElementType.BUTTON, 0.0f, 0.0f, 1.0f, 0.5f);
-		TotalityServer.instance.addControllerElement("joystick1", ControllerElementType.JOYSTICK, 0.0f, 0.5f, 1.0f, 0.5f);
-
+		loginController = new GameController();
+		loginController.addControllerElement("nameInput", ControllerElementType.TEXTINPUT, 0, 0, 1.0f, 0.5f);
+		loginController.addControllerElement("loginButton", ControllerElementType.BUTTON, 0, 0.5f, 1.0f, 0.5f);
+		TotalityServer.instance.setDefaultController(loginController);
+		
+		gameController = new GameController();
+		gameController.addControllerElement("bombButton", ControllerElementType.BUTTON, 0, 0, 1.0f, 0.5f);
+		gameController.addControllerElement("joystick1", ControllerElementType.JOYSTICK, 0, 0.5f, 1.0f, 0.5f);
+		
 		TotalityServer.instance.addConnectListener(new ConnectListener()
 		{
 			@Override
 			public void onConnect(UUID uuid)
 			{
-				try
-				{
-					System.out.println("New player connecting!");
-					
-					//TODO spawn player on a spawn block
-					Player newPlayer = new Player(1, 1, level);
-					
-					newPlayer.name = "Anon";
-					
-					int r = (int)(Math.random() * 255);
-					int g = (int)(Math.random() * 200);
-					int b = (int)(Math.random() * 255);
-					
-					newPlayer.color = new Color(r, g, b);
-					
-					playerMap.put(uuid, newPlayer);
-
-					playerList = new ArrayList<Player>(playerMap.values());
-				}
-				catch(SlickException e)
-				{
-					System.err.println("Could not add player to game!");
-				}
+				System.out.println("New player connecting!");
+				pendingPlayers.put(uuid, "");
 			}
 		});
 
@@ -135,10 +128,50 @@ public class Multiplayer extends BasicGameState
 				{
 					Button b = (Button) e;
 
-					if (b.id.equals("button1"))
+					if (b.id.equals("bombButton"))
 					{
 						p.dropBomb = true;
 					}
+					else if(b.id.equals("loginButton"))
+					{
+						try
+						{
+							System.out.println("Spawning player!");
+							
+							if(playerMap.get(uuid) == null)
+							{
+								//TODO spawn player on a spawn block
+								Player newPlayer = new Player(1, 1, level);
+	
+								if(pendingPlayers.get(uuid) != null)
+								{
+									newPlayer.name = pendingPlayers.get(uuid);
+									pendingPlayers.remove(uuid);
+								}
+								
+								int r = (int)(Math.random() * 255);
+								int g = (int)(Math.random() * 200);
+								int blue = (int)(Math.random() * 255);
+								
+								newPlayer.color = new Color(r, g, blue);
+								
+								playerMap.put(uuid, newPlayer);
+	
+								playerList = new ArrayList<Player>(playerMap.values());
+							}
+							
+							TotalityServer.instance.sendControllerToPlayer(uuid, gameController);
+						}
+						catch(SlickException ex)
+						{
+							System.err.println("Could not add player to game!");
+						}
+					}
+				}
+				else if(e.type == ControllerElementType.TEXTINPUT)
+				{
+					TextInput text = (TextInput)e;
+					pendingPlayers.put(uuid, text.value);
 				}
 			}
 		});

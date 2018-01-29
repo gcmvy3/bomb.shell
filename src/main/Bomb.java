@@ -62,14 +62,21 @@ public class Bomb extends Entity
 	{		
 		if(active)
 		{
-			if(!collisionEnabled)
+			if(!collisionEnabled || parent == null)
 			{
-				CircleShape boundingBox = (CircleShape)body.getFixtureList().getShape();
-				CircleShape parentBoundingBox = (CircleShape)parent.body.getFixtureList().getShape();
-				
-				float maxParentDistance = boundingBox.getRadius() + parentBoundingBox.getRadius();
-				
-				if(getMetersTo(parent) > maxParentDistance)
+				try
+				{
+					CircleShape boundingBox = (CircleShape)body.getFixtureList().getShape();
+					CircleShape parentBoundingBox = (CircleShape)parent.body.getFixtureList().getShape();
+					
+					float maxParentDistance = boundingBox.getRadius() + parentBoundingBox.getRadius();
+					
+					if(getMetersTo(parent) > maxParentDistance)
+					{
+						enableCollision();
+					}
+				}
+				catch (Exception e)
 				{
 					enableCollision();
 				}

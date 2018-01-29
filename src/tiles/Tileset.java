@@ -71,8 +71,6 @@ public class Tileset
 		        			break;
 		        		case "solid":
 		        			newType.solid = Boolean.valueOf(property.attributeValue("value"));
-			        		System.err.println("Solid: " + newType.solid);
-			        		
 		        			break;
 		        		case "destructible":
 		        			newType.destructible = Boolean.valueOf(property.attributeValue("value"));

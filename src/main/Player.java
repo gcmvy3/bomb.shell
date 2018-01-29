@@ -185,11 +185,26 @@ public class Player extends Entity
 		health = maxHealth;
 		
 		active = true;
+		
+		//Re-enable collision
+		Filter filter = new Filter();
+		filter.categoryBits = Entity.PLAYER;
+		filter.maskBits = Entity.SOLID_TILE | Entity.BOMB | Entity.LEVEL_BOUNDARY | Entity.PLAYER;
+		
+		body.getFixtureList().setFilterData(filter);
 	}
 	
 	public void destroy()
 	{
 		active = false;
+		
+		//Disable collision
+		Filter filter = new Filter();
+		filter.categoryBits = Entity.NONE;
+		filter.maskBits = Entity.NONE;
+		
+		body.getFixtureList().setFilterData(filter);
+		
 		level.world.destroyBody(body);
 	}
 	
