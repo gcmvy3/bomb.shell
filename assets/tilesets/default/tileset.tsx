@@ -22,6 +22,6 @@
   <properties>
    <property name="spawn" type="bool" value="true"/>
   </properties>
-  <image width="64" height="64" source="background1.png"/>
+  <image width="64" height="64" source="spawn1.png"/>
  </tile>
 </tileset>

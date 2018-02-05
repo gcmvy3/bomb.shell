@@ -34,6 +34,13 @@ public class Singleplayer extends BasicGameState
 		try 
 		{
 			level.init();
+			
+			//Scale the game so the level takes up the whole screen
+			float levelWidth = level.numColumns * level.tileSizeInPixels;
+			float levelHeight = level.numRows * level.tileSizeInPixels;
+			
+			BomBoiGame.scale = Math.min(BomBoiGame.WIDTH / levelWidth, BomBoiGame.HEIGHT / levelHeight);
+			
 			player = new Player(0.5f, 0.5f, level);
 		} 
 		catch (Exception e) 

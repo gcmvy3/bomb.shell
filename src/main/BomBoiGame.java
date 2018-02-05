@@ -25,7 +25,7 @@ public class BomBoiGame extends StateBasedGame
     public static final int WIDTH   = 3200;
     public static final int HEIGHT  = 1800;
     
-    public static float scale = 4.0f;
+    public static float scale = 1.0f;
     
     public static boolean multiplayer = false;
     public static Level level;

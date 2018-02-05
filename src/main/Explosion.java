@@ -122,7 +122,10 @@ public class Explosion implements RayCastCallback
 		}
 	}
 
-	//Used for tracing the explosion
+	/**
+	 * Used for tracing the explosion
+	 * Is called automatically when an explosion ray collides with a fixture
+	 */
 	@Override
 	public float reportFixture(Fixture fixture, Vec2 point, Vec2 normal, float fraction) 
 	{
@@ -155,6 +158,12 @@ public class Explosion implements RayCastCallback
 		return 1;
 	}
 	
+	/**
+	 * Calculates angle from this object to a given point
+	 * @param targetX
+	 * @param targetY
+	 * @return The angle in degrees
+	 */
 	public float getAngleTo(float targetX, float targetY) 
 	{
 	    float angle = (float) Math.toDegrees(Math.atan2(targetY - y, targetX - x));

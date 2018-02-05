@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
+import org.jbox2d.common.Vec2;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -59,6 +60,12 @@ public class Multiplayer extends BasicGameState
 		try 
 		{
 			level.init();
+			
+			//Scale the game so the level takes up the whole screen
+			float levelWidth = level.numColumns * level.tileSizeInPixels;
+			float levelHeight = level.numRows * level.tileSizeInPixels;
+			
+			BomBoiGame.scale = Math.min(BomBoiGame.WIDTH / levelWidth, BomBoiGame.HEIGHT / levelHeight);
 		} 
 		catch (Exception e) 
 		{
@@ -140,8 +147,10 @@ public class Multiplayer extends BasicGameState
 							
 							if(playerMap.get(uuid) == null)
 							{
-								//TODO spawn player on a spawn block
-								Player newPlayer = new Player(1, 1, level);
+								//Spawn player on a spawn block
+								Vec2 spawnLocation = level.getSpawnPoint();
+								
+								Player newPlayer = new Player(spawnLocation.x, spawnLocation.y, level);
 	
 								if(pendingPlayers.get(uuid) != null)
 								{

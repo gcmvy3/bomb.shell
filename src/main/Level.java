@@ -15,7 +15,6 @@ import tiles.Tileset;
 public class Level
 {
 	final float TIME_STEP = 1.0f / 60.0f;
-	final float SCALE = 3.1f;
 	final int POSITION_ITERATION = 10;
 	final int VELOCITY_ITERATION = 10;
 
@@ -33,6 +32,9 @@ public class Level
 	
 	public Tile[][] backgroundArray;
 	public Tile[][] foregroundArray;
+	
+	public ArrayList<Tile> spawnTiles;
+	public int currentSpawn = 0;
 	
 	public ArrayList<Bomb> bombs;
 	
@@ -67,6 +69,8 @@ public class Level
 		
 		initBoundaries();
 		
+		spawnTiles = new ArrayList<Tile>();
+		
 		//Convert background and foreground data into Tiles
 		for(int r = 0; r < numRows; r++)
 		{
@@ -87,6 +91,12 @@ public class Level
 				
 				backgroundArray[c][r] = bgTile;
 				
+				//If the tile is a spawn tile, add it to the list
+				if(bgTile.tileType.spawn)
+				{
+					spawnTiles.add(bgTile);
+				}
+				
 				tileID = tileMap.foreground[c][r];
 				
 				if(tileset.getTileType(tileID) == null)
@@ -98,6 +108,11 @@ public class Level
 				Tile fgTile = new Tile(x, y, r, c, tileSizeInMeters, tileset.getTileType(tileID), this);
 				
 				foregroundArray[c][r] = fgTile;
+				
+				if(fgTile.tileType.spawn)
+				{
+					spawnTiles.add(fgTile);
+				}
 			}
 		}
 		
@@ -123,7 +138,7 @@ public class Level
 
 	public void render(Graphics g, int x, int y)
 	{
-		g.scale(SCALE, SCALE);
+		g.scale(BomBoiGame.scale, BomBoiGame.scale);
 		
 		for(int r = 0; r < numRows; r++)
 		{
@@ -215,5 +230,20 @@ public class Level
 	public int getHeight()
 	{
 		return (int)(numRows * tileSizeInPixels);
+	}
+	
+	public Vec2 getSpawnPoint()
+	{
+		if(spawnTiles.size() > 0)
+		{
+			Tile spawnTile = spawnTiles.get(currentSpawn);
+			currentSpawn++;
+			if(currentSpawn == spawnTiles.size())
+			{
+				currentSpawn = 0;
+			}
+			return new Vec2(spawnTile.body.getPosition().x, spawnTile.body.getPosition().y);
+		}
+		return new Vec2(1.0f, 1.0f);
 	}
 }
