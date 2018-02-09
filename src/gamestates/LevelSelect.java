@@ -11,9 +11,11 @@ import org.newdawn.slick.gui.MouseOverArea;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
+import gui.ListView;
 import main.BomBoiGame;
 import main.Level;
 import main.LevelFactory;
+import tiles.TileMap;
 
 public class LevelSelect extends BasicGameState
 {
@@ -24,6 +26,8 @@ public class LevelSelect extends BasicGameState
 	private Image startButtonImage;
 	
 	private MouseOverArea startButton;
+	
+	ListView<TileMap> tileMapList;
 	
 	@Override
 	public void init(GameContainer gc, StateBasedGame game) throws SlickException 
@@ -44,6 +48,16 @@ public class LevelSelect extends BasicGameState
 			@Override
 			public void componentActivated(AbstractComponent arg0) 
 			{
+				try 
+				{
+					selectedLevel = LevelFactory.buildLevel(tileMapList.getCurrentSelection(), LevelFactory.tilesets.get(0));
+				} 
+				catch (Exception e) 
+				{
+					game.enterState(1);
+					e.printStackTrace();
+				}
+				
 				if(selectedLevel != null)
 				{
 					BomBoiGame.level = selectedLevel;
@@ -58,27 +72,22 @@ public class LevelSelect extends BasicGameState
 				}
 			}
 		});
+		
+		tileMapList = new ListView<TileMap>(gc, 0, 0, gc.getWidth() / 8, gc.getHeight(), 10);
 	}
 
 	@Override
 	public void enter(GameContainer gc, StateBasedGame game)
 	{
 		LevelFactory.refreshLists();
-		try 
-		{
-			selectedLevel = LevelFactory.buildLevel("default", "default");
-		} 
-		catch (Exception e) 
-		{
-			game.enterState(1);
-			e.printStackTrace();
-		}
+		tileMapList.setList(LevelFactory.tileMaps);
 	}
 	
 	@Override
 	public void render(GameContainer gc, StateBasedGame arg1, Graphics g) throws SlickException 
 	{
 		startButton.render(gc, g);
+		tileMapList.render(g);
 	}
 
 	@Override

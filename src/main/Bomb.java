@@ -110,7 +110,7 @@ public class Bomb extends Entity
 		sprite.draw(pixelsX - sizeInPixels / 2, pixelsY - sizeInPixels / 2, sizeInPixels, sizeInPixels);
 	}
 	
-	private void explode()
+	public void explode()
 	{
 		Vec2[] rays = new Vec2[4];
 		
@@ -133,5 +133,12 @@ public class Bomb extends Entity
 		active = false;
 		
 		level.world.destroyBody(body);
+	}
+	
+	@Override
+	public void takeDamage(int damage)
+	{
+		//If the bomb gets hit with an explosion, it should explode
+		explode();
 	}
 }

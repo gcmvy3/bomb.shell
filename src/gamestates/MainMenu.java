@@ -11,6 +11,7 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 import main.BomBoiGame;
+import main.SpriteManager;
 
 public class MainMenu extends BasicGameState
 {
@@ -33,13 +34,13 @@ public class MainMenu extends BasicGameState
 
 	private void initButtons(GameContainer gt, StateBasedGame game) throws SlickException
 	{
-		singleplayerButtonImage = new Image("/assets/gui/singleplayerButton.png");
+		singleplayerButtonImage = SpriteManager.getGUISprite("singleplayerButton");
 		if(singleplayerButtonImage == null)
 		{
 			System.err.println("Could not load button sprite!");
 		}
 		
-		multiplayerButtonImage = new Image("/assets/gui/multiplayerButton.png");
+		multiplayerButtonImage = SpriteManager.getGUISprite("multiplayerButton");
 		if(multiplayerButtonImage == null)
 		{
 			System.err.println("Could not load button sprite!");

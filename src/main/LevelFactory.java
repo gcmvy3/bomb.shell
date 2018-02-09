@@ -11,8 +11,8 @@ public class LevelFactory
 	private final static String TILEMAP_DIRECTORY = "assets/tilemaps";
 	private final static String TILESET_DIRECTORY = "assets/tilesets";
 	
-	private static ArrayList<TileMap> tileMaps;
-	private static ArrayList<Tileset> tilesets;
+	public static ArrayList<TileMap> tileMaps;
+	public static ArrayList<Tileset> tilesets;
 	
 	//Checks the worlds directory for valid world files
 	//Adds them to an arraylist, but does not load the tilemap into memory
@@ -70,27 +70,8 @@ public class LevelFactory
 		}
 	}
 	
-	public static Level buildLevel(String tileMapName, String tilesetName) throws Exception
-	{
-		TileMap tileMap = null;
-		Tileset tileset = null;
-		
-		for(TileMap tm : tileMaps)
-		{
-			if(tm.name.equals(tileMapName))
-			{
-				tileMap = tm;
-			}
-		}
-		
-		for(Tileset ts : tilesets)
-		{
-			if(ts.name.equals(tilesetName))
-			{
-				tileset = ts;
-			}
-		}
-		
+	public static Level buildLevel(TileMap tileMap, Tileset tileset) throws Exception
+	{	
 		//If the tilemap or tileset cannot be found, throw an exception
 		if(tileMap == null || tileset == null)
 		{
