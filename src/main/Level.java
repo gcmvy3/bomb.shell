@@ -38,7 +38,8 @@ public class Level
 	
 	public ArrayList<Bomb> bombs;
 	
-	public ArrayList<Explosion> explosions;
+	private ArrayList<Explosion> explosions; //Do not modify this directly
+	private ArrayList<Explosion> explosionsToBeAdded;
 	
 	public World world; //Box2d world for physics
 	
@@ -118,6 +119,7 @@ public class Level
 		
 		bombs = new ArrayList<Bomb>();
 		explosions = new ArrayList<Explosion>();
+		explosionsToBeAdded = new ArrayList<Explosion>();
 	}
 	
 	private void initBoundaries()
@@ -190,6 +192,14 @@ public class Level
 			}
 		}
 		
+		//Add all pending explosions to the level
+		for(Explosion e : explosionsToBeAdded)
+		{
+			explosions.add(e);
+		}
+		explosionsToBeAdded = new ArrayList<Explosion>();
+		
+		//Update all active explosions. Remove all inactive explosions
 		Iterator<Explosion> explosionIter = explosions.iterator();
 		while (explosionIter.hasNext()) 
 		{
@@ -245,5 +255,10 @@ public class Level
 			return new Vec2(spawnTile.body.getPosition().x, spawnTile.body.getPosition().y);
 		}
 		return new Vec2(1.0f, 1.0f);
+	}
+	
+	public void addExplosion(Explosion e)
+	{
+		explosionsToBeAdded.add(e);
 	}
 }

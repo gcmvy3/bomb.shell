@@ -114,4 +114,10 @@ public class Tileset
 		}
 		return null;
 	}
+	
+	@Override
+	public String toString()
+	{
+		return name;
+	}
 }

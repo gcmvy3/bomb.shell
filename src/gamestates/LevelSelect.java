@@ -19,12 +19,17 @@ import main.BomBoiGame;
 import main.Level;
 import main.LevelFactory;
 import tiles.TileMap;
+import tiles.Tileset;
 
 public class LevelSelect extends BasicGameState
 {
 	public static final int ID = 2;
 	
+	final float TILEMAP_LIST_WIDTH = 0.2f;
+	final float TILESET_LIST_WIDTH = 0.2f;
+	
 	private TileMap selectedTileMap = null;
+	private Tileset selectedTileset = null;
 	
 	private Level selectedLevel = null;
 	
@@ -33,6 +38,7 @@ public class LevelSelect extends BasicGameState
 	private MouseOverArea startButton;
 	
 	ListView<TileMap> tileMapList;
+	ListView<Tileset> tilesetList;
 	
 	TrueTypeFont font;
 	
@@ -57,7 +63,7 @@ public class LevelSelect extends BasicGameState
 			{
 				try 
 				{
-					selectedLevel = LevelFactory.buildLevel(selectedTileMap, LevelFactory.tilesets.get(0));
+					selectedLevel = LevelFactory.buildLevel(selectedTileMap, selectedTileset);
 				} 
 				catch (Exception e) 
 				{
@@ -80,7 +86,11 @@ public class LevelSelect extends BasicGameState
 			}
 		});
 		
-		tileMapList = new ListView<TileMap>(gc, 0, 0, gc.getWidth() / 8, gc.getHeight(), 10);
+		int listWidth = (int)(gc.getWidth() * TILEMAP_LIST_WIDTH);
+		tileMapList = new ListView<TileMap>(gc, 0, 0, listWidth, gc.getHeight(), 10);
+		
+		int listWidth2 = (int)(gc.getWidth() * TILESET_LIST_WIDTH);
+		tilesetList = new ListView<Tileset>(gc, gc.getWidth() - listWidth2, 0, listWidth2, gc.getHeight(), 10);
 		
 		Font f = new Font("Verdana", Font.BOLD, 32);
 		font = new TrueTypeFont(f, true);
@@ -91,6 +101,7 @@ public class LevelSelect extends BasicGameState
 	{
 		LevelFactory.refreshLists();
 		tileMapList.setList(LevelFactory.tileMaps);
+		tilesetList.setList(LevelFactory.tilesets);
 	}
 	
 	@Override
@@ -98,16 +109,22 @@ public class LevelSelect extends BasicGameState
 	{
 		startButton.render(gc, g);
 		tileMapList.render(g);
+		tilesetList.render(g);
 		
-		int textX = gc.getWidth() / 2;
+		int textX = gc.getWidth() / 2 - font.getWidth("TileMap: " + selectedTileMap.name) / 2;
 		int textY = gc.getHeight() / 2 - 100;
-		font.drawString(textX, textY, "TileMap: " + tileMapList.getCurrentSelection());
+		font.drawString(textX, textY, "TileMap: " + selectedTileMap.name);
+		
+		textX = gc.getWidth() / 2 - font.getWidth("Tileset: " + selectedTileset.name) / 2;
+		textY -= font.getLineHeight() * 2;
+		font.drawString(textX, textY, "Tileset: " + selectedTileset.name);
 	}
 
 	@Override
 	public void update(GameContainer gc, StateBasedGame game, int arg2) throws SlickException 
 	{
 		selectedTileMap = tileMapList.getCurrentSelection();
+		selectedTileset = tilesetList.getCurrentSelection();
 		
 		//If escape is pressed, return to the main menu
 		if(gc.getInput().isKeyDown(Input.KEY_ESCAPE))
