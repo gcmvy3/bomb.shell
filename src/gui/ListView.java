@@ -56,6 +56,11 @@ public class ListView<T>
 	{
 		ListItem<T> li = new ListItem<T>(this, gameContainer, obj, x, y + listItemHeight * listItems.size(), width, listItemHeight);
 		listItems.add(li);
+		
+		if(currentSelection == null)
+		{
+			currentSelection = li;
+		}
 	}
 	
 	public void removeItem(T obj)
@@ -87,6 +92,23 @@ public class ListView<T>
 		{
 			return currentSelection.object;
 		}
+		return null;
+	}
+	
+	public T getIndex(int i)
+	{
+		ListItem<T> item = listItems.get(i);
+		
+		if(item != null)
+		{
+			T obj = item.object;
+			
+			if(obj != null)
+			{
+				return obj;
+			}
+		}
+		
 		return null;
 	}
 }

@@ -1,10 +1,13 @@
 package gamestates;
 
+import java.awt.Font;
+
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.gui.AbstractComponent;
 import org.newdawn.slick.gui.ComponentListener;
 import org.newdawn.slick.gui.MouseOverArea;
@@ -21,6 +24,8 @@ public class LevelSelect extends BasicGameState
 {
 	public static final int ID = 2;
 	
+	private TileMap selectedTileMap = null;
+	
 	private Level selectedLevel = null;
 	
 	private Image startButtonImage;
@@ -28,6 +33,8 @@ public class LevelSelect extends BasicGameState
 	private MouseOverArea startButton;
 	
 	ListView<TileMap> tileMapList;
+	
+	TrueTypeFont font;
 	
 	@Override
 	public void init(GameContainer gc, StateBasedGame game) throws SlickException 
@@ -50,7 +57,7 @@ public class LevelSelect extends BasicGameState
 			{
 				try 
 				{
-					selectedLevel = LevelFactory.buildLevel(tileMapList.getCurrentSelection(), LevelFactory.tilesets.get(0));
+					selectedLevel = LevelFactory.buildLevel(selectedTileMap, LevelFactory.tilesets.get(0));
 				} 
 				catch (Exception e) 
 				{
@@ -74,6 +81,9 @@ public class LevelSelect extends BasicGameState
 		});
 		
 		tileMapList = new ListView<TileMap>(gc, 0, 0, gc.getWidth() / 8, gc.getHeight(), 10);
+		
+		Font f = new Font("Verdana", Font.BOLD, 32);
+		font = new TrueTypeFont(f, true);
 	}
 
 	@Override
@@ -88,11 +98,17 @@ public class LevelSelect extends BasicGameState
 	{
 		startButton.render(gc, g);
 		tileMapList.render(g);
+		
+		int textX = gc.getWidth() / 2;
+		int textY = gc.getHeight() / 2 - 100;
+		font.drawString(textX, textY, "TileMap: " + tileMapList.getCurrentSelection());
 	}
 
 	@Override
 	public void update(GameContainer gc, StateBasedGame game, int arg2) throws SlickException 
 	{
+		selectedTileMap = tileMapList.getCurrentSelection();
+		
 		//If escape is pressed, return to the main menu
 		if(gc.getInput().isKeyDown(Input.KEY_ESCAPE))
 		{
