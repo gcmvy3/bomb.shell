@@ -83,16 +83,18 @@ public class Multiplayer extends BasicGameState
 	}
 	
 	private void initTotality()
-	{
+	{		
 		loginController = new GameController();
-		loginController.addControllerElement("nameInput", ControllerElementType.TEXTINPUT, 0, 0, 1.0f, 0.5f);
-		loginController.addControllerElement("loginButton", ControllerElementType.BUTTON, 0, 0.5f, 1.0f, 0.5f);
+		loginController.addText("usernamePrompt", "Type a username:", 32, 0.5f, 0.15f);
+		loginController.addTextInput("nameInput", 0.5f, 0.25f, 0.8f, 0.05f);
+		loginController.addButton("loginButton", 0.5f, 0.75f, 1.0f, 0.5f);
+			
 		TotalityServer.instance.setDefaultController(loginController);
-		
+
 		gameController = new GameController();
-		gameController.addControllerElement("bombButton", ControllerElementType.BUTTON, 0, 0, 1.0f, 0.5f);
-		gameController.addControllerElement("joystick1", ControllerElementType.JOYSTICK, 0, 0.5f, 1.0f, 0.5f);
-		
+		gameController.addButton("bombButton", 0.5f, 0.25f, 1.0f, 0.5f);
+		gameController.addJoystick("joystick1", 0.5f, 0.75f, 1.0f, 0.5f);
+
 		TotalityServer.instance.addConnectListener(new ConnectListener()
 		{
 			@Override
