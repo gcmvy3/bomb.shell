@@ -28,12 +28,23 @@ public class LevelSelect extends BasicGameState
 	final float TILEMAP_LIST_WIDTH = 0.2f;
 	final float TILESET_LIST_WIDTH = 0.2f;
 	
+	final float THUMBNAIL_RELATIVE_WIDTH = 0.4f;
+	final float THUMBNAIL_RELATIVE_HEIGHT = 0.4f;
+	
+	private int thumbnailWidth;
+	private int thumbnailHeight;
+	
+	private int thumbnailX;
+	private int thumbnailY;
+	
 	private TileMap selectedTileMap = null;
 	private Tileset selectedTileset = null;
 	
 	private Level selectedLevel = null;
 	
 	private Image startButtonImage;
+	
+	private Image thumbnail;
 	
 	private MouseOverArea startButton;
 	
@@ -53,7 +64,7 @@ public class LevelSelect extends BasicGameState
 		startButton = new MouseOverArea(gc,
 										startButtonImage,
 										gc.getWidth() / 2 - buttonWidth / 2,
-										gc.getHeight() / 2,
+										gc.getHeight() - gc.getHeight() / 10,
 										buttonWidth,
 										buttonHeight);
 		startButton.addListener(new ComponentListener() 
@@ -94,6 +105,12 @@ public class LevelSelect extends BasicGameState
 		
 		Font f = new Font("Verdana", Font.BOLD, 32);
 		font = new TrueTypeFont(f, true);
+		
+		thumbnailWidth = (int)(gc.getWidth() * THUMBNAIL_RELATIVE_WIDTH);
+		thumbnailHeight = (int)(gc.getHeight() * THUMBNAIL_RELATIVE_HEIGHT);
+		
+		thumbnailX = gc.getWidth() / 2 - thumbnailWidth / 2;
+		thumbnailY = gc.getHeight() / 2 - thumbnailHeight / 2;
 	}
 
 	@Override
@@ -102,6 +119,10 @@ public class LevelSelect extends BasicGameState
 		LevelFactory.refreshLists();
 		tileMapList.setList(LevelFactory.tileMaps);
 		tilesetList.setList(LevelFactory.tilesets);
+		
+		selectedTileMap = tileMapList.getCurrentSelection();
+		selectedTileset = tilesetList.getCurrentSelection();
+		thumbnail = LevelFactory.buildThumbnail(selectedTileMap, selectedTileset, thumbnailWidth, thumbnailHeight);
 	}
 	
 	@Override
@@ -111,8 +132,13 @@ public class LevelSelect extends BasicGameState
 		tileMapList.render(g);
 		tilesetList.render(g);
 		
+		if(thumbnail != null)
+		{
+			thumbnail.draw(thumbnailX, thumbnailY);
+		}
+		
 		int textX = gc.getWidth() / 2 - font.getWidth("TileMap: " + selectedTileMap.name) / 2;
-		int textY = gc.getHeight() / 2 - 100;
+		int textY = gc.getHeight() - gc.getHeight() / 7;
 		font.drawString(textX, textY, "TileMap: " + selectedTileMap.name);
 		
 		textX = gc.getWidth() / 2 - font.getWidth("Tileset: " + selectedTileset.name) / 2;
@@ -123,8 +149,24 @@ public class LevelSelect extends BasicGameState
 	@Override
 	public void update(GameContainer gc, StateBasedGame game, int arg2) throws SlickException 
 	{
-		selectedTileMap = tileMapList.getCurrentSelection();
-		selectedTileset = tilesetList.getCurrentSelection();
+		//If a new tilemap or tileset has been selected, update the thumbnail
+		boolean updateThumbnail = false;
+		if(selectedTileMap != tileMapList.getCurrentSelection())
+		{
+			selectedTileMap = tileMapList.getCurrentSelection();
+			updateThumbnail = true;
+		}
+		if(selectedTileset != tilesetList.getCurrentSelection())
+		{
+			selectedTileset = tilesetList.getCurrentSelection();
+			updateThumbnail = true;
+		}
+		
+		if(updateThumbnail)
+		{
+			thumbnail = LevelFactory.buildThumbnail(selectedTileMap, selectedTileset, thumbnailWidth, thumbnailHeight);
+			updateThumbnail = false;
+		}
 		
 		//If escape is pressed, return to the main menu
 		if(gc.getInput().isKeyDown(Input.KEY_ESCAPE))

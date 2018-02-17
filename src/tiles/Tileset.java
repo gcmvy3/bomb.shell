@@ -10,6 +10,8 @@ import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 import org.newdawn.slick.Image;
 
+import main.SpriteManager;
+
 public class Tileset 
 {
 	public String name;
@@ -20,6 +22,8 @@ public class Tileset
 	
 	int numTiles;
 	
+	boolean initialized = false;
+	
 	public Tileset(File directory)
 	{
 		this.directory = directory;
@@ -28,6 +32,11 @@ public class Tileset
 	
 	public void init() throws Exception
 	{
+		if(initialized)
+		{
+			return;
+		}
+		
 		//Open up the XML file for parsing
 		File tilesetFile = new File(directory.getPath() + "/tileset.tsx");
 		URL url = tilesetFile.toURI().toURL();
@@ -43,7 +52,6 @@ public class Tileset
 		
 		//Add null tile type (id = -1)
 		TileType nullTile = new TileType(-1);
-		nullTile.visible = false;
 		tileTypes.add(nullTile);
 		
 		// Iterate through tiles, creating a new TileType for each one
@@ -101,6 +109,8 @@ public class Tileset
 		    
 		    tileTypes.add(newType);
 	    }
+	    
+	    initialized = true;
 	}
 	
 	public TileType getTileType(int id)

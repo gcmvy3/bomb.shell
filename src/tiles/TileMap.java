@@ -22,6 +22,8 @@ public class TileMap
 	public int[][] background;
 	public int[][] foreground;
 	
+	boolean initialized = false;
+	
 	public TileMap(File directory)
 	{
 		this.directory = directory;
@@ -30,7 +32,12 @@ public class TileMap
 	
 	public void init() throws Exception
 	{
+		if(initialized)
+		{
+			return;
+		}
 		loadFromFile();
+		initialized = true;
 	}
 	
 	/**
