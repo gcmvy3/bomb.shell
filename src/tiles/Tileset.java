@@ -10,8 +10,6 @@ import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 import org.newdawn.slick.Image;
 
-import main.SpriteManager;
-
 public class Tileset 
 {
 	public String name;
@@ -21,6 +19,7 @@ public class Tileset
 	private ArrayList<TileType> tileTypes;
 	
 	int numTiles;
+	public int tileSize;
 	
 	boolean initialized = false;
 	
@@ -47,6 +46,7 @@ public class Tileset
 		Element root = document.getRootElement();
 		
 		numTiles = Integer.parseInt(root.attributeValue("tilecount"));
+		tileSize = Integer.parseInt(root.attributeValue("tilewidth"));
 		
 		tileTypes = new ArrayList<TileType>(numTiles);
 		
@@ -105,7 +105,7 @@ public class Tileset
 		    String source = imageElement.attributeValue("source");
 		        
 		    Image image = new Image(directory.getPath() + File.separator + source);    
-		    newType.sprite = image;
+		    newType.sprite = image.getScaledCopy(tileSize, tileSize);
 		    
 		    tileTypes.add(newType);
 	    }

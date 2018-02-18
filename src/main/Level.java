@@ -59,7 +59,7 @@ public class Level
 		tileMap.init();
 		tileset.init();
 		
-		tileSizeInPixels = tileMap.tileSize;
+		tileSizeInPixels = tileset.tileSize;
 		pixelsPerMeter = tileSizeInPixels;
 		tileSizeInMeters = pixelsToMeters(tileSizeInPixels);
 		

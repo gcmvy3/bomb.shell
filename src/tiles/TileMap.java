@@ -17,8 +17,6 @@ public class TileMap
 	public int numRows;
 	public int numColumns;
 	
-	public int tileSize;
-	
 	public int[][] background;
 	public int[][] foreground;
 	
@@ -58,7 +56,6 @@ public class TileMap
 		//Parse level metadata
 		numRows = Integer.parseInt(root.attributeValue("height"));
 		numColumns = Integer.parseInt(root.attributeValue("width"));
-		tileSize = Integer.parseInt(root.attributeValue("tilewidth"));
 		
 		Element backgroundElement = null;
 		Element foregroundElement = null;
