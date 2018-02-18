@@ -102,8 +102,8 @@ public class LevelFactory
 
 			int tileSize = Math.min(width / numColumns, height / numRows);
 			
-			int offsetX = width - numColumns * tileSize;
-			int offsetY = height - numRows * tileSize;
+			int offsetX = (width - numColumns * tileSize) / 2;
+			int offsetY = (height - numRows * tileSize) / 2;
 			
 			//Draw background and foreground to the image
 			for(int r = 0; r < numRows; r++)
