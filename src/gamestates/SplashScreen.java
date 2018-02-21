@@ -6,7 +6,7 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
-import main.BomBoiGame;
+import main.ResourceManager;
 
 public class SplashScreen extends BasicGameState
 {
@@ -16,19 +16,18 @@ public class SplashScreen extends BasicGameState
 	
 	@Override
 	public void init(GameContainer arg0, StateBasedGame game) throws SlickException 
-	{
+	{	
+		ResourceManager.initialize();
 	}
 	
 	@Override
 	public void enter(GameContainer gc, StateBasedGame game)
 	{
-		gc.getGraphics().scale(BomBoiGame.scale, BomBoiGame.scale);
 	}
 
 	@Override
-	public void render(GameContainer arg0, StateBasedGame game, Graphics arg2) throws SlickException 
+	public void render(GameContainer arg0, StateBasedGame game, Graphics g) throws SlickException 
 	{
-		
 	}
 
 	@Override

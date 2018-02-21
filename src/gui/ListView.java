@@ -6,17 +6,17 @@ import java.util.Iterator;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 
-import main.SpriteManager;
+import main.ResourceManager;
 
 public class ListView<T> 
 {
 	final String SPRITE_NAME = "listBackground";
 	
-	int x;
-	int y;
-	int width;
-	int height;
-	int listItemHeight;
+	public int x;
+	public int y;
+	public int width;
+	public int height;
+	public int listItemHeight;
 	GameContainer gameContainer;
 	
 	ArrayList<ListItem<T>> listItems;
@@ -43,8 +43,8 @@ public class ListView<T>
 	}
 	
 	public void render(Graphics g)
-	{
-		SpriteManager.getGUISprite(SPRITE_NAME).draw(x, y, width, height);
+	{	
+		ResourceManager.getGUISprite(SPRITE_NAME).draw(x, y, width, height);
 		
 		for(ListItem<T> li : listItems)
 		{

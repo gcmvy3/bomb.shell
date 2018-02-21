@@ -92,7 +92,7 @@ public class Explosion implements RayCastCallback
 	
 	private void loadSprite()
 	{
-		sprite = SpriteManager.getSprite("explosion1");
+		sprite = ResourceManager.getSprite("explosion1");
 	}
 	
 	private void dealDamage()

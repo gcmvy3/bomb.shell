@@ -21,7 +21,7 @@ public abstract class Entity
 	public Body body;
 	public Level level;
 	
-	public boolean active = true;
+	//public boolean active = true;
 	
 	public int health;
 	public int maxHealth;
@@ -78,5 +78,15 @@ public abstract class Entity
 	public void destroy()
 	{
 		
+	}
+	
+	public boolean isActive()
+	{
+		return body.isActive();
+	}
+	
+	public void setActive(boolean b)
+	{
+		body.setActive(b);
 	}
 }

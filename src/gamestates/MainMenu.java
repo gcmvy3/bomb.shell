@@ -11,7 +11,8 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 import main.BomBoiGame;
-import main.SpriteManager;
+import main.ResourceManager;
+
 
 public class MainMenu extends BasicGameState
 {
@@ -28,19 +29,19 @@ public class MainMenu extends BasicGameState
 	
 	@Override
 	public void init(GameContainer gt, StateBasedGame game) throws SlickException 
-	{	
+	{			
 		initButtons(gt, game);
 	}
 
-	private void initButtons(GameContainer gt, StateBasedGame game) throws SlickException
+	private void initButtons(GameContainer gc, StateBasedGame game) throws SlickException
 	{
-		singleplayerButtonImage = SpriteManager.getGUISprite("singleplayerButton");
+		singleplayerButtonImage = ResourceManager.getGUISprite("singleplayerButton");
 		if(singleplayerButtonImage == null)
 		{
 			System.err.println("Could not load button sprite!");
 		}
 		
-		multiplayerButtonImage = SpriteManager.getGUISprite("multiplayerButton");
+		multiplayerButtonImage = ResourceManager.getGUISprite("multiplayerButton");
 		if(multiplayerButtonImage == null)
 		{
 			System.err.println("Could not load button sprite!");
@@ -49,10 +50,10 @@ public class MainMenu extends BasicGameState
 		buttonWidth = multiplayerButtonImage.getWidth();
 		buttonHeight = multiplayerButtonImage.getHeight();
 		
-		singleplayerButton = new MouseOverArea(gt, 
+		singleplayerButton = new MouseOverArea(gc, 
 												singleplayerButtonImage, 
-												gt.getWidth() / 2 - buttonWidth / 2,
-												gt.getHeight() / 2,
+												gc.getWidth() / 2 - buttonWidth / 2,
+												gc.getHeight() / 2,
 												buttonWidth,
 												buttonHeight);
 		singleplayerButton.addListener(new ComponentListener() 
@@ -65,10 +66,10 @@ public class MainMenu extends BasicGameState
 		});
 		
 		
-		multiplayerButton = new MouseOverArea(gt, 
+		multiplayerButton = new MouseOverArea(gc, 
 												multiplayerButtonImage, 
-												gt.getWidth() / 2 - buttonWidth / 2, 
-												gt.getHeight() / 2 + (2 * buttonHeight), 
+												gc.getWidth() / 2 - buttonWidth / 2, 
+												gc.getHeight() / 2 + (2 * buttonHeight), 
 												buttonWidth, 
 												buttonHeight);
 		multiplayerButton.addListener(new ComponentListener() 
@@ -85,14 +86,12 @@ public class MainMenu extends BasicGameState
 	@Override
 	public void enter(GameContainer gc, StateBasedGame game)
 	{
-
 	}
 	
 	@Override
 	public void render(GameContainer gc, StateBasedGame game, Graphics g) throws SlickException 
 	{
 		singleplayerButton.render(gc, g);
-		
 		multiplayerButton.render(gc, g);
 	}
 

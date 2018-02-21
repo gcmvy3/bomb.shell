@@ -34,13 +34,7 @@ public class Singleplayer extends BasicGameState
 		try 
 		{
 			level.init();
-			
-			//Scale the game so the level takes up the whole screen
-			float levelWidth = level.numColumns * level.tileSizeInPixels;
-			float levelHeight = level.numRows * level.tileSizeInPixels;
-			
-			BomBoiGame.scale = Math.min(BomBoiGame.WIDTH / levelWidth, BomBoiGame.HEIGHT / levelHeight);
-			
+
 			player = new Player(0.5f, 0.5f, level);
 		} 
 		catch (Exception e) 
@@ -54,10 +48,8 @@ public class Singleplayer extends BasicGameState
 	@Override
 	public void render(GameContainer gc, StateBasedGame game, Graphics g) throws SlickException 
 	{
-		int x = (BomBoiGame.WIDTH / 2) - (level.getWidth() / 2);
-		int y = (BomBoiGame.HEIGHT / 2) - (level.getHeight() / 2);
-		
-		//System.out.println("X: " + x);
+		int x = (int)((BomBoiGame.width / 2) - (level.getWidth() / 2));
+		int y = (int)((BomBoiGame.height / 2) - (level.getHeight() / 2));
 		
 		level.render(g, x, y);
 		

@@ -1,7 +1,5 @@
 package gui;
 
-import java.awt.Font;
-
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -10,7 +8,7 @@ import org.newdawn.slick.gui.AbstractComponent;
 import org.newdawn.slick.gui.ComponentListener;
 import org.newdawn.slick.gui.MouseOverArea;
 
-import main.SpriteManager;
+import main.ResourceManager;
 
 public class ListItem<T> 
 {
@@ -45,10 +43,10 @@ public class ListItem<T>
 		object = obj;
 		title = obj.toString();
 		
-		sprite = SpriteManager.getGUISprite(SPRITE_NAME);
+		sprite = ResourceManager.getGUISprite(SPRITE_NAME);
 		
 		moa = new MouseOverArea(gc, 
-								SpriteManager.getGUISprite(SPRITE_NAME), 
+								null, 
 								x,
 								y,
 								width,
@@ -63,8 +61,7 @@ public class ListItem<T>
 			}
 		});
 		
-		Font f = new Font("Verdana", Font.BOLD, 32);
-		font = new TrueTypeFont(f, true);
+		font = ResourceManager.getFont("listItemFont");
 	}
 	
 	public void render(Graphics g)

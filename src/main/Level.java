@@ -7,6 +7,7 @@ import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.World;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.TrueTypeFont;
 
 import tiles.Tile;
 import tiles.TileMap;
@@ -26,6 +27,11 @@ public class Level
 	
 	public float tileSizeInPixels;
 	public float tileSizeInMeters;
+	
+	public float levelScale = 1.0f;
+	
+	public int x;
+	public int y;
 	
 	public int numRows;
 	public int numColumns;
@@ -137,10 +143,40 @@ public class Level
 		LevelBoundary left = new LevelBoundary(-thickness / 2, yMiddle, thickness, worldHeight, this);
 		LevelBoundary right = new LevelBoundary(worldWidth + thickness / 2, yMiddle, thickness, worldHeight, this);
 	}
-
+	
+	public void render(Graphics g)
+	{
+		render(g, 0, 0);
+	}
+	
 	public void render(Graphics g, int x, int y)
 	{
-		g.scale(BomBoiGame.scale, BomBoiGame.scale);
+		render(g, x, y, (int)getWidth(), (int)getHeight());
+	}
+
+	public void render(Graphics g, int x, int y, int drawWidth, int drawHeight)
+	{
+		//Scale the game so the level takes up the whole allotted area
+		levelScale = Math.min(drawWidth / getWidth(), drawHeight / getHeight());
+		
+		//Center the level vertically in the allocated area
+		if(drawHeight > getScaledHeight())
+		{
+			y += (drawHeight - getScaledHeight()) / 2;
+		}
+		
+		//Center the level horizontally in the allocated area
+		if(drawWidth > getScaledWidth())
+		{
+			x += (drawWidth - getScaledWidth()) / 2;
+		}
+		
+		this.x = x;
+		this.y = y;
+		
+		//Move the map to the desired coordinates
+		g.translate(x, y);
+		g.scale(levelScale, levelScale);
 		
 		for(int r = 0; r < numRows; r++)
 		{
@@ -169,6 +205,30 @@ public class Level
 		{
 			e.render();
 		}
+		
+		g.resetTransform();
+	}
+	
+	public void renderPlayers(Graphics g, ArrayList<Player> players)
+	{
+		g.translate(x, y);
+		g.scale(levelScale, levelScale);
+		
+		TrueTypeFont playerNameFont = ResourceManager.getFont("playerNameFont");
+		
+		for(Player p : players)
+		{
+			if(p.isActive())
+			{
+				p.render(g);
+				
+				float nameLength = playerNameFont.getWidth(p.name);
+				
+				playerNameFont.drawString(p.getPixelsX() - nameLength / 2, p.getPixelsY(), p.name);
+			}
+		}
+		
+		g.resetTransform();
 	}
 	
 	public void update(GameContainer gc)
@@ -182,7 +242,7 @@ public class Level
 		{
 		    Bomb b = bombIter.next();
 
-			if(b.active)
+			if(b.isActive())
 			{
 				b.update();
 			}
@@ -232,14 +292,24 @@ public class Level
 		return meters * pixelsPerMeter;
 	}
 	
-	public int getWidth()
+	public float getWidth()
 	{
-		return (int)(numColumns * tileSizeInPixels);
+		return numColumns * tileSizeInPixels;
 	}
 	
-	public int getHeight()
+	public float getHeight()
 	{
-		return (int)(numRows * tileSizeInPixels);
+		return numRows * tileSizeInPixels;
+	}
+	
+	public float getScaledWidth()
+	{
+		return getWidth() * levelScale;
+	}
+	
+	public float getScaledHeight()
+	{
+		return getHeight() * levelScale;
 	}
 	
 	public Vec2 getSpawnPoint()

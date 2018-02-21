@@ -1,6 +1,5 @@
 package gamestates;
 
-import java.awt.Font;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
@@ -11,10 +10,10 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
+import gui.ListView;
 import main.BomBoiGame;
 import main.Level;
 import main.Player;
@@ -32,6 +31,8 @@ import self.totality.webSocketServer.listener.DisconnectListener;
 public class Multiplayer extends BasicGameState
 {
 	public static final int ID = 4;
+	public static final int RESPAWN_DELAY = 100;
+	public static final float LEADERBOARD_RELATIVE_WIDTH = 0.2f;
 	
 	Level level;
 	
@@ -40,10 +41,10 @@ public class Multiplayer extends BasicGameState
 	public static HashMap<UUID, Player> playerMap;
 	public static ArrayList<Player> playerList;
 	
-	TrueTypeFont playerNameFont;
-	
 	GameController loginController;
 	GameController gameController;
+	
+	ListView<Player> leaderboard;
 	
 	@Override
 	public void init(GameContainer arg0, StateBasedGame arg1) throws SlickException 
@@ -60,12 +61,6 @@ public class Multiplayer extends BasicGameState
 		try 
 		{
 			level.init();
-			
-			//Scale the game so the level takes up the whole screen
-			float levelWidth = level.numColumns * level.tileSizeInPixels;
-			float levelHeight = level.numRows * level.tileSizeInPixels;
-			
-			BomBoiGame.scale = Math.min(BomBoiGame.WIDTH / levelWidth, BomBoiGame.HEIGHT / levelHeight);
 		} 
 		catch (Exception e) 
 		{
@@ -79,7 +74,9 @@ public class Multiplayer extends BasicGameState
 		playerList = new ArrayList<Player>(playerMap.values());
 		
 		initTotality();
-		initFont();
+
+		int listWidth = (int)(gc.getWidth() * LEADERBOARD_RELATIVE_WIDTH);
+		leaderboard = new ListView<Player>(gc, 0, 0, listWidth, gc.getHeight(), 20);
 	}
 	
 	private void initTotality()
@@ -143,40 +140,7 @@ public class Multiplayer extends BasicGameState
 					}
 					else if(b.id.equals("loginButton"))
 					{
-						try
-						{
-							System.out.println("Spawning player!");
-							
-							if(playerMap.get(uuid) == null)
-							{
-								//Spawn player on a spawn block
-								Vec2 spawnLocation = level.getSpawnPoint();
-								
-								Player newPlayer = new Player(spawnLocation.x, spawnLocation.y, level);
-	
-								if(pendingPlayers.get(uuid) != null)
-								{
-									newPlayer.name = pendingPlayers.get(uuid);
-									pendingPlayers.remove(uuid);
-								}
-								
-								int r = (int)(Math.random() * 255);
-								int g = (int)(Math.random() * 200);
-								int blue = (int)(Math.random() * 255);
-								
-								newPlayer.color = new Color(r, g, blue);
-								
-								playerMap.put(uuid, newPlayer);
-	
-								playerList = new ArrayList<Player>(playerMap.values());
-							}
-							
-							TotalityServer.instance.sendControllerToPlayer(uuid, gameController);
-						}
-						catch(SlickException ex)
-						{
-							System.err.println("Could not add player to game!");
-						}
+						spawnPlayer(uuid);
 					}
 				}
 				else if(e.type == ControllerElementType.TEXTINPUT)
@@ -188,33 +152,19 @@ public class Multiplayer extends BasicGameState
 		});
 		
 		TotalityServer.instance.start();
-	}
-
-	private void initFont()
-	{
-		Font f = new Font("Verdana", Font.BOLD, 32);
-		playerNameFont = new TrueTypeFont(f, true);
+		TotalityServer.instance.startMulticastServer("bomboi");
 	}
 	
 	@Override
-	public void render(GameContainer arg0, StateBasedGame arg1, Graphics g) throws SlickException 
+	public void render(GameContainer gc, StateBasedGame arg1, Graphics g) throws SlickException 
 	{
-		int x = BomBoiGame.WIDTH - level.getWidth() / 2;
-		int y = BomBoiGame.HEIGHT - level.getHeight() / 2;
+		int levelX = leaderboard.width;
+		int levelY = 0;
 		
-		level.render(g, x, y);
+		level.render(g, levelX, levelY, gc.getWidth() - leaderboard.width, gc.getHeight());
+		level.renderPlayers(g, playerList);
 		
-		for(Player p : playerList)
-		{
-			if(p.active)
-			{
-				p.render(g);
-				
-				float nameLength = playerNameFont.getWidth(p.name);
-				
-				playerNameFont.drawString(p.getPixelsX() - nameLength / 2, p.getPixelsY(), p.name);
-			}
-		}
+		leaderboard.render(g);
 	}
 
 	@Override
@@ -225,11 +175,58 @@ public class Multiplayer extends BasicGameState
 		for(Player p : playerList)
 		{
 			p.update(gc);
+			
+			//Respawn the player
+			if(!p.isActive() && p.timeSinceDeath >= RESPAWN_DELAY)
+			{
+				Vec2 spawnPoint = level.getSpawnPoint();
+				p.respawn(spawnPoint.x, spawnPoint.y);
+			}
 		}
 		
 		if(gc.getInput().isKeyDown(Input.KEY_ESCAPE))
 		{
 			game.enterState(1);
+		}
+		
+		leaderboard.setList(playerList);
+	}
+	
+	public void spawnPlayer(UUID uuid)
+	{
+		try
+		{
+			System.out.println("Spawning player!");
+			
+			if(playerMap.get(uuid) == null)
+			{
+				//Spawn player on a spawn block
+				Vec2 spawnLocation = level.getSpawnPoint();
+				
+				Player newPlayer = new Player(spawnLocation.x, spawnLocation.y, level);
+
+				if(pendingPlayers.get(uuid) != null)
+				{
+					newPlayer.name = pendingPlayers.get(uuid);
+					pendingPlayers.remove(uuid);
+				}
+				
+				int r = (int)(Math.random() * 255);
+				int g = (int)(Math.random() * 200);
+				int blue = (int)(Math.random() * 255);
+				
+				newPlayer.color = new Color(r, g, blue);
+				
+				playerMap.put(uuid, newPlayer);
+
+				playerList = new ArrayList<Player>(playerMap.values());
+			}
+			
+			TotalityServer.instance.sendControllerToPlayer(uuid, gameController);
+		}
+		catch(SlickException ex)
+		{
+			System.err.println("Could not add player to game!");
 		}
 	}
 

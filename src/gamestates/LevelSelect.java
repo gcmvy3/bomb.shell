@@ -18,6 +18,7 @@ import gui.ListView;
 import main.BomBoiGame;
 import main.Level;
 import main.LevelFactory;
+import main.ResourceManager;
 import tiles.TileMap;
 import tiles.Tileset;
 
@@ -56,8 +57,8 @@ public class LevelSelect extends BasicGameState
 	@Override
 	public void init(GameContainer gc, StateBasedGame game) throws SlickException 
 	{
-		startButtonImage = new Image("/assets/gui/startButton.png");
-		
+		startButtonImage = ResourceManager.getGUISprite("startButton");
+
 		int buttonWidth = startButtonImage.getWidth();
 		int buttonHeight = startButtonImage.getHeight();
 		

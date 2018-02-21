@@ -31,6 +31,9 @@ public class Player extends Entity
 	
 	int attackDelay = 30;
 	int timeSinceAttack = 0;
+	public int timeSinceDeath = 0;
+	int numDeaths = 0;
+	int numKills = 0;
 	
 	public boolean dropBomb = false;
 	
@@ -89,8 +92,9 @@ public class Player extends Entity
 	
 	public void update(GameContainer gc)
 	{	
-		if(!active)
+		if(!isActive())
 		{
+			timeSinceDeath++;
 			return;
 		}
 		
@@ -180,32 +184,20 @@ public class Player extends Entity
 		}
 	}
 	
-	public void respawn()
+	public void respawn(float x, float y)
 	{
+		body.setTransform(new Vec2(x, y), body.getAngle());
+		
 		health = maxHealth;
-		
-		active = true;
-		
-		//Re-enable collision
-		Filter filter = new Filter();
-		filter.categoryBits = Entity.PLAYER;
-		filter.maskBits = Entity.SOLID_TILE | Entity.BOMB | Entity.LEVEL_BOUNDARY | Entity.PLAYER;
-		
-		body.getFixtureList().setFilterData(filter);
+		setActive(true);
 	}
 	
 	public void destroy()
 	{
-		active = false;
+		setActive(false);
 		
-		//Disable collision
-		Filter filter = new Filter();
-		filter.categoryBits = Entity.NONE;
-		filter.maskBits = Entity.NONE;
-		
-		body.getFixtureList().setFilterData(filter);
-		
-		level.world.destroyBody(body);
+		numDeaths++;
+		timeSinceDeath++;
 	}
 	
 	public float getPixelsX()
@@ -221,5 +213,11 @@ public class Player extends Entity
 	public float getSizeInPixels()
 	{
 		return level.metersToPixels(sizeInMeters);
+	}
+	
+	@Override
+	public String toString()
+	{
+		return name;
 	}
 }

@@ -22,12 +22,11 @@ public class BomBoiGame extends StateBasedGame
     public static final int MULTIPLAYER   = 4;
 
     // Application Properties
-    public static final int WIDTH   = 3200;
-    public static final int HEIGHT  = 1800;
-    
-    public static float scale = 1.0f;
+    public static int width  = 1920;
+    public static int height = 1080;
     
     public static boolean multiplayer = false;
+    public static boolean reloaded = false;
     public static Level level;
 	
 	public BomBoiGame() 
@@ -51,12 +50,13 @@ public class BomBoiGame extends StateBasedGame
     {
         try 
         {
-            AppGameContainer app = new AppGameContainer(new ScalableGame(new BomBoiGame(), WIDTH, HEIGHT));
-            app.setDisplayMode(WIDTH, HEIGHT, true);
-            app.setShowFPS(true);
+        	ScalableGame scalableGame = new ScalableGame(new BomBoiGame(), width, height, true);
+            AppGameContainer app = new AppGameContainer(scalableGame);
+            app.setDisplayMode(width, height, true);
             app.setVSync(true);
+
             app.start();
-        } 
+        }
         catch(SlickException e) 
         {
             e.printStackTrace();

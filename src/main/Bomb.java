@@ -60,7 +60,7 @@ public class Bomb extends Entity
 	
 	public void update()
 	{		
-		if(active)
+		if(isActive())
 		{
 			if(!collisionEnabled || parent == null)
 			{
@@ -130,7 +130,7 @@ public class Bomb extends Entity
 		Explosion explosion = new Explosion(x, y, level, damage, rays, explosionThickness);
 		level.addExplosion(explosion);
 		
-		active = false;
+		setActive(false);
 		
 		level.world.destroyBody(body);
 	}

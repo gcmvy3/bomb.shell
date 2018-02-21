@@ -1,25 +1,44 @@
 package main;
 
+import java.awt.Font;
 import java.io.File;
 import java.util.HashMap;
 
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.TrueTypeFont;
 
-public class SpriteManager 
+public class ResourceManager 
 {
 	final static String SPRITES_DIRECTORY = "assets/sprites/";
 	final static String GUI_SPRITES_DIRECTORY = "assets/gui/";
 	
 	static HashMap<String, Image> sprites = new HashMap<String, Image>();
 	static HashMap<String, Image> guiSprites = new HashMap<String, Image>();
-
+	static HashMap<String, TrueTypeFont> fonts = new HashMap<String, TrueTypeFont>();
+	
 	static boolean initialized = false;
+	
+	public static void initialize()
+	{
+		initialized = true;
+		loadSprites();
+		loadFonts();
+	}
+	
+	private static void loadFonts()
+	{
+		Font f = new Font("Verdana", Font.BOLD, 32);
+		TrueTypeFont listItemFont = new TrueTypeFont(f, true);
+		fonts.put("listItemFont", listItemFont);
+		
+		f = new Font("Verdana", Font.BOLD, 28);
+		TrueTypeFont playerNameFont = new TrueTypeFont(f, true);
+		fonts.put("playerNameFont", playerNameFont);
+	}
 	
 	private static void loadSprites()
 	{
-		initialized = true;
-		
 		File[] spriteFiles = new File(SPRITES_DIRECTORY).listFiles();
 
 		for(int i = 0; i < spriteFiles.length; i++)
@@ -69,11 +88,21 @@ public class SpriteManager
 		}
 	}
 	
+	public static TrueTypeFont getFont(String id)
+	{
+		if(!initialized)
+		{
+			initialize();
+		}
+		
+		return fonts.get(id);
+	}
+	
 	public static Image getSprite(String id)
 	{
 		if(!initialized)
 		{
-			loadSprites();
+			initialize();
 		}
 		
 		return sprites.get(id);
@@ -83,7 +112,7 @@ public class SpriteManager
 	{
 		if(!initialized)
 		{
-			loadSprites();
+			initialize();
 		}
 		
 		return guiSprites.get(id);
