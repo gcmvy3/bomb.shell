@@ -20,7 +20,8 @@ public class Explosion implements RayCastCallback
 	float thickness = 0;
 	
 	int rayIndex; //Temp variable used for calculating ray lengths
-	
+
+	Player parent;
 	Level level;
 	Vec2[] rays;
 	float[] rayLengths;
@@ -31,8 +32,9 @@ public class Explosion implements RayCastCallback
 	
 	Image sprite;
 	
-	public Explosion(float x, float y, Level l, int damage, Vec2[] rays, float thickness) 
+	public Explosion(Player parent, float x, float y, Level l, int damage, Vec2[] rays, float thickness) 
 	{
+		this.parent = parent;
 		this.x = x;
 		this.y = y;
 		this.level = l;
@@ -50,14 +52,12 @@ public class Explosion implements RayCastCallback
 	public void update()
 	{
 		age++;
-		if(age == 1)
-		{
-			dealDamage();
-		}
 		if(age >= DURATION)
 		{
 			active = false;
 		}
+		
+		dealDamage();
 	}
 	
 	public void render()
@@ -118,6 +118,16 @@ public class Explosion implements RayCastCallback
 					}
 				}
 				rc.entity.takeDamage(damage);
+				
+				if(rc.entity instanceof Player)
+				{
+					//If we killed a player, update kill count
+					Player p = (Player) rc.entity;
+					if(!p.isActive())
+					{
+						parent.numKills++;
+					}
+				}
 			}
 		}
 	}
@@ -153,7 +163,10 @@ public class Explosion implements RayCastCallback
 		}
 		
 		RayCollision collision = new RayCollision(entity, fraction);
-		collisions.add(collision);
+		if(!collisions.contains(collision))
+		{
+			collisions.add(collision);
+		}
 		
 		return 1;
 	}

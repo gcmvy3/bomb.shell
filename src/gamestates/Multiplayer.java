@@ -13,6 +13,7 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
+import gui.Leaderboard;
 import gui.ListView;
 import main.BomBoiGame;
 import main.Level;
@@ -21,6 +22,7 @@ import self.totality.TotalityServer;
 import self.totality.webSocketServer.controller.Button;
 import self.totality.webSocketServer.controller.ControllerElement;
 import self.totality.webSocketServer.controller.ControllerElementType;
+import self.totality.webSocketServer.controller.DPad;
 import self.totality.webSocketServer.controller.GameController;
 import self.totality.webSocketServer.controller.Joystick;
 import self.totality.webSocketServer.controller.TextInput;
@@ -44,7 +46,7 @@ public class Multiplayer extends BasicGameState
 	GameController loginController;
 	GameController gameController;
 	
-	ListView<Player> leaderboard;
+	Leaderboard leaderboard;
 	
 	@Override
 	public void init(GameContainer arg0, StateBasedGame arg1) throws SlickException 
@@ -76,7 +78,7 @@ public class Multiplayer extends BasicGameState
 		initTotality();
 
 		int listWidth = (int)(gc.getWidth() * LEADERBOARD_RELATIVE_WIDTH);
-		leaderboard = new ListView<Player>(gc, 0, 0, listWidth, gc.getHeight(), 20);
+		leaderboard = new Leaderboard(gc, 0, 0, listWidth, gc.getHeight(), 20);
 	}
 	
 	private void initTotality()
@@ -85,13 +87,13 @@ public class Multiplayer extends BasicGameState
 		loginController.addText("usernamePrompt", "Type a username:", 32, 0.5f, 0.15f);
 		loginController.addTextInput("nameInput", 0.5f, 0.25f, 0.8f, 0.05f);
 		loginController.addButton("loginButton", 0.5f, 0.75f, 1.0f, 0.5f);
-			
+		
 		TotalityServer.instance.setDefaultController(loginController);
-
+		
 		gameController = new GameController();
 		gameController.addButton("bombButton", 0.5f, 0.25f, 1.0f, 0.5f);
-		gameController.addJoystick("joystick1", 0.5f, 0.75f, 1.0f, 0.5f);
-
+		gameController.addDPad("dpad1", 0.5f, 0.75f, 1.0f, 0.5f);
+		
 		TotalityServer.instance.addConnectListener(new ConnectListener()
 		{
 			@Override
@@ -123,12 +125,14 @@ public class Multiplayer extends BasicGameState
 			{
 				Player p = playerMap.get(uuid);
 
-				if (e.type == ControllerElementType.JOYSTICK)
+				if (e.type == ControllerElementType.DPAD)
 				{
-					Joystick j = (Joystick) e;
-
-					p.joystickX = j.getXVal();
-					p.joystickY = j.getYVal();
+					DPad d = (DPad) e;
+					
+					p.dPadUp = d.up();
+					p.dPadDown = d.down();
+					p.dPadLeft = d.left();
+					p.dPadRight = d.right();
 				}
 				else if (e.type == ControllerElementType.BUTTON)
 				{
@@ -186,7 +190,7 @@ public class Multiplayer extends BasicGameState
 		
 		if(gc.getInput().isKeyDown(Input.KEY_ESCAPE))
 		{
-			game.enterState(1);
+			game.enterState(GameStates.MAIN_MENU);
 		}
 		
 		leaderboard.setList(playerList);

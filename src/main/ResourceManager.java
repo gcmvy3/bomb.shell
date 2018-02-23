@@ -28,11 +28,11 @@ public class ResourceManager
 	
 	private static void loadFonts()
 	{
-		Font f = new Font("Verdana", Font.BOLD, 32);
+		Font f = new Font("Verdana", Font.PLAIN, 32);
 		TrueTypeFont listItemFont = new TrueTypeFont(f, true);
 		fonts.put("listItemFont", listItemFont);
 		
-		f = new Font("Verdana", Font.BOLD, 28);
+		f = new Font("Verdana", Font.PLAIN, 28);
 		TrueTypeFont playerNameFont = new TrueTypeFont(f, true);
 		fonts.put("playerNameFont", playerNameFont);
 	}

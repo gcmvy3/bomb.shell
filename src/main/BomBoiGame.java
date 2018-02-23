@@ -1,5 +1,9 @@
 package main;
 
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+import java.io.File;
+
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.ScalableGame;
@@ -14,14 +18,7 @@ import gamestates.SplashScreen;
 
 public class BomBoiGame extends StateBasedGame
 {
-    // Game state identifiers
-    public static final int SPLASHSCREEN  = 0;
-    public static final int MAIN_MENU     = 1;
-    public static final int LEVEL_SELECT  = 2;
-    public static final int SINGLEPLAYER  = 3;
-    public static final int MULTIPLAYER   = 4;
-
-    // Application Properties
+    // Default resolution (should be automatically changed)
     public static int width  = 1920;
     public static int height = 1080;
     
@@ -38,16 +35,21 @@ public class BomBoiGame extends StateBasedGame
     public void initStatesList(GameContainer gc) throws SlickException 
     {
         // The first state added will be the one that is loaded first, when the application is launched
-        this.addState(new SplashScreen());
-        this.addState(new MainMenu());
-        this.addState(new LevelSelect());
-        this.addState(new Singleplayer());
-        this.addState(new Multiplayer());
+        this.addState(new SplashScreen());	//State 0
+        this.addState(new MainMenu());		//State 1
+        this.addState(new LevelSelect());   //State 2
+        this.addState(new Singleplayer());  //State 3
+        this.addState(new Multiplayer());   //State 4
     }
 
     // Main Method
     public static void main(String[] args) 
     {
+    	GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+    	width = gd.getDisplayMode().getWidth();
+    	height = gd.getDisplayMode().getHeight();
+    	
+    	setLWJGLNatives();
         try 
         {
         	ScalableGame scalableGame = new ScalableGame(new BomBoiGame(), width, height, true);
@@ -61,6 +63,43 @@ public class BomBoiGame extends StateBasedGame
         {
             e.printStackTrace();
         }
+    }
+    
+    public static void setLWJGLNatives()
+    {
+    	Class<BomBoiGame> c = BomBoiGame.class;
+
+		System.out.println(c.getResource(c.getName() + ".class"));
+    	
+    	String currentDirectory = new File("native").getAbsolutePath();
+    	String nativesPath = currentDirectory + File.separator + getOSName();
+    	System.setProperty("org.lwjgl.librarypath", nativesPath);
+    }
+    
+    public static String getOSName()
+    {
+    	String system = System.getProperty("os.name").toLowerCase();
+    	
+        if(system.startsWith("win"))
+        {
+            return "windows";
+        }
+
+        if(system.startsWith("mac"))
+        {
+            return "macosx";
+        }
+
+        if(system.startsWith("lin"))
+        {
+            return "linux";
+        }
+
+        if(system.startsWith("sol"))
+        {
+            return "solaris";
+        }
+        return "unknown";
     }
 }
 

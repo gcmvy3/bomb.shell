@@ -77,7 +77,6 @@ public abstract class Entity
 	
 	public void destroy()
 	{
-		
 	}
 	
 	public boolean isActive()

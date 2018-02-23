@@ -1,5 +1,8 @@
 package gamestates;
 
+import java.util.ArrayList;
+
+import org.jbox2d.common.Vec2;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
@@ -17,6 +20,7 @@ public class Singleplayer extends BasicGameState
 	
 	Level level;
 	
+	ArrayList<Player> players;
 	Player player;
 	
 	@Override
@@ -34,8 +38,11 @@ public class Singleplayer extends BasicGameState
 		try 
 		{
 			level.init();
-
-			player = new Player(0.5f, 0.5f, level);
+			
+			//Spawn the player
+			Vec2 spawnPoint = level.getSpawnPoint();
+			player = new Player(spawnPoint.x, spawnPoint.y, level);
+			players = new ArrayList<Player>();
 		} 
 		catch (Exception e) 
 		{
@@ -48,12 +55,8 @@ public class Singleplayer extends BasicGameState
 	@Override
 	public void render(GameContainer gc, StateBasedGame game, Graphics g) throws SlickException 
 	{
-		int x = (int)((BomBoiGame.width / 2) - (level.getWidth() / 2));
-		int y = (int)((BomBoiGame.height / 2) - (level.getHeight() / 2));
-		
-		level.render(g, x, y);
-		
-		player.render(g);
+		level.render(g, 0, 0, gc.getWidth(), gc.getHeight());
+		level.renderPlayers(g, players);
 	}
 
 	@Override
@@ -62,6 +65,7 @@ public class Singleplayer extends BasicGameState
 		level.update(gc);
 		player.update(gc);
 		
+		//If the user presses 'escape', return to the main menu
 		if(gc.getInput().isKeyDown(Input.KEY_ESCAPE))
 		{
 			game.enterState(1);

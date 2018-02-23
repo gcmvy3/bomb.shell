@@ -23,8 +23,13 @@ public class Player extends Entity
 	float sizeInMeters;
 	float speed = 8.0f;
 	
-	public double joystickX = 0f;
-	public double joystickY = 0f;
+	//public double joystickX = 0f;
+	//public double joystickY = 0f;
+	
+	public boolean dPadUp = false;
+	public boolean dPadDown = false;
+	public boolean dPadLeft = false;
+	public boolean dPadRight = false;
 	
 	int maxHealth = 100;
 	int health = maxHealth;
@@ -32,9 +37,8 @@ public class Player extends Entity
 	int attackDelay = 30;
 	int timeSinceAttack = 0;
 	public int timeSinceDeath = 0;
-	int numDeaths = 0;
-	int numKills = 0;
-	
+	public int numDeaths = 0;
+	public int numKills = 0;
 	public boolean dropBomb = false;
 	
 	public String name = "";
@@ -108,22 +112,22 @@ public class Player extends Entity
 	    
 	    Input input = gc.getInput();
 	    
-		if(joystickY < -JOYSTICK_DEADZONE || input.isKeyDown(Input.KEY_S))
+		if(dPadDown || input.isKeyDown(Input.KEY_S))
 		{
 			//DOWN
 			desiredYVel = Math.max(currentVelocity.y - 0.1f, speed);
 		}
-		if(joystickX < -JOYSTICK_DEADZONE || input.isKeyDown(Input.KEY_A))
+		if(dPadLeft || input.isKeyDown(Input.KEY_A))
 		{
 			//LEFT
 			desiredXVel = Math.min(currentVelocity.x + 0.1f, -speed);
 		}
-		if(joystickY > JOYSTICK_DEADZONE || input.isKeyDown(Input.KEY_W))
+		if(dPadUp || input.isKeyDown(Input.KEY_W))
 		{
 			//UP
 			desiredYVel = Math.min(currentVelocity.y + 0.1f, -speed);
 		}
-		if(joystickX > JOYSTICK_DEADZONE || input.isKeyDown(Input.KEY_D))
+		if(dPadRight || input.isKeyDown(Input.KEY_D))
 		{
 			//RIGHT
 			desiredXVel = Math.max(currentVelocity.x - 0.1f, speed);
