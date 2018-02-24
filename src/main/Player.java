@@ -13,6 +13,8 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 
+import self.totality.webSocketServer.controller.DPad;
+
 public class Player extends Entity
 {
 	final String SPRITE_DIRECTORY = "assets" + File.separator + "characters" + File.separator;
@@ -25,11 +27,7 @@ public class Player extends Entity
 	
 	//public double joystickX = 0f;
 	//public double joystickY = 0f;
-	
-	public boolean dPadUp = false;
-	public boolean dPadDown = false;
-	public boolean dPadLeft = false;
-	public boolean dPadRight = false;
+	public int dPadDirection = 0;
 	
 	int maxHealth = 100;
 	int health = maxHealth;
@@ -112,22 +110,22 @@ public class Player extends Entity
 	    
 	    Input input = gc.getInput();
 	    
-		if(dPadDown || input.isKeyDown(Input.KEY_S))
+		if(dPadDirection == DPad.DOWN || input.isKeyDown(Input.KEY_S))
 		{
 			//DOWN
 			desiredYVel = Math.max(currentVelocity.y - 0.1f, speed);
 		}
-		if(dPadLeft || input.isKeyDown(Input.KEY_A))
+		if(dPadDirection == DPad.LEFT || input.isKeyDown(Input.KEY_A))
 		{
 			//LEFT
 			desiredXVel = Math.min(currentVelocity.x + 0.1f, -speed);
 		}
-		if(dPadUp || input.isKeyDown(Input.KEY_W))
+		if(dPadDirection == DPad.UP || input.isKeyDown(Input.KEY_W))
 		{
 			//UP
 			desiredYVel = Math.min(currentVelocity.y + 0.1f, -speed);
 		}
-		if(dPadRight || input.isKeyDown(Input.KEY_D))
+		if(dPadDirection == DPad.RIGHT || input.isKeyDown(Input.KEY_D))
 		{
 			//RIGHT
 			desiredXVel = Math.max(currentVelocity.x - 0.1f, speed);

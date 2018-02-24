@@ -17,16 +17,13 @@ import gui.Leaderboard;
 import main.BomBoiGame;
 import main.Level;
 import main.Player;
-import self.totality.TotalityServer;
-import self.totality.webSocketServer.PacketProcessor;
+import self.totality.Totality;
 import self.totality.webSocketServer.PacketProcessor.ControllerElementProcessor.Listener;
-import self.totality.webSocketServer.controller.ButtonElement;
-import self.totality.webSocketServer.controller.ButtonElement.DataClass;
-import self.totality.webSocketServer.controller.ControllerElement;
-import self.totality.webSocketServer.controller.DPadElement;
+import self.totality.webSocketServer.controller.Button;
+import self.totality.webSocketServer.controller.DPad;
 import self.totality.webSocketServer.controller.GameController;
-import self.totality.webSocketServer.controller.TextElement;
-import self.totality.webSocketServer.controller.TextInputElement;
+import self.totality.webSocketServer.controller.Text;
+import self.totality.webSocketServer.controller.TextInput;
 import self.totality.webSocketServer.listener.ConnectListener;
 import self.totality.webSocketServer.listener.DisconnectListener;
 
@@ -84,17 +81,17 @@ public class Multiplayer extends BasicGameState
 	private void initTotality()
 	{		
 		loginController = new GameController();
-		loginController.addControllerElement(new TextElement("usernamePrompt", 0.5f, 0.15f, "Type a username:", 32));
-		loginController.addControllerElement(new TextInputElement("nameInput", 0.5f, 0.25f, 0.8f, 0.05f));
-		loginController.addControllerElement(new ButtonElement("loginButton", 0.5f, 0.75f, 1.0f, 0.5f));
+		loginController.addControllerElement(new Text("usernamePrompt", 0.5f, 0.15f, "Type a username:", 32));
+		loginController.addControllerElement(new TextInput("nameInput", 0.5f, 0.25f, 0.8f, 0.05f));
+		loginController.addControllerElement(new Button("loginButton", 0.5f, 0.75f, 1.0f, 0.5f));
 
-		TotalityServer.instance.setDefaultController(loginController);
+		Totality.instance.setDefaultController(loginController);
 		
 		gameController = new GameController();
-		gameController.addControllerElement(new ButtonElement("bombButton", 0.5f, 0.25f, 1.0f, 0.5f));
-		gameController.addControllerElement(new DPadElement("dpad1", 0.5f, 0.75f, 1.0f, 0.5f));
+		gameController.addControllerElement(new Button("bombButton", 0.5f, 0.25f, 1.0f, 0.5f));
+		gameController.addControllerElement(new DPad("dpad1", 0.5f, 0.75f, 1.0f, 0.5f));
 		
-		TotalityServer.instance.addConnectListener(new ConnectListener()
+		Totality.instance.addConnectListener(new ConnectListener()
 		{
 			@Override
 			public void onConnect(UUID uuid)
@@ -104,7 +101,7 @@ public class Multiplayer extends BasicGameState
 			}
 		});
 
-		TotalityServer.instance.addDisconnectListener(new DisconnectListener()
+		Totality.instance.addDisconnectListener(new DisconnectListener()
 		{
 			@Override
 			public void onDisconnect(UUID uuid)
@@ -118,10 +115,10 @@ public class Multiplayer extends BasicGameState
 			}
 		});
 		
-		PacketProcessor.registerListener("BUTTON", new Listener<ButtonElement.DataClass>()
+		Totality.addDataListener(Button.TYPE, new Listener<Button.DataClass>()
 		{
 			@Override
-			public void onData(UUID uuid, DataClass data) 
+			public void onData(UUID uuid, Button.DataClass data) 
 			{
 				Player p = playerMap.get(uuid);
 				
@@ -136,31 +133,28 @@ public class Multiplayer extends BasicGameState
 			}
 		});
 		
-		PacketProcessor.registerListener("DPAD", new Listener<DPadElement.DataClass>()
+		Totality.addDataListener(DPad.TYPE, new Listener<DPad.DataClass>()
 		{
 			@Override
-			public void onData(UUID uuid, DPadElement.DataClass data) 
+			public void onData(UUID uuid, DPad.DataClass data) 
 			{
 				Player p = playerMap.get(uuid);
 				
-				p.dPadUp = data.up;
-				p.dPadDown = data.down;
-				p.dPadLeft = data.left;
-				p.dPadRight = data.right;
+				p.dPadDirection = data.direction;
 			}
 		});
 		
-		PacketProcessor.registerListener("TEXTINPUT", new Listener<TextInputElement.DataClass>()
+		Totality.addDataListener(TextInput.TYPE, new Listener<TextInput.DataClass>()
 		{
 			@Override
-			public void onData(UUID uuid, TextInputElement.DataClass data) 
+			public void onData(UUID uuid, TextInput.DataClass data) 
 			{
 				pendingPlayers.put(uuid, data.text);
 			}
 		});
 		
-		TotalityServer.instance.start();
-		TotalityServer.instance.startMulticastServer("bomboi");
+		Totality.instance.start();
+		Totality.instance.startMulticastServer("bomboi");
 	}
 	
 	@Override
@@ -230,7 +224,7 @@ public class Multiplayer extends BasicGameState
 				playerList = new ArrayList<Player>(playerMap.values());
 			}
 			
-			TotalityServer.instance.sendControllerToPlayer(uuid, gameController);
+			Totality.instance.sendControllerToPlayer(uuid, gameController);
 		}
 		catch(SlickException ex)
 		{
