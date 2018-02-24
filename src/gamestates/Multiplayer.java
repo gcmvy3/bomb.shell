@@ -14,20 +14,20 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 import gui.Leaderboard;
-import gui.ListView;
 import main.BomBoiGame;
 import main.Level;
 import main.Player;
 import self.totality.TotalityServer;
-import self.totality.webSocketServer.controller.Button;
+import self.totality.webSocketServer.PacketProcessor;
+import self.totality.webSocketServer.PacketProcessor.ControllerElementProcessor.Listener;
+import self.totality.webSocketServer.controller.ButtonElement;
+import self.totality.webSocketServer.controller.ButtonElement.DataClass;
 import self.totality.webSocketServer.controller.ControllerElement;
-import self.totality.webSocketServer.controller.ControllerElementType;
-import self.totality.webSocketServer.controller.DPad;
+import self.totality.webSocketServer.controller.DPadElement;
 import self.totality.webSocketServer.controller.GameController;
-import self.totality.webSocketServer.controller.Joystick;
-import self.totality.webSocketServer.controller.TextInput;
+import self.totality.webSocketServer.controller.TextElement;
+import self.totality.webSocketServer.controller.TextInputElement;
 import self.totality.webSocketServer.listener.ConnectListener;
-import self.totality.webSocketServer.listener.DataListener;
 import self.totality.webSocketServer.listener.DisconnectListener;
 
 public class Multiplayer extends BasicGameState
@@ -84,15 +84,15 @@ public class Multiplayer extends BasicGameState
 	private void initTotality()
 	{		
 		loginController = new GameController();
-		loginController.addText("usernamePrompt", "Type a username:", 32, 0.5f, 0.15f);
-		loginController.addTextInput("nameInput", 0.5f, 0.25f, 0.8f, 0.05f);
-		loginController.addButton("loginButton", 0.5f, 0.75f, 1.0f, 0.5f);
-		
+		loginController.addControllerElement(new TextElement("usernamePrompt", 0.5f, 0.15f, "Type a username:", 32));
+		loginController.addControllerElement(new TextInputElement("nameInput", 0.5f, 0.25f, 0.8f, 0.05f));
+		loginController.addControllerElement(new ButtonElement("loginButton", 0.5f, 0.75f, 1.0f, 0.5f));
+
 		TotalityServer.instance.setDefaultController(loginController);
 		
 		gameController = new GameController();
-		gameController.addButton("bombButton", 0.5f, 0.25f, 1.0f, 0.5f);
-		gameController.addDPad("dpad1", 0.5f, 0.75f, 1.0f, 0.5f);
+		gameController.addControllerElement(new ButtonElement("bombButton", 0.5f, 0.25f, 1.0f, 0.5f));
+		gameController.addControllerElement(new DPadElement("dpad1", 0.5f, 0.75f, 1.0f, 0.5f));
 		
 		TotalityServer.instance.addConnectListener(new ConnectListener()
 		{
@@ -117,41 +117,45 @@ public class Multiplayer extends BasicGameState
 				playerList = new ArrayList<Player>(playerMap.values());
 			}
 		});
-
-		TotalityServer.instance.addDataListener(new DataListener()
+		
+		PacketProcessor.registerListener("BUTTON", new Listener<ButtonElement.DataClass>()
 		{
 			@Override
-			public void onDataUpdate(UUID uuid, ControllerElement e)
+			public void onData(UUID uuid, DataClass data) 
 			{
 				Player p = playerMap.get(uuid);
-
-				if (e.type == ControllerElementType.DPAD)
+				
+				if (data.id.equals("bombButton"))
 				{
-					DPad d = (DPad) e;
-					
-					p.dPadUp = d.up();
-					p.dPadDown = d.down();
-					p.dPadLeft = d.left();
-					p.dPadRight = d.right();
+					p.dropBomb = true;
 				}
-				else if (e.type == ControllerElementType.BUTTON)
+				else if(data.id.equals("loginButton"))
 				{
-					Button b = (Button) e;
-
-					if (b.id.equals("bombButton"))
-					{
-						p.dropBomb = true;
-					}
-					else if(b.id.equals("loginButton"))
-					{
-						spawnPlayer(uuid);
-					}
+					spawnPlayer(uuid);
 				}
-				else if(e.type == ControllerElementType.TEXTINPUT)
-				{
-					TextInput text = (TextInput)e;
-					pendingPlayers.put(uuid, text.value);
-				}
+			}
+		});
+		
+		PacketProcessor.registerListener("DPAD", new Listener<DPadElement.DataClass>()
+		{
+			@Override
+			public void onData(UUID uuid, DPadElement.DataClass data) 
+			{
+				Player p = playerMap.get(uuid);
+				
+				p.dPadUp = data.up;
+				p.dPadDown = data.down;
+				p.dPadLeft = data.left;
+				p.dPadRight = data.right;
+			}
+		});
+		
+		PacketProcessor.registerListener("TEXTINPUT", new Listener<TextInputElement.DataClass>()
+		{
+			@Override
+			public void onData(UUID uuid, TextInputElement.DataClass data) 
+			{
+				pendingPlayers.put(uuid, data.text);
 			}
 		});
 		

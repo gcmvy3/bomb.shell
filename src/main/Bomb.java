@@ -125,8 +125,7 @@ public class Bomb extends Entity
 		rays[0] = downRay;
 		rays[1] = upRay;
 		rays[2] = leftRay;
-		rays[3] = rightRay;
-		
+		rays[3] = rightRay;		
 		Explosion explosion = new Explosion(parent, x, y, level, damage, rays, explosionThickness);
 		level.addExplosion(explosion);
 		
