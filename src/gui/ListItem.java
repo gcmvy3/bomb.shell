@@ -61,7 +61,7 @@ public class ListItem<T>
 			}
 		});
 		
-		font = ResourceManager.getFont("listItemFont");
+		font = ResourceManager.getFont(ResourceManager.LIST_ITEM_FONT);
 	}
 	
 	public void render(Graphics g)

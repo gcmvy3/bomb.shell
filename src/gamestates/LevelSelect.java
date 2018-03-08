@@ -10,22 +10,19 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.gui.AbstractComponent;
 import org.newdawn.slick.gui.ComponentListener;
-import org.newdawn.slick.gui.MouseOverArea;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
+import gui.CustomButton;
 import gui.ListView;
 import main.BomBoiGame;
 import main.Level;
 import main.LevelFactory;
-import main.ResourceManager;
 import tiles.TileMap;
 import tiles.Tileset;
 
 public class LevelSelect extends BasicGameState
 {
-	public static final int ID = 2;
-	
 	final float TILEMAP_LIST_WIDTH = 0.2f;
 	final float TILESET_LIST_WIDTH = 0.2f;
 	
@@ -43,11 +40,9 @@ public class LevelSelect extends BasicGameState
 	
 	private Level selectedLevel = null;
 	
-	private Image startButtonImage;
-	
 	private Image thumbnail;
 	
-	private MouseOverArea startButton;
+	private CustomButton startButton;
 	
 	ListView<TileMap> tileMapList;
 	ListView<Tileset> tilesetList;
@@ -57,17 +52,15 @@ public class LevelSelect extends BasicGameState
 	@Override
 	public void init(GameContainer gc, StateBasedGame game) throws SlickException 
 	{
-		startButtonImage = ResourceManager.getGUISprite("startButton");
-
-		int buttonWidth = startButtonImage.getWidth();
-		int buttonHeight = startButtonImage.getHeight();
+		int buttonWidth = gc.getWidth() / 5;
+		int buttonHeight = gc.getHeight() / 12;
 		
-		startButton = new MouseOverArea(gc,
-										startButtonImage,
+		startButton = new CustomButton(gc,
 										gc.getWidth() / 2 - buttonWidth / 2,
 										gc.getHeight() - gc.getHeight() / 10,
 										buttonWidth,
-										buttonHeight);
+										buttonHeight,
+										"Start");
 		startButton.addListener(new ComponentListener() 
 		{
 			@Override
@@ -138,12 +131,12 @@ public class LevelSelect extends BasicGameState
 			thumbnail.draw(thumbnailX, thumbnailY);
 		}
 		
-		int textX = gc.getWidth() / 2 - font.getWidth("TileMap: " + selectedTileMap.name) / 2;
-		int textY = gc.getHeight() - gc.getHeight() / 7;
+		float textX = gc.getWidth() / 2 - font.getWidth("TileMap: " + selectedTileMap.name) / 2;
+		float textY = gc.getHeight() - gc.getHeight() / 7;
 		font.drawString(textX, textY, "TileMap: " + selectedTileMap.name);
 		
 		textX = gc.getWidth() / 2 - font.getWidth("Tileset: " + selectedTileset.name) / 2;
-		textY -= font.getLineHeight() * 2;
+		textY -= font.getLineHeight();
 		font.drawString(textX, textY, "Tileset: " + selectedTileset.name);
 	}
 
@@ -172,14 +165,14 @@ public class LevelSelect extends BasicGameState
 		//If escape is pressed, return to the main menu
 		if(gc.getInput().isKeyDown(Input.KEY_ESCAPE))
 		{
-			game.enterState(1);
+			game.enterState(GameStates.MAIN_MENU);
 		}
 	}
 
 	@Override
 	public int getID() 
 	{
-		return LevelSelect.ID;
+		return GameStates.LEVEL_SELECT;
 	}
 
 }

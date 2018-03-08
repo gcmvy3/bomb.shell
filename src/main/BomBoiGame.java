@@ -13,6 +13,7 @@ import org.newdawn.slick.state.StateBasedGame;
 import gamestates.LevelSelect;
 import gamestates.MainMenu;
 import gamestates.Multiplayer;
+import gamestates.SettingsMenu;
 import gamestates.Singleplayer;
 import gamestates.SplashScreen;
 
@@ -40,6 +41,7 @@ public class BomBoiGame extends StateBasedGame
         this.addState(new LevelSelect());   //State 2
         this.addState(new Singleplayer());  //State 3
         this.addState(new Multiplayer());   //State 4
+        this.addState(new SettingsMenu());  //State 5
     }
 
     // Main Method

@@ -7,4 +7,5 @@ public final class GameStates
     public static int LEVEL_SELECT = 2;
     public static int SINGLEPLAYER = 3;
     public static int MULTIPLAYER = 4;
+    public static int SETTINGS_MENU = 5;
 }

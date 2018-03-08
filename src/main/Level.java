@@ -214,7 +214,7 @@ public class Level
 		g.translate(x, y);
 		g.scale(levelScale, levelScale);
 		
-		TrueTypeFont playerNameFont = ResourceManager.getFont("playerNameFont");
+		TrueTypeFont playerNameFont = ResourceManager.getFont(ResourceManager.PLAYER_NAME_FONT);
 		
 		for(Player p : players)
 		{

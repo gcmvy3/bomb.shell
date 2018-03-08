@@ -16,7 +16,7 @@ public class Leaderboard extends ListView<Player>
 	{
 		super(gt, x, y, width, height, numPlayers);
 		
-		font = ResourceManager.getFont("listItemFont");
+		font = ResourceManager.getFont(ResourceManager.LIST_ITEM_FONT);
 	}
 	
 	@Override

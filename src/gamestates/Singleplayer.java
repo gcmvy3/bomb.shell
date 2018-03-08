@@ -16,8 +16,6 @@ import main.Player;
 
 public class Singleplayer extends BasicGameState
 {
-	public static final int ID = 3;
-	
 	Level level;
 	
 	ArrayList<Player> players;
@@ -43,6 +41,7 @@ public class Singleplayer extends BasicGameState
 			Vec2 spawnPoint = level.getSpawnPoint();
 			player = new Player(spawnPoint.x, spawnPoint.y, level);
 			players = new ArrayList<Player>();
+			players.add(player);
 		} 
 		catch (Exception e) 
 		{
@@ -75,7 +74,7 @@ public class Singleplayer extends BasicGameState
 	@Override
 	public int getID() 
 	{
-		return Singleplayer.ID;
+		return GameStates.SINGLEPLAYER;
 	}
 
 }

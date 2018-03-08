@@ -106,8 +106,6 @@ public class Player extends Entity
 	    float desiredXVel = 0;
 	    float desiredYVel = 0;
 	    
-	    //System.out.println("JoystickY: " + joystickY);
-	    
 	    Input input = gc.getInput();
 	    
 		if(dPadDirection == DPad.DOWN || input.isKeyDown(Input.KEY_S))

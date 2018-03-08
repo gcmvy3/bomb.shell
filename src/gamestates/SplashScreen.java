@@ -12,8 +12,6 @@ public class SplashScreen extends BasicGameState
 {
 	//TODO make this state show a splashscreen
 	
-	public static final int ID = 0;
-	
 	@Override
 	public void init(GameContainer arg0, StateBasedGame game) throws SlickException 
 	{	
@@ -39,7 +37,7 @@ public class SplashScreen extends BasicGameState
 	@Override
 	public int getID() 
 	{
-		return SplashScreen.ID;
+		return GameStates.SPLASHSCREEN;
 	}
 
 }

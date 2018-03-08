@@ -10,12 +10,16 @@ import org.newdawn.slick.TrueTypeFont;
 
 public class ResourceManager 
 {
-	final static String SPRITES_DIRECTORY = "assets/sprites/";
-	final static String GUI_SPRITES_DIRECTORY = "assets/gui/";
+	private final static String SPRITES_DIRECTORY = "assets/sprites/";
+	private final static String GUI_SPRITES_DIRECTORY = "assets/gui/";
 	
-	static HashMap<String, Image> sprites = new HashMap<String, Image>();
-	static HashMap<String, Image> guiSprites = new HashMap<String, Image>();
-	static HashMap<String, TrueTypeFont> fonts = new HashMap<String, TrueTypeFont>();
+	private static HashMap<String, Image> sprites = new HashMap<String, Image>();
+	private static HashMap<String, Image> guiSprites = new HashMap<String, Image>();
+	private static HashMap<Integer, TrueTypeFont> fonts = new HashMap<Integer, TrueTypeFont>();
+
+	public final static int LIST_ITEM_FONT = 0;
+	public final static int PLAYER_NAME_FONT = 1;
+	public final static int BUTTON_FONT = 2;
 	
 	static boolean initialized = false;
 	
@@ -30,11 +34,15 @@ public class ResourceManager
 	{
 		Font f = new Font("Verdana", Font.PLAIN, 32);
 		TrueTypeFont listItemFont = new TrueTypeFont(f, true);
-		fonts.put("listItemFont", listItemFont);
+		fonts.put(LIST_ITEM_FONT, listItemFont);
 		
 		f = new Font("Verdana", Font.PLAIN, 28);
 		TrueTypeFont playerNameFont = new TrueTypeFont(f, true);
-		fonts.put("playerNameFont", playerNameFont);
+		fonts.put(PLAYER_NAME_FONT, playerNameFont);
+		
+		f = new Font("Verdana", Font.PLAIN, 28);
+		TrueTypeFont buttonFont = new TrueTypeFont(f, true);
+		fonts.put(BUTTON_FONT, buttonFont);
 	}
 	
 	private static void loadSprites()
@@ -88,7 +96,7 @@ public class ResourceManager
 		}
 	}
 	
-	public static TrueTypeFont getFont(String id)
+	public static TrueTypeFont getFont(int id)
 	{
 		if(!initialized)
 		{

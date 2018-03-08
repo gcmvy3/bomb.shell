@@ -2,30 +2,26 @@ package gamestates;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.gui.AbstractComponent;
 import org.newdawn.slick.gui.ComponentListener;
-import org.newdawn.slick.gui.MouseOverArea;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
+import gui.CustomButton;
 import main.BomBoiGame;
-import main.ResourceManager;
-
 
 public class MainMenu extends BasicGameState
 {
-	public static final int ID = 1;
-	
 	private int buttonWidth;
 	private int buttonHeight;
 	
-	private Image singleplayerButtonImage;
-	private Image multiplayerButtonImage;
+	private int buttonSpacing;
 	
-	private MouseOverArea singleplayerButton;
-	private MouseOverArea multiplayerButton;
+	private CustomButton singleplayerButton;
+	private CustomButton multiplayerButton;
+	private CustomButton settingsButton;
+	private CustomButton exitButton;
 	
 	@Override
 	public void init(GameContainer gt, StateBasedGame game) throws SlickException 
@@ -35,50 +31,71 @@ public class MainMenu extends BasicGameState
 
 	private void initButtons(GameContainer gc, StateBasedGame game) throws SlickException
 	{
-		singleplayerButtonImage = ResourceManager.getGUISprite("singleplayerButton");
-		if(singleplayerButtonImage == null)
-		{
-			System.err.println("Could not load button sprite!");
-		}
+		buttonWidth = gc.getWidth() / 6;
+		buttonHeight = gc.getHeight() / 12;
+		buttonSpacing = (int)(buttonHeight * 1.5);
 		
-		multiplayerButtonImage = ResourceManager.getGUISprite("multiplayerButton");
-		if(multiplayerButtonImage == null)
-		{
-			System.err.println("Could not load button sprite!");
-		}
-		
-		buttonWidth = multiplayerButtonImage.getWidth();
-		buttonHeight = multiplayerButtonImage.getHeight();
-		
-		singleplayerButton = new MouseOverArea(gc, 
-												singleplayerButtonImage, 
+		singleplayerButton = new CustomButton(gc,  
 												gc.getWidth() / 2 - buttonWidth / 2,
 												gc.getHeight() / 2,
 												buttonWidth,
-												buttonHeight);
+												buttonHeight,
+												"Singleplayer");
 		singleplayerButton.addListener(new ComponentListener() 
 		{
 			@Override
 			public void componentActivated(AbstractComponent arg0) 
 			{
-				game.enterState(2);
+				game.enterState(GameStates.LEVEL_SELECT);
 			}
 		});
 		
 		
-		multiplayerButton = new MouseOverArea(gc, 
-												multiplayerButtonImage, 
+		multiplayerButton = new CustomButton(gc, 
 												gc.getWidth() / 2 - buttonWidth / 2, 
-												gc.getHeight() / 2 + (2 * buttonHeight), 
+												gc.getHeight() / 2 + buttonSpacing, 
 												buttonWidth, 
-												buttonHeight);
+												buttonHeight,
+												"Multiplayer");
 		multiplayerButton.addListener(new ComponentListener() 
 		{
 			@Override
 			public void componentActivated(AbstractComponent arg0) 
 			{
 				BomBoiGame.multiplayer = true;
-				game.enterState(2);
+				game.enterState(GameStates.LEVEL_SELECT);
+			}
+		});
+		
+		settingsButton = new CustomButton(gc, 
+											gc.getWidth() / 2 - buttonWidth / 2,
+											gc.getHeight() / 2 + (2 * buttonSpacing),
+											buttonWidth,
+											buttonHeight,
+											"Settings");
+		
+		settingsButton.addListener(new ComponentListener() 
+		{
+			@Override
+			public void componentActivated(AbstractComponent arg0) 
+			{
+				game.enterState(GameStates.SETTINGS_MENU);
+			}
+		});
+		
+		exitButton = new CustomButton(gc, 
+										gc.getWidth() / 2 - buttonWidth / 2,
+										gc.getHeight() / 2 + (3 * buttonSpacing),
+										buttonWidth,
+										buttonHeight,
+										"Exit");
+
+		exitButton.addListener(new ComponentListener() 
+		{
+			@Override
+			public void componentActivated(AbstractComponent arg0) 
+			{
+				gc.exit();
 			}
 		});
 	}
@@ -93,6 +110,8 @@ public class MainMenu extends BasicGameState
 	{
 		singleplayerButton.render(gc, g);
 		multiplayerButton.render(gc, g);
+		settingsButton.render(gc, g);
+		exitButton.render(gc, g);
 	}
 
 	@Override
@@ -103,7 +122,7 @@ public class MainMenu extends BasicGameState
 	@Override
 	public int getID() 
 	{
-		return MainMenu.ID;
+		return GameStates.MAIN_MENU;
 	}
 
 }

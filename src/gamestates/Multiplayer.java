@@ -29,7 +29,6 @@ import self.totality.webSocketServer.listener.DisconnectListener;
 
 public class Multiplayer extends BasicGameState
 {
-	public static final int ID = 4;
 	public static final int RESPAWN_DELAY = 100;
 	public static final float LEADERBOARD_RELATIVE_WIDTH = 0.2f;
 	
@@ -109,8 +108,11 @@ public class Multiplayer extends BasicGameState
 				System.out.println("Disconnecting player!");
 				
 				Player p = playerMap.get(uuid);
-				p.destroy();
-				playerMap.remove(uuid);
+				if(p != null)
+				{	
+					p.destroy();
+					playerMap.remove(uuid);
+				}
 				playerList = new ArrayList<Player>(playerMap.values());
 			}
 		});
@@ -153,6 +155,7 @@ public class Multiplayer extends BasicGameState
 			}
 		});
 		
+		Totality.instance.setWebPort(8080);
 		Totality.instance.start();
 		Totality.instance.startMulticastServer("bomboi");
 	}
@@ -235,7 +238,7 @@ public class Multiplayer extends BasicGameState
 	@Override
 	public int getID() 
 	{
-		return Multiplayer.ID;
+		return GameStates.MULTIPLAYER;
 	}
 
 }
