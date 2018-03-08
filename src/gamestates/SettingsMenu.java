@@ -4,23 +4,31 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
+import main.ResourceManager;
+
 public class SettingsMenu extends BasicGameState
 {
+	private final float topOffset = 0.2f;
+	
+	TrueTypeFont labelFont;
+	
 	@Override
 	public void init(GameContainer arg0, StateBasedGame arg1) throws SlickException 
 	{
-		// TODO Auto-generated method stub
-		
+		labelFont = ResourceManager.getFont(ResourceManager.GUI_FONT);
 	}
 
 	@Override
-	public void render(GameContainer arg0, StateBasedGame arg1, Graphics arg2) throws SlickException 
+	public void render(GameContainer gc, StateBasedGame arg1, Graphics arg2) throws SlickException 
 	{
-		// TODO Auto-generated method stub
+		int fullscreenWidth = labelFont.getWidth("Fullscreen:");
+		labelFont.drawString(gc.getWidth() / 2 - fullscreenWidth, gc.getWidth() * topOffset, "Fullscreen:");
 		
+		labelFont.drawString(gc.getWidth() / 2, gc.getHeight() / 2, "Totality IP: ");
 	}
 
 	@Override

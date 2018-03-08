@@ -1,7 +1,5 @@
 package gamestates;
 
-import java.awt.Font;
-
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -18,6 +16,7 @@ import gui.ListView;
 import main.BomBoiGame;
 import main.Level;
 import main.LevelFactory;
+import main.ResourceManager;
 import tiles.TileMap;
 import tiles.Tileset;
 
@@ -34,6 +33,8 @@ public class LevelSelect extends BasicGameState
 	
 	private int thumbnailX;
 	private int thumbnailY;
+	
+	private boolean thumbnailDirty = true;
 	
 	private TileMap selectedTileMap = null;
 	private Tileset selectedTileset = null;
@@ -97,8 +98,7 @@ public class LevelSelect extends BasicGameState
 		int listWidth2 = (int)(gc.getWidth() * TILESET_LIST_WIDTH);
 		tilesetList = new ListView<Tileset>(gc, gc.getWidth() - listWidth2, 0, listWidth2, gc.getHeight(), 10);
 		
-		Font f = new Font("Verdana", Font.BOLD, 32);
-		font = new TrueTypeFont(f, true);
+		font = ResourceManager.getFont(ResourceManager.GUI_FONT);
 		
 		thumbnailWidth = (int)(gc.getWidth() * THUMBNAIL_RELATIVE_WIDTH);
 		thumbnailHeight = (int)(gc.getHeight() * THUMBNAIL_RELATIVE_HEIGHT);
@@ -116,7 +116,8 @@ public class LevelSelect extends BasicGameState
 		
 		selectedTileMap = tileMapList.getCurrentSelection();
 		selectedTileset = tilesetList.getCurrentSelection();
-		thumbnail = LevelFactory.buildThumbnail(selectedTileMap, selectedTileset, thumbnailWidth, thumbnailHeight);
+		
+		updateThumbnail();
 	}
 	
 	@Override
@@ -144,22 +145,20 @@ public class LevelSelect extends BasicGameState
 	public void update(GameContainer gc, StateBasedGame game, int arg2) throws SlickException 
 	{
 		//If a new tilemap or tileset has been selected, update the thumbnail
-		boolean updateThumbnail = false;
 		if(selectedTileMap != tileMapList.getCurrentSelection())
 		{
 			selectedTileMap = tileMapList.getCurrentSelection();
-			updateThumbnail = true;
+			thumbnailDirty = true;
 		}
 		if(selectedTileset != tilesetList.getCurrentSelection())
 		{
 			selectedTileset = tilesetList.getCurrentSelection();
-			updateThumbnail = true;
+			thumbnailDirty = true;
 		}
 		
-		if(updateThumbnail)
+		if(thumbnailDirty)
 		{
-			thumbnail = LevelFactory.buildThumbnail(selectedTileMap, selectedTileset, thumbnailWidth, thumbnailHeight);
-			updateThumbnail = false;
+			updateThumbnail();
 		}
 		
 		//If escape is pressed, return to the main menu
@@ -167,6 +166,23 @@ public class LevelSelect extends BasicGameState
 		{
 			game.enterState(GameStates.MAIN_MENU);
 		}
+	}
+	
+	/**
+	 * Try and generate a thumbnail using the current tilemap and tileset
+	 * If it fails, load the default thumbnail
+	 */
+	private void updateThumbnail()
+	{
+		try
+		{
+			thumbnail = LevelFactory.buildThumbnail(selectedTileMap, selectedTileset, thumbnailWidth, thumbnailHeight);
+		}
+		catch(Exception e)
+		{
+			thumbnail = ResourceManager.getGUISprite("defaultThumbnail").getScaledCopy(thumbnailWidth, thumbnailHeight);
+		}
+		thumbnailDirty = false;
 	}
 
 	@Override

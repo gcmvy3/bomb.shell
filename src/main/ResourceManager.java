@@ -20,6 +20,7 @@ public class ResourceManager
 	public final static int LIST_ITEM_FONT = 0;
 	public final static int PLAYER_NAME_FONT = 1;
 	public final static int BUTTON_FONT = 2;
+	public final static int GUI_FONT = 3;
 	
 	static boolean initialized = false;
 	
@@ -43,6 +44,10 @@ public class ResourceManager
 		f = new Font("Verdana", Font.PLAIN, 28);
 		TrueTypeFont buttonFont = new TrueTypeFont(f, true);
 		fonts.put(BUTTON_FONT, buttonFont);
+		
+		f = new Font("Verdana", Font.PLAIN, 28);
+		TrueTypeFont guiFont = new TrueTypeFont(f, true);
+		fonts.put(GUI_FONT, guiFont);
 	}
 	
 	private static void loadSprites()

@@ -46,7 +46,7 @@ public class ListItem<T>
 		sprite = ResourceManager.getGUISprite(SPRITE_NAME);
 		
 		moa = new MouseOverArea(gc, 
-								null, 
+								ResourceManager.getGUISprite(SPRITE_NAME).getScaledCopy(width, height), 
 								x,
 								y,
 								width,
@@ -60,6 +60,7 @@ public class ListItem<T>
 				lv.currentSelection = ListItem.this;
 			}
 		});
+		moa.setMouseOverImage(ResourceManager.getGUISprite(SPRITE_NAME + "_mouseover").getScaledCopy(width, height));
 		
 		font = ResourceManager.getFont(ResourceManager.LIST_ITEM_FONT);
 	}
@@ -67,8 +68,7 @@ public class ListItem<T>
 	public void render(Graphics g)
 	{
 		moa.render(gc, g);
-		sprite.draw(x, y, width, height);
-		
+
 		int textX = x + width / 2 - font.getWidth(title) / 2;
 		int textY = y + height / 2 - font.getHeight(title) / 2;
 		
