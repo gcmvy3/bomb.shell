@@ -5,7 +5,6 @@ import java.util.ArrayList;
 
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
-import org.newdawn.slick.SlickException;
 
 import tiles.TileMap;
 import tiles.Tileset;

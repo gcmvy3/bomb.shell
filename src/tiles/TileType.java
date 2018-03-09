@@ -10,6 +10,7 @@ public class TileType
 	public boolean destructible = false;
 	public boolean visible = true;
 	public boolean spawn = false;
+	public boolean randomRot = false;
 	
 	public Image sprite;
 	

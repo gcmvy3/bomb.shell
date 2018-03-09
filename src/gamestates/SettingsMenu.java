@@ -8,11 +8,14 @@ import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
+import gui.CustomButton;
 import main.ResourceManager;
 
 public class SettingsMenu extends BasicGameState
 {
 	private final float topOffset = 0.2f;
+	
+	CustomButton fullscreenToggle;
 	
 	TrueTypeFont labelFont;
 	

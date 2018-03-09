@@ -109,6 +109,7 @@ public class Explosion implements RayCastCallback
 			
 			for(RayCollision rc : collisions)
 			{
+				//If explosion hits an indestructible tile, stop the explosion
 				if(rc.entity instanceof Tile)
 				{
 					Tile t = (Tile)rc.entity;
@@ -119,11 +120,12 @@ public class Explosion implements RayCastCallback
 				}
 				rc.entity.takeDamage(damage);
 				
+				//Deal damage to players
+				//If a player (not the parent) is killed, update kill count
 				if(rc.entity instanceof Player)
 				{
-					//If we killed a player, update kill count
 					Player p = (Player) rc.entity;
-					if(!p.isActive())
+					if(!(p.isActive() || p == parent))
 					{
 						parent.numKills++;
 					}
@@ -141,7 +143,7 @@ public class Explosion implements RayCastCallback
 	{
 		Entity entity = (Entity)fixture.getBody().getUserData();
 		
-		//If we hit an indestructible entity, record it
+		//If we hit an indestructible tile or a level boundary, record it
 		if(entity instanceof Tile)
 		{
 			Tile t = (Tile)entity;

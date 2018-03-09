@@ -1,5 +1,7 @@
 package gui;
 
+import java.util.Collections;
+
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -17,6 +19,11 @@ public class Leaderboard extends ListView<Player>
 		super(gt, x, y, width, height, numPlayers);
 		
 		font = ResourceManager.getFont(ResourceManager.LIST_ITEM_FONT);
+	}
+	
+	public void update()
+	{
+		Collections.sort(listItems);
 	}
 	
 	@Override

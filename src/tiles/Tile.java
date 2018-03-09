@@ -1,5 +1,7 @@
 package tiles;
 
+import java.util.Random;
+
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.dynamics.Filter;
 import org.newdawn.slick.Graphics;
@@ -17,6 +19,8 @@ public class Tile extends Entity
 	public int row;
 	public int column;
 	
+	public int rotation = 0;
+	
 	public Level level;
 	
 	public Tile(float x, float y, int row, int column, float size, TileType type, Level level)
@@ -29,8 +33,18 @@ public class Tile extends Entity
 		this.tileType = type;
 		this.level = level;
 		
+		//Init health of the tile
 		maxHealth = tileType.health;
 		health = maxHealth;
+		
+		//If the random rotation flag is true, assign a random rotation
+		if(tileType.randomRot)
+		{
+			int[] allowedRotations = {0, 90, 180, 270};
+			
+			Random random = new Random();
+			rotation = allowedRotations[random.nextInt(4)];
+		}
 		
 		sizeInPixels = level.metersToPixels(size);
 

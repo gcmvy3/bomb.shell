@@ -89,6 +89,9 @@ public class Tileset
 		        		case "spawn":
 		        			newType.spawn = Boolean.valueOf(property.attributeValue("value"));
 		        			break;
+		        		case "randomRot":
+		        			newType.randomRot = Boolean.valueOf(property.attributeValue("value"));
+		        			break;
 		        		default:
 		        			throw new Exception();
 		        		}

@@ -188,13 +188,15 @@ public class Multiplayer extends BasicGameState
 				p.respawn(spawnPoint.x, spawnPoint.y);
 			}
 		}
+
+		//Update the leaderboard
+		leaderboard.setList(playerList);
+		leaderboard.update();
 		
 		if(gc.getInput().isKeyDown(Input.KEY_ESCAPE))
 		{
 			game.enterState(GameStates.MAIN_MENU);
 		}
-		
-		leaderboard.setList(playerList);
 	}
 	
 	public void spawnPlayer(UUID uuid)

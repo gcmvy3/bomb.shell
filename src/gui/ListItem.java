@@ -8,9 +8,10 @@ import org.newdawn.slick.gui.AbstractComponent;
 import org.newdawn.slick.gui.ComponentListener;
 import org.newdawn.slick.gui.MouseOverArea;
 
+import main.Player;
 import main.ResourceManager;
 
-public class ListItem<T> 
+public class ListItem<T> implements Comparable<ListItem<T>>
 {
 	final String SPRITE_NAME = "listItem";
 	
@@ -78,5 +79,26 @@ public class ListItem<T>
 	public void setTitle(String t)
 	{
 		title = t;
+	}
+
+	/*
+	 * Allows us to sort ListViews
+	 * We have defined custom behavior for player lists (leaderboards)
+	 * @see java.lang.Comparable#compareTo(java.lang.Object)
+	 */
+	@Override
+	public int compareTo(ListItem<T> other) 
+	{
+		if(other.object instanceof Player)
+		{
+			Player thisP = (Player) this.object;
+			Player otherP = (Player) other.object;
+			
+			return thisP.numKills - otherP.numKills;
+		}
+		else
+		{
+			return this.title.compareTo(other.title);
+		}
 	}
 }

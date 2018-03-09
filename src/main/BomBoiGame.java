@@ -3,6 +3,7 @@ package main;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.io.File;
+import java.io.IOException;
 
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.GameContainer;
@@ -19,9 +20,10 @@ import gamestates.SplashScreen;
 
 public class BomBoiGame extends StateBasedGame
 {
-    // Default resolution (should be automatically changed)
-    public static int width  = 1920;
-    public static int height = 1080;
+	//These will be loaded from memory
+    public static boolean fullscreen;
+    public static int width;
+    public static int height;
     
     public static boolean multiplayer = false;
     public static boolean reloaded = false;
@@ -47,16 +49,34 @@ public class BomBoiGame extends StateBasedGame
     // Main Method
     public static void main(String[] args) 
     {
-    	GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-    	width = gd.getDisplayMode().getWidth();
-    	height = gd.getDisplayMode().getHeight();
-    	
+    	try
+    	{
+    		SettingManager.loadSettings();
+    		fullscreen = SettingManager.isFullscreen();
+    		width = SettingManager.getWidth();
+    		height = SettingManager.getHeight();
+    	}
+    	catch(IOException e)
+    	{
+    		System.err.println("Could not load settings from memory");
+    		
+    		fullscreen = true;
+    		
+        	GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+        	width = gd.getDisplayMode().getWidth();
+        	height = gd.getDisplayMode().getHeight();
+        	
+        	SettingManager.setFullscreen(fullscreen);
+        	SettingManager.setWidth(width);
+        	SettingManager.setHeight(height);
+    	}
+    
     	setLWJGLNatives();
         try 
         {
         	ScalableGame scalableGame = new ScalableGame(new BomBoiGame(), width, height, true);
             AppGameContainer app = new AppGameContainer(scalableGame);
-            app.setDisplayMode(width, height, true);
+            app.setDisplayMode(width, height, SettingManager.isFullscreen());
             app.setVSync(true);
 
             app.start();
