@@ -82,6 +82,7 @@ public class Tile extends Entity
 				int pixelsX = x + (int)level.metersToPixels(body.getPosition().x);
 				int pixelsY = y + (int)level.metersToPixels(body.getPosition().y);
 				
+				tileType.sprite.setRotation(rotation);
 				tileType.sprite.draw(pixelsX - sizeInPixels / 2, pixelsY - sizeInPixels / 2);
 			}
 		}

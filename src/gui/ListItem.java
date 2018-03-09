@@ -11,6 +11,7 @@ import org.newdawn.slick.gui.MouseOverArea;
 import main.Player;
 import main.ResourceManager;
 
+//TODO this should probably extend MouseOverArea or CustomButton
 public class ListItem<T> implements Comparable<ListItem<T>>
 {
 	final String SPRITE_NAME = "listItem";

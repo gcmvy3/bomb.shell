@@ -15,6 +15,7 @@
  <tile id="3">
   <properties>
    <property name="solid" type="bool" value="true"/>
+   <property name="randomRot" type="bool" value="true"/>
   </properties>
   <image width="64" height="64" source="indestructible1.png"/>
  </tile>
