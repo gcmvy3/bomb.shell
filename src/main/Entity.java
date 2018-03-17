@@ -7,6 +7,7 @@ import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.FixtureDef;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 
 public abstract class Entity
 {	
@@ -20,6 +21,7 @@ public abstract class Entity
 	
 	public Body body;
 	public Level level;
+	public Image sprite;
 	
 	//public boolean active = true;
 	

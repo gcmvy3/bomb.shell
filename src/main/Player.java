@@ -18,15 +18,14 @@ import self.totality.webSocketServer.controller.DPad;
 public class Player extends Entity
 {
 	final String SPRITE_DIRECTORY = "assets" + File.separator + "characters" + File.separator;
-	final float JOYSTICK_DEADZONE = 0.5f;
+
+	final float TOP_SPEED = 7.5f;
+	final float ACCELERATION = 0.3f;
 	
 	final float sizeRelativeToTile = 0.8f;
 	
 	float sizeInMeters;
-	float speed = 8.0f;
 	
-	//public double joystickX = 0f;
-	//public double joystickY = 0f;
 	public int dPadDirection = 0;
 	
 	int maxHealth = 100;
@@ -44,8 +43,6 @@ public class Player extends Entity
 	public Color color = null;
 	
 	Level level;
-	
-	Image sprite;
 	
 	public Player(float x, float y, Level l) throws SlickException 
 	{
@@ -108,25 +105,56 @@ public class Player extends Entity
 	    
 	    Input input = gc.getInput();
 	    
+	    //Right is positive
+	    //Down is positive
+	    
 		if(dPadDirection == DPad.DOWN || input.isKeyDown(Input.KEY_S))
-		{
+		{	
 			//DOWN
-			desiredYVel = Math.max(currentVelocity.y - 0.1f, speed);
+			if(currentVelocity.y > 0 && currentVelocity.y < TOP_SPEED / 2)
+			{
+				desiredYVel = Math.min(currentVelocity.y + ACCELERATION, TOP_SPEED);
+			}
+			else
+			{
+				desiredYVel = Math.min(currentVelocity.y + ACCELERATION * 2, TOP_SPEED);
+			}
 		}
 		if(dPadDirection == DPad.LEFT || input.isKeyDown(Input.KEY_A))
 		{
 			//LEFT
-			desiredXVel = Math.min(currentVelocity.x + 0.1f, -speed);
+			if(currentVelocity.x < 0 && currentVelocity.x > -TOP_SPEED / 2)
+			{
+				desiredXVel = Math.max(currentVelocity.x - ACCELERATION, -TOP_SPEED);
+			}
+			else
+			{
+				desiredXVel = Math.max(currentVelocity.x - ACCELERATION * 2, -TOP_SPEED);
+			}
 		}
 		if(dPadDirection == DPad.UP || input.isKeyDown(Input.KEY_W))
 		{
 			//UP
-			desiredYVel = Math.min(currentVelocity.y + 0.1f, -speed);
+			if(currentVelocity.y < 0 && currentVelocity.y > -TOP_SPEED / 2)
+			{
+				desiredYVel = Math.max(currentVelocity.y - ACCELERATION, -TOP_SPEED);
+			}
+			else
+			{
+				desiredYVel = Math.max(currentVelocity.y - ACCELERATION * 2, -TOP_SPEED);
+			}
 		}
 		if(dPadDirection == DPad.RIGHT || input.isKeyDown(Input.KEY_D))
 		{
 			//RIGHT
-			desiredXVel = Math.max(currentVelocity.x - 0.1f, speed);
+			if(currentVelocity.x > 0 && currentVelocity.x < TOP_SPEED / 2)
+			{
+				desiredXVel = Math.min(currentVelocity.x + ACCELERATION, TOP_SPEED);
+			}
+			else
+			{
+				desiredXVel = Math.min(currentVelocity.x + ACCELERATION * 2, TOP_SPEED);
+			}
 		}
 		
 	    float velChangeX = desiredXVel - currentVelocity.x;

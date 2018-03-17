@@ -10,6 +10,7 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
@@ -17,6 +18,7 @@ import gui.Leaderboard;
 import main.BomBoiGame;
 import main.Level;
 import main.Player;
+import main.ResourceManager;
 import self.totality.Totality;
 import self.totality.webSocketServer.PacketProcessor.ControllerElementProcessor.Listener;
 import self.totality.webSocketServer.controller.Button;
@@ -43,6 +45,8 @@ public class Multiplayer extends BasicGameState
 	GameController gameController;
 	
 	Leaderboard leaderboard;
+	
+	TrueTypeFont font;
 	
 	@Override
 	public void init(GameContainer arg0, StateBasedGame arg1) throws SlickException 
@@ -73,8 +77,10 @@ public class Multiplayer extends BasicGameState
 		
 		initTotality();
 
+		font = ResourceManager.getFont(ResourceManager.GUI_FONT);
+		
 		int listWidth = (int)(gc.getWidth() * LEADERBOARD_RELATIVE_WIDTH);
-		leaderboard = new Leaderboard(gc, 0, 0, listWidth, gc.getHeight(), 20);
+		leaderboard = new Leaderboard(gc, 0, 0, listWidth, gc.getHeight() - font.getLineHeight(), 20);
 	}
 	
 	private void initTotality()
@@ -87,8 +93,8 @@ public class Multiplayer extends BasicGameState
 		Totality.instance.setDefaultController(loginController);
 		
 		gameController = new GameController();
-		gameController.addControllerElement(new Button("bombButton", 0.5f, 0.25f, 1.0f, 0.5f));
-		gameController.addControllerElement(new DPad("dpad1", 0.5f, 0.75f, 1.0f, 0.5f));
+		gameController.addControllerElement(new Button("bombButton", 0.25f, 0.5f, 0.5f, 1.0f));
+		gameController.addControllerElement(new DPad("dpad1", 0.75f, 0.5f, 0.45f, 0.9f));
 		
 		Totality.instance.addConnectListener(new ConnectListener()
 		{
@@ -155,7 +161,6 @@ public class Multiplayer extends BasicGameState
 			}
 		});
 		
-		Totality.instance.setWebPort(8080);
 		Totality.instance.start();
 		Totality.instance.startMulticastServer("bomboi");
 	}
@@ -170,6 +175,8 @@ public class Multiplayer extends BasicGameState
 		level.renderPlayers(g, playerList);
 		
 		leaderboard.render(g);
+		
+		font.drawString(0, gc.getHeight() - font.getLineHeight(), Totality.localIp, Color.white);
 	}
 
 	@Override

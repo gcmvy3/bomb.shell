@@ -1,5 +1,6 @@
 package gui;
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -74,7 +75,7 @@ public class ListItem<T> implements Comparable<ListItem<T>>
 		int textX = x + width / 2 - font.getWidth(title) / 2;
 		int textY = y + height / 2 - font.getHeight(title) / 2;
 		
-		font.drawString(textX, textY, title);
+		font.drawString(textX, textY, title, Color.white);
 	}
 	
 	public void setTitle(String t)
@@ -95,7 +96,7 @@ public class ListItem<T> implements Comparable<ListItem<T>>
 			Player thisP = (Player) this.object;
 			Player otherP = (Player) other.object;
 			
-			return thisP.numKills - otherP.numKills;
+			return otherP.numKills - thisP.numKills;
 		}
 		else
 		{

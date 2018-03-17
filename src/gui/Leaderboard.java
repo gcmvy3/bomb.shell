@@ -40,7 +40,7 @@ public class Leaderboard extends ListView<Player>
 			
 			String message = String.format("%s %d %d", p.name, p.numKills, p.numDeaths);
 			
-			font.drawString(textX, textY, message, Color.black);
+			font.drawString(textX, textY, message, Color.white);
 			
 			textY += listItemHeight;
 		}

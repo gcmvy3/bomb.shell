@@ -3,6 +3,7 @@ package main;
 import org.jbox2d.collision.shapes.CircleShape;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Filter;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
@@ -17,6 +18,8 @@ public class Bomb extends Entity
 	int delay = 120;
 	int age = 0;
 	int damage = 100;
+	int redDelay = 12;
+	int timeSinceRed = 0;
 	float explosionRadius;
 	float explosionThickness;
 	
@@ -24,8 +27,6 @@ public class Bomb extends Entity
 	float sizeInPixels;
 	
 	Player parent;
-	
-	public Image sprite;
 	
 	boolean collisionEnabled = false;
 	
@@ -38,7 +39,7 @@ public class Bomb extends Entity
 		sizeInMeters = l.tileSizeInMeters * SIZE_RELATIVE_TO_TILE;
 		sizeInPixels = l.metersToPixels(sizeInMeters);
 		
-		sprite = new Image(PATH_TO_SPRITE);
+		sprite = new Image(PATH_TO_SPRITE).getScaledCopy((int)sizeInPixels, (int)sizeInPixels);
 		
 		initExplosionShape();
 		
@@ -107,7 +108,22 @@ public class Bomb extends Entity
 		int pixelsX = (int)level.metersToPixels(body.getPosition().x);
 		int pixelsY = (int)level.metersToPixels(body.getPosition().y);
 		
-		sprite.draw(pixelsX - sizeInPixels / 2, pixelsY - sizeInPixels / 2, sizeInPixels, sizeInPixels);
+		timeSinceRed++;
+		if(timeSinceRed > redDelay)
+		{
+			sprite.draw(pixelsX - sizeInPixels / 2, pixelsY - sizeInPixels / 2, sizeInPixels, sizeInPixels, Color.red);
+			
+			timeSinceRed = 0;
+			redDelay--;
+			if(redDelay < 0)
+			{
+				redDelay = 0;
+			}
+		}
+		else
+		{
+			sprite.draw(pixelsX - sizeInPixels / 2, pixelsY - sizeInPixels / 2, sizeInPixels, sizeInPixels);
+		}
 	}
 	
 	public void explode()
