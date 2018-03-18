@@ -80,7 +80,7 @@ public class Multiplayer extends BasicGameState
 		font = ResourceManager.getFont(ResourceManager.GUI_FONT);
 		
 		int listWidth = (int)(gc.getWidth() * LEADERBOARD_RELATIVE_WIDTH);
-		leaderboard = new Leaderboard(gc, 0, 0, listWidth, gc.getHeight() - font.getLineHeight(), 20);
+		leaderboard = new Leaderboard(gc, 0, 0, listWidth, gc.getHeight() - font.getLineHeight());
 	}
 	
 	private void initTotality()

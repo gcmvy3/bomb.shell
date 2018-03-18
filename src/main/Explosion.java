@@ -47,6 +47,8 @@ public class Explosion implements RayCastCallback
 		{
 			rayLengths[i] = 1;
 		}
+		
+		sprite = ResourceManager.getSprite("explosion1");
 	}
 	
 	public void update()
@@ -62,11 +64,6 @@ public class Explosion implements RayCastCallback
 	
 	public void render()
 	{
-		if(sprite == null)
-		{
-			loadSprite();
-		}
-		
 		sprite.setCenterOfRotation(0, thickness / 2);
 		
 		for(int i = 0; i < rays.length; i++)

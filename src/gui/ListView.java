@@ -26,11 +26,6 @@ public class ListView<T>
 	//TODO add scrolling functionality
 	public ListView(GameContainer gt, int x, int y, int width, int height)
 	{
-		this(gt, x, y, width, height, height / 20);
-	}
-	
-	public ListView(GameContainer gt, int x, int y, int width, int height, int numItemsShown)
-	{
 		this.gameContainer = gt;
 		this.x = x;
 		this.y = y;
@@ -38,6 +33,13 @@ public class ListView<T>
 		this.height = height;
 		
 		listItems = new ArrayList<ListItem<T>>();
+		
+		listItemHeight = ResourceManager.getFont(ResourceManager.LIST_ITEM_FONT).getLineHeight();
+	}
+	
+	public ListView(GameContainer gt, int x, int y, int width, int height, int numItemsShown)
+	{
+		this(gt, x, y, width, height);
 		
 		listItemHeight = height / numItemsShown;
 	}

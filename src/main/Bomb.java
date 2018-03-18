@@ -3,7 +3,6 @@ package main;
 import org.jbox2d.collision.shapes.CircleShape;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Filter;
-import org.newdawn.slick.Color;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
@@ -12,8 +11,6 @@ public class Bomb extends Entity
 	final float SIZE_RELATIVE_TO_TILE = 0.5f;
 	final float EXPLOSION_THICKNESS_RELATIVE_TO_TILE = 0.6f;
 	final int RADIUS_IN_BLOCKS = 4;
-	
-	final String PATH_TO_SPRITE = "assets/sprites/bomb1.png";
 	
 	int delay = 120;
 	int age = 0;
@@ -25,6 +22,8 @@ public class Bomb extends Entity
 	
 	float sizeInMeters;
 	float sizeInPixels;
+	
+	Image redSprite;
 	
 	Player parent;
 	
@@ -39,14 +38,17 @@ public class Bomb extends Entity
 		sizeInMeters = l.tileSizeInMeters * SIZE_RELATIVE_TO_TILE;
 		sizeInPixels = l.metersToPixels(sizeInMeters);
 		
-		sprite = new Image(PATH_TO_SPRITE).getScaledCopy((int)sizeInPixels, (int)sizeInPixels);
+		sprite = ResourceManager.getSprite("bomb").getScaledCopy((int)sizeInPixels, (int)sizeInPixels);
+		redSprite = ResourceManager.getSprite("bomb_red").getScaledCopy((int)sizeInPixels, (int)sizeInPixels);
 		
 		initExplosionShape();
 		
+		//Set up bounding box
 		CircleShape boundingBox = new CircleShape();
 		boundingBox.setRadius(sizeInMeters / 2);
 		setShape(boundingBox);
 		
+		//Set up collision filtering
 		Filter filter = new Filter();
 		filter.categoryBits = Entity.BOMB;
 		filter.maskBits = Entity.NONE;
@@ -61,6 +63,7 @@ public class Bomb extends Entity
 	
 	public void update()
 	{		
+		//Don't collide with things until the parent moves
 		if(isActive())
 		{
 			if(!collisionEnabled || parent == null)
@@ -108,10 +111,11 @@ public class Bomb extends Entity
 		int pixelsX = (int)level.metersToPixels(body.getPosition().x);
 		int pixelsY = (int)level.metersToPixels(body.getPosition().y);
 		
+		//Flash red
 		timeSinceRed++;
 		if(timeSinceRed > redDelay)
 		{
-			sprite.draw(pixelsX - sizeInPixels / 2, pixelsY - sizeInPixels / 2, sizeInPixels, sizeInPixels, Color.red);
+			redSprite.draw(pixelsX - sizeInPixels / 2, pixelsY - sizeInPixels / 2, sizeInPixels, sizeInPixels);
 			
 			timeSinceRed = 0;
 			redDelay--;
@@ -126,6 +130,7 @@ public class Bomb extends Entity
 		}
 	}
 	
+	//Create an explosion object at the current location
 	public void explode()
 	{
 		Vec2[] rays = new Vec2[4];

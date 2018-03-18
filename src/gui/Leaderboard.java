@@ -26,6 +26,17 @@ public class Leaderboard extends ListView<Player>
 	int columnWidth;
 	int nameColumnWidth;
 	
+	public Leaderboard(GameContainer gt, int x, int y, int width, int height) 
+	{
+		super(gt, x, y, width, height);
+		
+		headerHeight = (int)(HEADER_HEIGHT * height);
+		columnWidth =  (int)(COLUMN_WIDTH * width);
+		nameColumnWidth = width - columnWidth * 2;
+		
+		font = ResourceManager.getFont(ResourceManager.LIST_ITEM_FONT);
+	}
+	
 	public Leaderboard(GameContainer gt, int x, int y, int width, int height, int numPlayers) 
 	{
 		super(gt, x, y, width, height, numPlayers);
