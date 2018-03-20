@@ -11,9 +11,12 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.TrueTypeFont;
+import org.newdawn.slick.gui.AbstractComponent;
+import org.newdawn.slick.gui.ComponentListener;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
+import gui.CustomButton;
 import gui.Leaderboard;
 import main.BomBoiGame;
 import main.Level;
@@ -34,14 +37,20 @@ public class Multiplayer extends BasicGameState
 	public static final int RESPAWN_DELAY = 100;
 	public static final float LEADERBOARD_RELATIVE_WIDTH = 0.2f;
 	
-	public static final int KILL_LIMIT = 10;
-	
 	Level level;
 	
 	public static HashMap<UUID, String> pendingPlayers;
 	
 	public static HashMap<UUID, Player> playerMap;
 	public static ArrayList<Player> playerList;
+	
+	public static ArrayList<Player> winners;
+	
+	public static int killLimit = 5;
+	public static boolean gameOver = false;
+	
+	private CustomButton restartButton;
+	private CustomButton quitButton;
 	
 	GameController loginController;
 	GameController gameController;
@@ -76,13 +85,52 @@ public class Multiplayer extends BasicGameState
 		pendingPlayers = new HashMap<UUID, String>();
 		playerMap = new HashMap<UUID, Player>();
 		playerList = new ArrayList<Player>(playerMap.values());
+		winners = new ArrayList<Player>();
 		
+		initButtons(gc, game);
 		initTotality();
 
 		font = ResourceManager.getFont(ResourceManager.GUI_FONT);
 		
 		int listWidth = (int)(gc.getWidth() * LEADERBOARD_RELATIVE_WIDTH);
 		leaderboard = new Leaderboard(gc, 0, 0, listWidth, gc.getHeight() - font.getLineHeight());
+	}
+	
+	private void initButtons(GameContainer gc, StateBasedGame game)
+	{
+		int buttonWidth = gc.getWidth() / 6;
+		int buttonHeight = gc.getHeight() / 12;
+		int buttonSpacing = (int)(buttonHeight * 1.5);
+		
+		restartButton = new CustomButton(gc,  
+											gc.getWidth() / 2 - buttonWidth / 2,
+											gc.getHeight() / 2,
+											buttonWidth,
+											buttonHeight,
+											"Restart");
+		restartButton.addListener(new ComponentListener() 
+		{
+			@Override
+			public void componentActivated(AbstractComponent arg0) 
+			{
+				restartGame();
+			}
+		});
+		
+		quitButton = new CustomButton(gc,  
+										gc.getWidth() / 2 - buttonWidth / 2,
+										gc.getHeight() / 2 + buttonSpacing,
+										buttonWidth,
+										buttonHeight,
+										"Quit");
+		quitButton.addListener(new ComponentListener() 
+		{
+			@Override
+			public void componentActivated(AbstractComponent arg0) 
+			{
+					game.enterState(GameStates.MAIN_MENU);
+			}
+		});
 	}
 	
 	private void initTotality()
@@ -170,49 +218,95 @@ public class Multiplayer extends BasicGameState
 	@Override
 	public void render(GameContainer gc, StateBasedGame arg1, Graphics g) throws SlickException 
 	{
-		int levelX = leaderboard.width;
-		int levelY = 0;
-		
-		level.render(g, levelX, levelY, gc.getWidth() - leaderboard.width, gc.getHeight());
-		level.renderPlayers(g, playerList);
-		
-		leaderboard.render(g);
-		
-		font.drawString(0, gc.getHeight() - font.getLineHeight(), Totality.localIp, Color.white);
+		if(!gameOver)
+		{
+			int levelX = leaderboard.width;
+			int levelY = 0;
+			
+			level.render(g, levelX, levelY, gc.getWidth() - leaderboard.width, gc.getHeight());
+			level.renderPlayers(g, playerList);
+			
+			leaderboard.render(g);
+			
+			font.drawString(0, gc.getHeight() - font.getLineHeight(), Totality.localIp, Color.white);
+		}
+		else
+		{
+			g.setColor(Color.black);
+			g.fillRect(0, 0, gc.getWidth(), gc.getHeight());
+			
+			restartButton.render(gc, g);
+			quitButton.render(gc, g);
+			
+			String endMessage = "";
+			float messageWidth = 0;
+			
+			if(winners.size() > 0)
+			{
+				if(winners.size() == 1) //One winner
+				{
+					endMessage = winners.get(0).name + " wins!";
+				}
+				else //Multiple winners (in case of a draw)
+				{
+					endMessage = "Winners: ";
+					for(int i = 0; i < winners.size(); i++)
+					{
+						Player w = winners.get(i);
+						endMessage += w.name;
+						
+						if(i == winners.size() - 2)
+						{
+							endMessage += ", and ";
+						}
+						else if(i == winners.size() - 2)
+						{
+							endMessage += ", ";
+						}
+					}
+				}
+			}
+			else
+			{
+				endMessage = "Something went wrong - let's call it a draw";
+			}
+			
+			messageWidth = font.getWidth(endMessage);
+			font.drawString(gc.getWidth() / 2 - messageWidth / 2, gc.getHeight() / 3, endMessage);
+		}
 	}
 
 	@Override
 	public void update(GameContainer gc, StateBasedGame game, int arg2) throws SlickException 
 	{
-		level.update(gc);
-		
-		boolean gameOver = false;
-		for(Player p : playerList)
+		if(!gameOver)
 		{
-			p.update(gc);
+			level.update(gc);
 			
-			//Respawn the player
-			if(!p.isActive() && p.timeSinceDeath >= RESPAWN_DELAY)
+			for(Player p : playerList)
 			{
-				Vec2 spawnPoint = level.getSpawnPoint();
-				p.respawn(spawnPoint.x, spawnPoint.y);
+				p.update(gc);
+				
+				//Respawn the player
+				if(!p.isActive() && p.timeSinceDeath >= RESPAWN_DELAY)
+				{
+					Vec2 spawnPoint = level.getSpawnPoint();
+					p.respawn(spawnPoint.x, spawnPoint.y);
+				}
+				
+				if(p.numKills >= killLimit)
+				{
+					gameOver = true;
+					winners.add(p);
+				}
 			}
 			
-			if(p.numKills >= KILL_LIMIT)
-			{
-				gameOver = true;
-			}
-		}
-		
-		if(gameOver)
-		{
-			endGame();
+			//Update the leaderboard
+			leaderboard.setList(playerList);
+			leaderboard.update();
 		}
 
-		//Update the leaderboard
-		leaderboard.setList(playerList);
-		leaderboard.update();
-		
+		//If escape is pressed, quit to main menu
 		if(gc.getInput().isKeyDown(Input.KEY_ESCAPE))
 		{
 			game.enterState(GameStates.MAIN_MENU);
@@ -220,9 +314,9 @@ public class Multiplayer extends BasicGameState
 		}
 	}
 	
-	public void endGame()
+	public void restartGame()
 	{
-		//TODO end game
+		
 	}
 	
 	public void spawnPlayer(UUID uuid)
@@ -262,7 +356,7 @@ public class Multiplayer extends BasicGameState
 			System.err.println("Could not add player to game!");
 		}
 	}
-
+	
 	@Override
 	public int getID() 
 	{
