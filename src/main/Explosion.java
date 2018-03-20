@@ -87,11 +87,6 @@ public class Explosion implements RayCastCallback
 		}
 	}
 	
-	private void loadSprite()
-	{
-		sprite = ResourceManager.getSprite("explosion1");
-	}
-	
 	private void dealDamage()
 	{
 		//Calculate raycast

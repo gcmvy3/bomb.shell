@@ -34,6 +34,8 @@ public class Multiplayer extends BasicGameState
 	public static final int RESPAWN_DELAY = 100;
 	public static final float LEADERBOARD_RELATIVE_WIDTH = 0.2f;
 	
+	public static final int KILL_LIMIT = 10;
+	
 	Level level;
 	
 	public static HashMap<UUID, String> pendingPlayers;
@@ -184,6 +186,7 @@ public class Multiplayer extends BasicGameState
 	{
 		level.update(gc);
 		
+		boolean gameOver = false;
 		for(Player p : playerList)
 		{
 			p.update(gc);
@@ -194,6 +197,16 @@ public class Multiplayer extends BasicGameState
 				Vec2 spawnPoint = level.getSpawnPoint();
 				p.respawn(spawnPoint.x, spawnPoint.y);
 			}
+			
+			if(p.numKills >= KILL_LIMIT)
+			{
+				gameOver = true;
+			}
+		}
+		
+		if(gameOver)
+		{
+			endGame();
 		}
 
 		//Update the leaderboard
@@ -203,7 +216,13 @@ public class Multiplayer extends BasicGameState
 		if(gc.getInput().isKeyDown(Input.KEY_ESCAPE))
 		{
 			game.enterState(GameStates.MAIN_MENU);
+			Totality.instance.stop();
 		}
+	}
+	
+	public void endGame()
+	{
+		//TODO end game
 	}
 	
 	public void spawnPlayer(UUID uuid)
