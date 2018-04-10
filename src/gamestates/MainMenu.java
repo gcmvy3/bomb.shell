@@ -9,7 +9,7 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 import gui.CustomButton;
-import main.BomBoiGame;
+import main.BombshellGame;
 
 public class MainMenu extends BasicGameState
 {
@@ -62,7 +62,7 @@ public class MainMenu extends BasicGameState
 			@Override
 			public void componentActivated(AbstractComponent arg0) 
 			{
-				BomBoiGame.multiplayer = true;
+				BombshellGame.multiplayer = true;
 				game.enterState(GameStates.LEVEL_SELECT);
 			}
 		});

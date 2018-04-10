@@ -10,7 +10,7 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
-import main.BomBoiGame;
+import main.BombshellGame;
 import main.Level;
 import main.Player;
 
@@ -32,7 +32,7 @@ public class Singleplayer extends BasicGameState
 	{
 		System.out.println("Entering singleplayer");
 		
-		level = BomBoiGame.level;
+		level = BombshellGame.level;
 		try 
 		{
 			level.init();

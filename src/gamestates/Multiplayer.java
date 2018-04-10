@@ -18,7 +18,7 @@ import org.newdawn.slick.state.StateBasedGame;
 
 import gui.CustomButton;
 import gui.Leaderboard;
-import main.BomBoiGame;
+import main.BombshellGame;
 import main.Level;
 import main.Player;
 import main.ResourceManager;
@@ -70,7 +70,7 @@ public class Multiplayer extends BasicGameState
 	{
 		System.out.println("Entering multiplayer");
 		
-		level = BomBoiGame.level;
+		level = BombshellGame.level;
 		try 
 		{
 			level.init();

@@ -18,7 +18,7 @@ import gamestates.SettingsMenu;
 import gamestates.Singleplayer;
 import gamestates.SplashScreen;
 
-public class BomBoiGame extends StateBasedGame
+public class BombshellGame extends StateBasedGame
 {
 	//These will be loaded from memory
     public static boolean fullscreen;
@@ -29,7 +29,7 @@ public class BomBoiGame extends StateBasedGame
     public static boolean reloaded = false;
     public static Level level;
 	
-	public BomBoiGame() 
+	public BombshellGame() 
 	{
 		super("BomBoi");
 	}
@@ -74,7 +74,7 @@ public class BomBoiGame extends StateBasedGame
     	setLWJGLNatives();
         try 
         {
-        	ScalableGame scalableGame = new ScalableGame(new BomBoiGame(), width, height, true);
+        	ScalableGame scalableGame = new ScalableGame(new BombshellGame(), width, height, true);
             AppGameContainer app = new AppGameContainer(scalableGame);
             app.setDisplayMode(width, height, SettingManager.isFullscreen());
             app.setVSync(true);
@@ -89,7 +89,7 @@ public class BomBoiGame extends StateBasedGame
     
     public static void setLWJGLNatives()
     {
-    	Class<BomBoiGame> c = BomBoiGame.class;
+    	Class<BombshellGame> c = BombshellGame.class;
 
 		System.out.println(c.getResource(c.getName() + ".class"));
     	

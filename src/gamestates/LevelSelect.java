@@ -13,7 +13,7 @@ import org.newdawn.slick.state.StateBasedGame;
 
 import gui.CustomButton;
 import gui.ListView;
-import main.BomBoiGame;
+import main.BombshellGame;
 import main.Level;
 import main.LevelFactory;
 import main.ResourceManager;
@@ -79,8 +79,8 @@ public class LevelSelect extends BasicGameState
 				
 				if(selectedLevel != null)
 				{
-					BomBoiGame.level = selectedLevel;
-					if(BomBoiGame.multiplayer)
+					BombshellGame.level = selectedLevel;
+					if(BombshellGame.multiplayer)
 					{
 						game.enterState(4);
 					}
