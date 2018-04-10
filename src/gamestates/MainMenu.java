@@ -2,6 +2,7 @@ package gamestates;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.gui.AbstractComponent;
 import org.newdawn.slick.gui.ComponentListener;
@@ -10,6 +11,7 @@ import org.newdawn.slick.state.StateBasedGame;
 
 import gui.CustomButton;
 import main.BombshellGame;
+import main.ResourceManager;
 
 public class MainMenu extends BasicGameState
 {
@@ -23,14 +25,18 @@ public class MainMenu extends BasicGameState
 	private CustomButton settingsButton;
 	private CustomButton exitButton;
 	
+	Image titleArt;
+	
 	@Override
 	public void init(GameContainer gt, StateBasedGame game) throws SlickException 
-	{			
+	{
+		titleArt = ResourceManager.getGUISprite("titleArt");
+		
 		initButtons(gt, game);
 	}
 
 	private void initButtons(GameContainer gc, StateBasedGame game) throws SlickException
-	{
+	{	
 		buttonWidth = gc.getWidth() / 6;
 		buttonHeight = gc.getHeight() / 12;
 		buttonSpacing = (int)(buttonHeight * 1.5);
@@ -108,6 +114,11 @@ public class MainMenu extends BasicGameState
 	@Override
 	public void render(GameContainer gc, StateBasedGame game, Graphics g) throws SlickException 
 	{
+		int titleY = gc.getHeight() / 2 - titleArt.getHeight() * 2;
+		int titleX = gc.getWidth() / 2 - titleArt.getWidth() / 2;
+		
+		g.drawImage(titleArt, titleX, titleY);
+		
 		singleplayerButton.render(gc, g);
 		multiplayerButton.render(gc, g);
 		settingsButton.render(gc, g);

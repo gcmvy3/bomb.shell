@@ -33,7 +33,7 @@ public class ResourceManager
 	
 	private static void loadFonts()
 	{
-		Font f = new Font("Verdana", Font.PLAIN, 32);
+		Font f = new Font("Courier New", Font.PLAIN, 32);
 		TrueTypeFont listItemFont = new TrueTypeFont(f, true);
 		fonts.put(LIST_ITEM_FONT, listItemFont);
 		
@@ -41,11 +41,11 @@ public class ResourceManager
 		TrueTypeFont playerNameFont = new TrueTypeFont(f, true);
 		fonts.put(PLAYER_NAME_FONT, playerNameFont);
 		
-		f = new Font("Verdana", Font.PLAIN, 28);
+		f = new Font("Courier New", Font.PLAIN, 28);
 		TrueTypeFont buttonFont = new TrueTypeFont(f, true);
 		fonts.put(BUTTON_FONT, buttonFont);
 		
-		f = new Font("Verdana", Font.PLAIN, 28);
+		f = new Font("Courier New", Font.PLAIN, 28);
 		TrueTypeFont guiFont = new TrueTypeFont(f, true);
 		fonts.put(GUI_FONT, guiFont);
 	}

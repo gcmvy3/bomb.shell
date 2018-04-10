@@ -31,7 +31,7 @@ public class BombshellGame extends StateBasedGame
 	
 	public BombshellGame() 
 	{
-		super("BomBoi");
+		super("bomb.shell");
 	}
 
     // Initialize game states (calls init method of each gamestate, and set's the state ID)
