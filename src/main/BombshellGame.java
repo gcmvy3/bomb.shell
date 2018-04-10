@@ -5,6 +5,10 @@ import java.awt.GraphicsEnvironment;
 import java.io.File;
 import java.io.IOException;
 
+import javax.swing.JOptionPane;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.ScalableGame;
@@ -72,6 +76,7 @@ public class BombshellGame extends StateBasedGame
     	}
     
     	setLWJGLNatives();
+    	
         try 
         {
         	ScalableGame scalableGame = new ScalableGame(new BombshellGame(), width, height, true);
@@ -83,6 +88,34 @@ public class BombshellGame extends StateBasedGame
         }
         catch(SlickException e) 
         {
+        	try 
+        	{
+				UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+
+	    		JOptionPane.showMessageDialog(null, "Unknown error");
+			} 
+        	catch (Exception e2) 
+        	{
+				System.err.println("Error showing error dialog!");
+				e2.printStackTrace();
+			}
+        	
+            e.printStackTrace();
+        }
+        catch(UnsatisfiedLinkError e)
+        {
+        	try 
+        	{
+				UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+
+	    		JOptionPane.showMessageDialog(null, "Error loading LWJGL natives");
+			} 
+        	catch (Exception e2) 
+        	{
+				System.err.println("Error showing error dialog!");
+				e2.printStackTrace();
+			}
+        	
             e.printStackTrace();
         }
     }
@@ -92,9 +125,9 @@ public class BombshellGame extends StateBasedGame
     	Class<BombshellGame> c = BombshellGame.class;
 
 		System.out.println(c.getResource(c.getName() + ".class"));
-    	
-    	String currentDirectory = new File("native").getAbsolutePath();
-    	String nativesPath = currentDirectory + File.separator + getOSName();
+
+    	String currentDirectory = new File(BombshellGame.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getParentFile().getAbsolutePath();
+    	String nativesPath = currentDirectory + File.separator + "native" + File.separator + getOSName();
     	System.setProperty("org.lwjgl.librarypath", nativesPath);
     }
     
