@@ -7,7 +7,9 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
-public class SettingManager implements Serializable
+import org.newdawn.slick.SlickException;
+
+public class SettingsManager implements Serializable
 {
 	private static final long serialVersionUID = 8445432275188685172L;
 	
@@ -26,7 +28,7 @@ public class SettingManager implements Serializable
 	        out.writeInt(height);
 	        out.close();
 	        fileOut.close();
-	        System.out.printf("Settings saved to settings.cfg");
+	        System.out.println("Settings saved to settings.cfg");
 		}
 		catch(IOException e)
 		{
@@ -52,7 +54,7 @@ public class SettingManager implements Serializable
 
 	public static void setFullscreen(boolean fullscreen) 
 	{
-		SettingManager.fullscreen = fullscreen;
+		SettingsManager.fullscreen = fullscreen;
 
 		saveSettings();
 	}
@@ -64,7 +66,7 @@ public class SettingManager implements Serializable
 
 	public static void setWidth(int width) 
 	{
-		SettingManager.width = width;
+		SettingsManager.width = width;
 	}
 
 	public static int getHeight() 
@@ -74,6 +76,19 @@ public class SettingManager implements Serializable
 
 	public static void setHeight(int height) 
 	{
-		SettingManager.height = height;
+		SettingsManager.height = height;
+	}
+	
+	public static void applySettings()
+	{
+		try 
+		{
+			BombshellGame.app.setDisplayMode(width, height, fullscreen);
+		} 
+		catch (SlickException e) 
+		{
+			System.err.println("Could not apply settings");
+			e.printStackTrace();
+		}
 	}
 }

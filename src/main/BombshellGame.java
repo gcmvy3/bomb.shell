@@ -7,7 +7,6 @@ import java.io.IOException;
 
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.GameContainer;
@@ -32,7 +31,9 @@ public class BombshellGame extends StateBasedGame
     public static boolean multiplayer = false;
     public static boolean reloaded = false;
     public static Level level;
-	
+
+    public static AppGameContainer app;
+    
 	public BombshellGame() 
 	{
 		super("bomb.shell");
@@ -55,10 +56,10 @@ public class BombshellGame extends StateBasedGame
     {
     	try
     	{
-    		SettingManager.loadSettings();
-    		fullscreen = SettingManager.isFullscreen();
-    		width = SettingManager.getWidth();
-    		height = SettingManager.getHeight();
+    		SettingsManager.loadSettings();
+    		fullscreen = SettingsManager.isFullscreen();
+    		width = SettingsManager.getWidth();
+    		height = SettingsManager.getHeight();
     	}
     	catch(IOException e)
     	{
@@ -70,9 +71,9 @@ public class BombshellGame extends StateBasedGame
         	width = gd.getDisplayMode().getWidth();
         	height = gd.getDisplayMode().getHeight();
         	
-        	SettingManager.setFullscreen(fullscreen);
-        	SettingManager.setWidth(width);
-        	SettingManager.setHeight(height);
+        	SettingsManager.setFullscreen(fullscreen);
+        	SettingsManager.setWidth(width);
+        	SettingsManager.setHeight(height);
     	}
     
     	setLWJGLNatives();
@@ -80,8 +81,8 @@ public class BombshellGame extends StateBasedGame
         try 
         {
         	ScalableGame scalableGame = new ScalableGame(new BombshellGame(), width, height, true);
-            AppGameContainer app = new AppGameContainer(scalableGame);
-            app.setDisplayMode(width, height, SettingManager.isFullscreen());
+            app = new AppGameContainer(scalableGame);
+            app.setDisplayMode(width, height, SettingsManager.isFullscreen());
             app.setVSync(true);
 
             app.start();

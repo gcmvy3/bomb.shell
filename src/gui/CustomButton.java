@@ -1,6 +1,7 @@
 package gui;
 
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.gui.GUIContext;
 import org.newdawn.slick.gui.MouseOverArea;
@@ -11,6 +12,13 @@ public class CustomButton extends MouseOverArea
 {
 	private final static String DEFAULT_SPRITE = "button1";
 	private final static String DEFAULT_MOUSEOVER_SPRITE = "button1_mouseover";
+	private final static String DEFAULT_DISABLED_SPRITE = "button1_disabled";
+	
+	private Image enabledSprite;
+	private Image enabledMouseOverSprite;
+	private Image disabledSprite;
+	
+	private boolean enabled = true;
 	
 	String label;
 	
@@ -25,7 +33,13 @@ public class CustomButton extends MouseOverArea
 	{
 		super(container, ResourceManager.getGUISprite(DEFAULT_SPRITE).getScaledCopy(width, height), x, y, width, height);
 		
-		this.setMouseOverImage(ResourceManager.getGUISprite(DEFAULT_MOUSEOVER_SPRITE).getScaledCopy(width, height));
+		enabledSprite = ResourceManager.getGUISprite(DEFAULT_SPRITE).getScaledCopy(width, height);
+		enabledMouseOverSprite = ResourceManager.getGUISprite(DEFAULT_MOUSEOVER_SPRITE).getScaledCopy(width, height);
+		disabledSprite = ResourceManager.getGUISprite(DEFAULT_DISABLED_SPRITE).getScaledCopy(width, height);
+		
+		setNormalImage(enabledSprite);
+		setMouseOverImage(enabledMouseOverSprite);
+		setMouseDownImage(enabledMouseOverSprite);
 		
 		this.label = label;
 		
@@ -45,5 +59,32 @@ public class CustomButton extends MouseOverArea
 	public void setLabel(String s)
 	{
 		label = s;
+	}
+	
+	public void enable()
+	{
+		if(!isEnabled())
+		{
+			enabled = true;
+			setNormalImage(enabledSprite);
+			setMouseOverImage(enabledMouseOverSprite);	
+			setMouseDownImage(enabledMouseOverSprite);
+		}
+	}
+	
+	public void disable()
+	{
+		if(isEnabled())
+		{
+			enabled = false;
+			setNormalImage(disabledSprite);
+			setMouseOverImage(disabledSprite);
+			setMouseDownImage(disabledSprite);
+		}
+	}
+	
+	public boolean isEnabled()
+	{
+		return enabled;
 	}
 }
