@@ -143,7 +143,7 @@ public class Multiplayer extends BasicGameState
 		Totality.instance.setDefaultController(loginController);
 		
 		gameController = new GameController();
-		gameController.addControllerElement(new Button("bombButton", 0.25f, 0.5f, 0.5f, 1.0f));
+		gameController.addControllerElement(new Button("bombButton", 0.25f, 0.5f, 0.5f, 1.0f, 0x0000FF, 1));
 		gameController.addControllerElement(new DPad("dpad1", 0.75f, 0.5f, 0.45f, 0.9f));
 		
 		Totality.instance.addConnectListener(new ConnectListener()

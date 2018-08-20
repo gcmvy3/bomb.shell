@@ -10,6 +10,6 @@
 	<classpathentry kind="lib" path="C:/Users/grant_000/Desktop/workspace/bomb.shell/libs/Slick2D/lib/slick.jar"/>
 	<classpathentry kind="lib" path="C:/Users/grant_000/Desktop/workspace/bomb.shell/libs/dom4j/dom4j-2.1.0.jar"/>
 	<classpathentry kind="lib" path="C:/Users/grant_000/Desktop/workspace/bomb.shell/libs/jbox2d/jbox2d-library-2.2.1.1.jar"/>
-	<classpathentry kind="lib" path="C:/Users/grant_000/Desktop/workspace/bomb.shell/libs/Totality/Totality.jar"/>
+	<classpathentry kind="lib" path="C:/Users/grant_000/Desktop/workspace/bomb.shell/libs/Totality/Totality-1.1.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
