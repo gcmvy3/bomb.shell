@@ -80,7 +80,7 @@ public class LevelSelect extends BasicGameState
 				if(selectedLevel != null)
 				{
 					BombshellGame.level = selectedLevel;
-					if(BombshellGame.multiplayer)
+					if(BombshellGame.versus)
 					{
 						game.enterState(4);
 					}

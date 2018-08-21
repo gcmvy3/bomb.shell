@@ -16,9 +16,9 @@ import org.newdawn.slick.state.StateBasedGame;
 
 import gamestates.LevelSelect;
 import gamestates.MainMenu;
-import gamestates.Multiplayer;
+import gamestates.Versus;
 import gamestates.SettingsMenu;
-import gamestates.Singleplayer;
+import gamestates.Cooperative;
 import gamestates.SplashScreen;
 
 public class BombshellGame extends StateBasedGame
@@ -28,7 +28,7 @@ public class BombshellGame extends StateBasedGame
     public static int width;
     public static int height;
     
-    public static boolean multiplayer = false;
+    public static boolean versus = false;
     public static boolean reloaded = false;
     public static Level level;
 
@@ -46,8 +46,8 @@ public class BombshellGame extends StateBasedGame
         this.addState(new SplashScreen());	//State 0
         this.addState(new MainMenu());		//State 1
         this.addState(new LevelSelect());   //State 2
-        this.addState(new Singleplayer());  //State 3
-        this.addState(new Multiplayer());   //State 4
+        this.addState(new Cooperative());   //State 3
+        this.addState(new Versus());   		//State 4
         this.addState(new SettingsMenu());  //State 5
     }
 

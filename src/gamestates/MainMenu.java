@@ -46,7 +46,7 @@ public class MainMenu extends BasicGameState
 												gc.getHeight() / 2,
 												buttonWidth,
 												buttonHeight,
-												"Singleplayer");
+												"Co-op");
 		singleplayerButton.addListener(new ComponentListener() 
 		{
 			@Override
@@ -62,13 +62,13 @@ public class MainMenu extends BasicGameState
 												gc.getHeight() / 2 + buttonSpacing, 
 												buttonWidth, 
 												buttonHeight,
-												"Multiplayer");
+												"Versus");
 		multiplayerButton.addListener(new ComponentListener() 
 		{
 			@Override
 			public void componentActivated(AbstractComponent arg0) 
 			{
-				BombshellGame.multiplayer = true;
+				BombshellGame.versus = true;
 				game.enterState(GameStates.LEVEL_SELECT);
 			}
 		});

@@ -32,7 +32,7 @@ import self.totality.webSocketServer.controller.TextInput;
 import self.totality.webSocketServer.listener.ConnectListener;
 import self.totality.webSocketServer.listener.DisconnectListener;
 
-public class Multiplayer extends BasicGameState
+public class Versus extends BasicGameState
 {
 	public static final int RESPAWN_DELAY = 100;
 	public static final float LEADERBOARD_RELATIVE_WIDTH = 0.2f;
@@ -68,7 +68,7 @@ public class Multiplayer extends BasicGameState
 	@Override
 	public void enter(GameContainer gc, StateBasedGame game)
 	{
-		System.out.println("Entering multiplayer");
+		System.out.println("Entering versus");
 		
 		level = BombshellGame.level;
 		try 
@@ -360,7 +360,7 @@ public class Multiplayer extends BasicGameState
 	@Override
 	public int getID() 
 	{
-		return GameStates.MULTIPLAYER;
+		return GameStates.VERSUS;
 	}
 
 }

@@ -14,7 +14,7 @@ import main.BombshellGame;
 import main.Level;
 import main.Player;
 
-public class Singleplayer extends BasicGameState
+public class Cooperative extends BasicGameState
 {
 	Level level;
 	
@@ -30,7 +30,7 @@ public class Singleplayer extends BasicGameState
 	@Override
 	public void enter(GameContainer gc, StateBasedGame game)
 	{
-		System.out.println("Entering singleplayer");
+		System.out.println("Entering co-op");
 		
 		level = BombshellGame.level;
 		try 
@@ -74,7 +74,7 @@ public class Singleplayer extends BasicGameState
 	@Override
 	public int getID() 
 	{
-		return GameStates.SINGLEPLAYER;
+		return GameStates.COOPERATIVE;
 	}
 
 }

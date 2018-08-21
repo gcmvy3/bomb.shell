@@ -31,7 +31,7 @@ public class SplashScreen extends BasicGameState
 	@Override
 	public void update(GameContainer arg0, StateBasedGame game, int arg2) throws SlickException 
 	{
-		game.enterState(1);
+		game.enterState(GameStates.MAIN_MENU);
 	}
 
 	@Override
