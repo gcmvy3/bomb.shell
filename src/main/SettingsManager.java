@@ -1,13 +1,14 @@
 package main;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 import org.newdawn.slick.SlickException;
+
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
 
 public class SettingsManager implements Serializable
 {
@@ -21,13 +22,14 @@ public class SettingsManager implements Serializable
 	{
 		try
 		{
-	        FileOutputStream fileOut = new FileOutputStream("settings.cfg");
-	        ObjectOutputStream out = new ObjectOutputStream(fileOut);
-	        out.writeBoolean(fullscreen);
-	        out.writeInt(width);
-	        out.writeInt(height);
-	        out.close();
-	        fileOut.close();
+			JsonWriter writer = new JsonWriter(new FileWriter("settings.json"));
+			writer.beginObject();
+			writer.name("fullscreen").value(fullscreen);
+			writer.name("width").value(width);
+			writer.name("height").value(height);
+			writer.endObject();
+			writer.close();
+			
 	        System.out.println("Settings saved to settings.cfg");
 		}
 		catch(IOException e)
@@ -38,13 +40,31 @@ public class SettingsManager implements Serializable
 	
 	public static void loadSettings() throws IOException
 	{
-         FileInputStream fileIn = new FileInputStream("settings.cfg");
-         ObjectInputStream in = new ObjectInputStream(fileIn);
-         fullscreen = in.readBoolean();
-         width = in.readInt();
-         height = in.readInt();
-         in.close();
-         fileIn.close();
+		JsonReader reader = new JsonReader(new FileReader("settings.json"));
+		reader.beginObject();
+		while(reader.hasNext())
+		{
+			String name = reader.nextName();
+			
+			switch(name)
+			{
+				case "fullscreen":
+					fullscreen = reader.nextBoolean();
+					break;
+				case "width":
+					width = reader.nextInt();
+					break;
+				case "height":
+					height = reader.nextInt();
+					break;
+				default:
+					System.out.println("WARNING: setting " + name + " is not recognized");
+					break;
+			}
+		}
+		reader.endObject();
+		reader.close();
+		System.out.println("Successfully loaded settings");
 	}
 
 	public static boolean isFullscreen() 
