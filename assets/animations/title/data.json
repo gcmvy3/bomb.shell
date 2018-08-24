@@ -1,5 +1,6 @@
 {
-	"duration" : 300,
+	"duration" : 250,
+	"loop" : false,
 	"frames" : [
 	"001.png",
 	"002.png",

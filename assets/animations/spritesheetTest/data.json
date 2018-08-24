@@ -1,0 +1,9 @@
+{
+	"duration" : 300,
+	"loop" : false,
+	"spritesheet" : {
+		"name" : "spritesheet.png",
+		"tileWidth" : 32,
+		"tileHeight" : 32
+	}
+}

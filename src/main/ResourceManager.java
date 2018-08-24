@@ -10,13 +10,13 @@ import java.util.HashMap;
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.SpriteSheet;
 import org.newdawn.slick.TrueTypeFont;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.google.gson.stream.JsonReader;
 
 public class ResourceManager 
 {
@@ -50,14 +50,14 @@ public class ResourceManager
 		Animation animation = null;
 		File animationDirectory = file.getParentFile();
 		String name = animationDirectory.getName();
+		int duration = 0;
+		boolean loop = true;
 		
 		try 
 		{
 			JsonParser parser = new JsonParser();
 			
 			JsonObject dataObj = parser.parse(new FileReader(file)).getAsJsonObject();
-	
-			int duration = 0;
 
 			JsonElement durationElement = dataObj.get("duration");
 			if(durationElement != null && durationElement.isJsonPrimitive())
@@ -67,6 +67,12 @@ public class ResourceManager
 			else
 			{
 				System.err.println("WARNING: duration not specified for animation " + name);
+			}
+			
+			JsonElement loopElement = dataObj.get("loop");
+			if(loopElement != null && loopElement.isJsonPrimitive())
+			{
+				loop = dataObj.get("loop").getAsBoolean();
 			}
 			
 			if(dataObj.has("frames") && dataObj.get("frames").isJsonArray()) 
@@ -103,11 +109,47 @@ public class ResourceManager
 			}
 			else if(dataObj.has("spritesheet") && dataObj.get("spritesheet").isJsonObject())
 			{
-				//TODO
+				JsonObject spritesheetObj = dataObj.getAsJsonObject("spritesheet");
+				
+				String spriteSheetPath;
+				int tileWidth;
+				int tileHeight;
+				
+				JsonElement nameElement = spritesheetObj.get("name");
+				JsonElement widthElement = spritesheetObj.get("tileWidth");
+				JsonElement heightElement = spritesheetObj.get("tileHeight");
+				
+				if(nameElement != null 
+						&& widthElement != null 
+						&& heightElement != null
+						&& nameElement.isJsonPrimitive() 
+						&& widthElement.isJsonPrimitive() 
+						&& heightElement.isJsonPrimitive())
+				{
+					spriteSheetPath = animationDirectory + File.separator + nameElement.getAsString();
+					tileWidth = widthElement.getAsInt();
+					tileHeight = heightElement.getAsInt();
+					
+					try 
+					{
+						SpriteSheet spriteSheet = new SpriteSheet(spriteSheetPath, tileWidth, tileHeight);
+						animation = new Animation(spriteSheet, duration);
+					} 
+					catch (SlickException e) 
+					{
+						System.err.println("ERROR: Could not load spritesheet for animation " + name);
+						return null;
+					}
+				}
+				else
+				{
+					System.err.println("ERROR: missing spritesheet data for animation " + name);
+					return null;
+				}
 			}
 			else
 			{
-				System.err.println("ERROR: animation " + name + " is missing frame data and could not be loaded");
+				System.err.println("ERROR: animation " + name + " is missing image data and could not be loaded");
 			}
 			
 		} 
@@ -117,6 +159,7 @@ public class ResourceManager
 			return null;
 		}
 		
+		animation.setLooping(loop);
 		return animation;
 	}
 	

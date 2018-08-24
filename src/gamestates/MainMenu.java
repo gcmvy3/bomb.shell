@@ -43,7 +43,6 @@ public class MainMenu extends BasicGameState
 		initButtons(gt, game);
 		
 		titleAnimation = ResourceManager.getAnimation("title");
-		titleAnimation.setLooping(false);
 	}
 
 	private void initButtons(GameContainer gc, StateBasedGame game) throws SlickException
