@@ -7,12 +7,17 @@ import java.io.Serializable;
 
 import org.newdawn.slick.SlickException;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 
 public class SettingsManager implements Serializable
 {
 	private static final long serialVersionUID = 8445432275188685172L;
+	
+	private static final String FILE_NAME = "settings.json";
 	
 	private static boolean fullscreen = true;
 	private static int width = 1920;
@@ -22,7 +27,7 @@ public class SettingsManager implements Serializable
 	{
 		try
 		{
-			JsonWriter writer = new JsonWriter(new FileWriter("settings.json"));
+			JsonWriter writer = new JsonWriter(new FileWriter(FILE_NAME));
 			writer.beginObject();
 			writer.name("fullscreen").value(fullscreen);
 			writer.name("width").value(width);
@@ -40,31 +45,53 @@ public class SettingsManager implements Serializable
 	
 	public static void loadSettings() throws IOException
 	{
-		JsonReader reader = new JsonReader(new FileReader("settings.json"));
-		reader.beginObject();
-		while(reader.hasNext())
+		boolean success = true;
+		
+		JsonParser parser = new JsonParser();
+		
+		JsonObject settingsObj = parser.parse(new FileReader(FILE_NAME)).getAsJsonObject();
+		
+		JsonElement fullscreenElement = settingsObj.get("fullscreen");
+		if(fullscreenElement != null && fullscreenElement.isJsonPrimitive())
 		{
-			String name = reader.nextName();
-			
-			switch(name)
-			{
-				case "fullscreen":
-					fullscreen = reader.nextBoolean();
-					break;
-				case "width":
-					width = reader.nextInt();
-					break;
-				case "height":
-					height = reader.nextInt();
-					break;
-				default:
-					System.out.println("WARNING: setting " + name + " is not recognized");
-					break;
-			}
+			fullscreen = settingsObj.get("fullscreen").getAsBoolean();
 		}
-		reader.endObject();
-		reader.close();
-		System.out.println("Successfully loaded settings");
+		else
+		{
+			success = false;
+			System.err.println("WARNING: fullscreen setting is missing or invalid");
+		}
+		
+		JsonElement widthElement = settingsObj.get("width");
+		if(widthElement != null && widthElement.isJsonPrimitive())
+		{
+			width = settingsObj.get("width").getAsInt();
+		}
+		else
+		{
+			success = false;
+			System.err.println("WARNING: width setting is missing or invalid");
+		}
+		
+		JsonElement heightElement = settingsObj.get("height");
+		if(heightElement != null && heightElement.isJsonPrimitive())
+		{
+			height = settingsObj.get("height").getAsInt();
+		}
+		else
+		{
+			success = false;
+			System.err.println("WARNING: height setting is missing or invalid");
+		}
+		
+		if(success)
+		{
+			System.out.println("Successfully loaded all settings");
+		}
+		else
+		{
+			System.err.println("Finished loading settings, but with errors");
+		}
 	}
 
 	public static boolean isFullscreen() 

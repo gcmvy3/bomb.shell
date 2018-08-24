@@ -1,5 +1,6 @@
 package gamestates;
 
+import org.newdawn.slick.Animation;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -20,6 +21,11 @@ public class MainMenu extends BasicGameState
 	
 	private int buttonSpacing;
 	
+	private int titleWidth;
+	private int titleHeight;
+	
+	private double relTitleWidth = 0.6;
+
 	private CustomButton singleplayerButton;
 	private CustomButton multiplayerButton;
 	private CustomButton settingsButton;
@@ -27,12 +33,17 @@ public class MainMenu extends BasicGameState
 	
 	Image titleArt;
 	
+	Animation titleAnimation;
+	
 	@Override
 	public void init(GameContainer gt, StateBasedGame game) throws SlickException 
 	{
 		titleArt = ResourceManager.getGUISprite("titleArt");
 		
 		initButtons(gt, game);
+		
+		titleAnimation = ResourceManager.getAnimation("title");
+		titleAnimation.setLooping(false);
 	}
 
 	private void initButtons(GameContainer gc, StateBasedGame game) throws SlickException
@@ -109,15 +120,18 @@ public class MainMenu extends BasicGameState
 	@Override
 	public void enter(GameContainer gc, StateBasedGame game)
 	{
+		//Scale title animation while maintaining aspect ratio
+		titleWidth = (int)(gc.getWidth() * relTitleWidth);
+		titleHeight = (int)(titleAnimation.getHeight() * titleWidth / titleAnimation.getWidth());
 	}
 	
 	@Override
 	public void render(GameContainer gc, StateBasedGame game, Graphics g) throws SlickException 
 	{
-		int titleY = gc.getHeight() / 2 - titleArt.getHeight() * 2;
-		int titleX = gc.getWidth() / 2 - titleArt.getWidth() / 2;
+		int titleY = gc.getHeight() / 2 - titleHeight;
+		int titleX = gc.getWidth() / 2 - titleWidth / 2;
 		
-		g.drawImage(titleArt, titleX, titleY);
+		titleAnimation.draw(titleX, titleY, titleWidth, titleHeight);
 		
 		singleplayerButton.render(gc, g);
 		multiplayerButton.render(gc, g);
