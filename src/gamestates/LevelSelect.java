@@ -11,7 +11,7 @@ import org.newdawn.slick.gui.ComponentListener;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
-import gui.CustomButton;
+import gui.TextButton;
 import gui.ListView;
 import main.BombshellGame;
 import main.Level;
@@ -43,7 +43,7 @@ public class LevelSelect extends BasicGameState
 	
 	private Image thumbnail;
 	
-	private CustomButton startButton;
+	private TextButton startButton;
 	
 	ListView<TileMap> tileMapList;
 	ListView<Tileset> tilesetList;
@@ -56,7 +56,7 @@ public class LevelSelect extends BasicGameState
 		int buttonWidth = gc.getWidth() / 5;
 		int buttonHeight = gc.getHeight() / 12;
 		
-		startButton = new CustomButton(gc,
+		startButton = new TextButton(gc,
 										gc.getWidth() / 2 - buttonWidth / 2,
 										gc.getHeight() - gc.getHeight() / 10,
 										buttonWidth,
@@ -124,8 +124,8 @@ public class LevelSelect extends BasicGameState
 	public void render(GameContainer gc, StateBasedGame arg1, Graphics g) throws SlickException 
 	{
 		startButton.render(gc, g);
-		tileMapList.render(g);
-		tilesetList.render(g);
+		tileMapList.render(gc, g);
+		tilesetList.render(gc, g);
 		
 		if(thumbnail != null)
 		{

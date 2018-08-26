@@ -54,7 +54,7 @@ public class Leaderboard extends ListView<Player>
 	}
 	
 	@Override
-	public void render(Graphics g)
+	public void render(GameContainer gc, Graphics g)
 	{
 		//Draw background sprites
 		ResourceManager.getGUISprite(HEADER_SPRITE_NAME).draw(x, y, width, headerHeight);	

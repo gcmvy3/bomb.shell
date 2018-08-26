@@ -16,7 +16,7 @@ import org.newdawn.slick.gui.ComponentListener;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
-import gui.CustomButton;
+import gui.TextButton;
 import gui.Leaderboard;
 import main.BombshellGame;
 import main.Level;
@@ -49,8 +49,8 @@ public class Versus extends BasicGameState
 	public static int killLimit = 5;
 	public static boolean gameOver = false;
 	
-	private CustomButton restartButton;
-	private CustomButton quitButton;
+	private TextButton restartButton;
+	private TextButton quitButton;
 	
 	GameController loginController;
 	GameController gameController;
@@ -102,7 +102,7 @@ public class Versus extends BasicGameState
 		int buttonHeight = gc.getHeight() / 12;
 		int buttonSpacing = (int)(buttonHeight * 1.5);
 		
-		restartButton = new CustomButton(gc,  
+		restartButton = new TextButton(gc,  
 											gc.getWidth() / 2 - buttonWidth / 2,
 											gc.getHeight() / 2,
 											buttonWidth,
@@ -117,7 +117,7 @@ public class Versus extends BasicGameState
 			}
 		});
 		
-		quitButton = new CustomButton(gc,  
+		quitButton = new TextButton(gc,  
 										gc.getWidth() / 2 - buttonWidth / 2,
 										gc.getHeight() / 2 + buttonSpacing,
 										buttonWidth,
@@ -226,7 +226,7 @@ public class Versus extends BasicGameState
 			level.render(g, levelX, levelY, gc.getWidth() - leaderboard.width, gc.getHeight());
 			level.renderPlayers(g, playerList);
 			
-			leaderboard.render(g);
+			leaderboard.render(gc, g);
 			
 			font.drawString(0, gc.getHeight() - font.getLineHeight(), Totality.localIp, Color.white);
 		}

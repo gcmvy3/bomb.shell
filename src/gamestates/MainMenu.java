@@ -10,7 +10,7 @@ import org.newdawn.slick.gui.ComponentListener;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
-import gui.CustomButton;
+import gui.TextButton;
 import main.BombshellGame;
 import main.ResourceManager;
 
@@ -26,10 +26,10 @@ public class MainMenu extends BasicGameState
 	
 	private double relTitleWidth = 0.6;
 
-	private CustomButton singleplayerButton;
-	private CustomButton multiplayerButton;
-	private CustomButton settingsButton;
-	private CustomButton exitButton;
+	private TextButton singleplayerButton;
+	private TextButton multiplayerButton;
+	private TextButton settingsButton;
+	private TextButton exitButton;
 	
 	Image titleArt;
 	
@@ -51,7 +51,7 @@ public class MainMenu extends BasicGameState
 		buttonHeight = gc.getHeight() / 12;
 		buttonSpacing = (int)(buttonHeight * 1.5);
 		
-		singleplayerButton = new CustomButton(gc,  
+		singleplayerButton = new TextButton(gc,  
 												gc.getWidth() / 2 - buttonWidth / 2,
 												gc.getHeight() / 2,
 												buttonWidth,
@@ -67,7 +67,7 @@ public class MainMenu extends BasicGameState
 		});
 		
 		
-		multiplayerButton = new CustomButton(gc, 
+		multiplayerButton = new TextButton(gc, 
 												gc.getWidth() / 2 - buttonWidth / 2, 
 												gc.getHeight() / 2 + buttonSpacing, 
 												buttonWidth, 
@@ -83,7 +83,7 @@ public class MainMenu extends BasicGameState
 			}
 		});
 		
-		settingsButton = new CustomButton(gc, 
+		settingsButton = new TextButton(gc, 
 											gc.getWidth() / 2 - buttonWidth / 2,
 											gc.getHeight() / 2 + (2 * buttonSpacing),
 											buttonWidth,
@@ -99,7 +99,7 @@ public class MainMenu extends BasicGameState
 			}
 		});
 		
-		exitButton = new CustomButton(gc, 
+		exitButton = new TextButton(gc, 
 										gc.getWidth() / 2 - buttonWidth / 2,
 										gc.getHeight() / 2 + (3 * buttonSpacing),
 										buttonWidth,

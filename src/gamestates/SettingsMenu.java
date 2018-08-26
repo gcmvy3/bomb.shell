@@ -10,7 +10,9 @@ import org.newdawn.slick.gui.ComponentListener;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
-import gui.CustomButton;
+import gui.TextButton;
+import gui.DropDown;
+import main.Resolution;
 import main.ResourceManager;
 import main.SettingsManager;
 import self.totality.Totality;
@@ -24,10 +26,12 @@ public class SettingsMenu extends BasicGameState
 	
 	String totalityIP;
 	
-	CustomButton fullscreenOn;
-	CustomButton fullscreenOff;
-	CustomButton backButton;
-	CustomButton applyButton;
+	TextButton fullscreenOn;
+	TextButton fullscreenOff;
+	TextButton backButton;
+	TextButton applyButton;
+	
+	DropDown<Resolution> resolutionMenu;
 	
 	TrueTypeFont labelFont;
 	
@@ -52,7 +56,7 @@ public class SettingsMenu extends BasicGameState
 		rowHeight = labelFont.getHeight();
 		centerGap = (int) (gc.getWidth() * REL_CENTER_GAP);
 		
-		fullscreenOn = new CustomButton(gc, gc.getWidth() / 2, gc.getHeight() / 2, buttonWidth / 4, rowHeight);
+		fullscreenOn = new TextButton(gc, gc.getWidth() / 2, gc.getHeight() / 2, buttonWidth / 4, rowHeight);
 		fullscreenOn.setLabel("On");
 		fullscreenOn.addListener(new ComponentListener() 
 		{
@@ -65,7 +69,7 @@ public class SettingsMenu extends BasicGameState
 			}
 		});
 		
-		fullscreenOff = new CustomButton(gc, gc.getWidth() / 2, gc.getHeight() / 2, buttonWidth / 4, rowHeight);
+		fullscreenOff = new TextButton(gc, gc.getWidth() / 2, gc.getHeight() / 2, buttonWidth / 4, rowHeight);
 		fullscreenOff.setLabel("Off");
 		fullscreenOff.addListener(new ComponentListener() 
 		{
@@ -87,7 +91,10 @@ public class SettingsMenu extends BasicGameState
 			fullscreenOff.disable();
 		}
 		
-		backButton = new CustomButton(gc, gc.getWidth() / 2, gc.getHeight() / 2, buttonWidth, buttonHeight);
+		resolutionMenu = new DropDown<Resolution>(gc, 1,1, buttonWidth, rowHeight);
+		resolutionMenu.addItem(new Resolution(1920, 1080));
+		
+		backButton = new TextButton(gc, gc.getWidth() / 2, gc.getHeight() / 2, buttonWidth, buttonHeight);
 		backButton.setLabel("Back");
 		backButton.addListener(new ComponentListener() 
 		{
@@ -98,7 +105,7 @@ public class SettingsMenu extends BasicGameState
 			}
 		});
 		
-		applyButton = new CustomButton(gc, gc.getWidth() / 2, gc.getHeight() / 2, buttonWidth, buttonHeight);
+		applyButton = new TextButton(gc, gc.getWidth() / 2, gc.getHeight() / 2, buttonWidth, buttonHeight);
 		applyButton.setLabel("Apply");
 		applyButton.addListener(new ComponentListener() 
 		{
@@ -133,6 +140,9 @@ public class SettingsMenu extends BasicGameState
 		rowY += labelFont.getHeight() * 2;
 		labelWidth = labelFont.getWidth("Resolution:");
 		labelFont.drawString(gc.getWidth() / 2 - labelWidth - centerGap, rowY, "Resolution:");
+		resolutionMenu.setLocation(gc.getWidth() / 2 + centerGap, rowY);
+		resolutionMenu.setDimensions(buttonWidth, rowHeight);
+		resolutionMenu.render(gc, g);
 		
 		//Totality IP
 		rowY += labelFont.getHeight() * 2;
